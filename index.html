@@ -389,6 +389,19 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 @media (prefers-reduced-motion: reduce) { .sp .toggle input, .sp .toggle input::after { transition: none; } }
 /* Budget */
 .btn.sm { padding: 4px 10px; font-size: 0.78rem; }
+.chip.sm.bonus { background: var(--gain-soft); color: var(--gain); }
+.note.bonusc { color: var(--gain); }
+.field.chk { display: flex; flex-direction: row; gap: 10px; align-items: flex-start; cursor: pointer; background: var(--sunk); border-radius: 8px; padding: 10px 12px; }
+.field.chk input { width: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.field.chk span { display: grid; gap: 2px; font-size: 0.86rem; } .field.chk small { color: var(--muted); font-size: 0.78rem; }
+.spbars { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 4px; align-items: end; height: 140px; }
+.spbars .m { display: grid; grid-template-rows: 1fr auto; gap: 4px; height: 100%; justify-items: center; font-size: 0.66rem; color: var(--muted); min-width: 0; white-space: nowrap; }
+.spbars .bars { display: flex; flex-direction: column; justify-content: flex-end; width: 100%; max-width: 18px; height: 100%; }
+.spbars b { display: block; width: 100%; }
+.spbars b.o { background: var(--accent); border-radius: 3px 3px 0 0; } .spbars b.g { background: var(--gain); border-radius: 3px 3px 0 0; }
+.spbars b.g[style*="height:0%"] + b.o { border-radius: 3px 3px 0 0; } .spbars b.g:not([style*="height:0%"]) + b.o { border-radius: 0; }
+#spStList { display: none; }
+
 .budedit { display: grid; gap: 12px; }
 .g2b { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .bud .flow { position: relative; }
@@ -425,6 +438,8 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 .home .hero .l { padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
 .home .hero .big { font-family: var(--font-display); font-weight: 700; font-size: 3rem; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .home .hero .ln { display: flex; gap: 8px 18px; flex-wrap: wrap; align-items: center; font-size: 0.86rem; }
+#lineChart { min-height: 280px; }
+#perfNote { min-height: 1.5em; }
 .home .hrng { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
 .home .hero .r { border-left: 1px solid var(--line); background: var(--sunk); padding: 20px; display: grid; align-content: start; }
 .home .kv { display: grid; gap: 1px; padding: 11px 0; border-bottom: 1px solid var(--line); min-width: 0; }
@@ -465,9 +480,15 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 /* Handy */
 @media (max-width: 820px) {
+  #spStTbl { display: none; } #spStList { display: grid; }
+  .spbars { gap: 2px; height: 110px; }
   .home .hero { grid-template-columns: minmax(0, 1fr); background: transparent; border: 0; overflow: visible; }
   .home .hero .l { padding: 0; }
   .home .hero .big { font-size: 2.5rem; }
+  #lineChart { min-height: 220px; }
+  .home .hrng { flex-direction: column-reverse; align-items: stretch; min-width: 0; }
+  .home #rangeSeg { margin: 0; padding: 0 0 2px; min-width: 0; max-width: 100%; }
+  #perfNote { min-height: 3.1em; }
   .home .hero .r { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .home .hero .r .kv { border: 0; padding: 0; }
   .home .hero .r .kv .v { font-size: 0.95rem; }
@@ -744,6 +765,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
         <div class="subtabs" role="tablist" aria-label="Bereiche">
           <button type="button" role="tab" data-tab="fc">Hochrechnung</button>
           <button type="button" role="tab" data-tab="cr">Krisen-Test</button>
+          <button type="button" role="tab" data-tab="st">Statistik</button>
           <button type="button" role="tab" data-tab="dt">Details</button>
         </div>
 
@@ -832,6 +854,17 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
             </div>
           </div>
           <p class="note">Gerundete Indexwerte von Hoch bis Tief, ohne Dividenden. Aktien und ETFs fallen voll mit, Anleihen, Rohstoffe und Krypto anders gewichtet. Nach der Erholung wächst das Depot mit deiner erwarteten Rendite.</p>
+        </div>
+
+        <!-- Statistik -->
+        <div data-pane="st" hidden class="crpane">
+          <div class="kpis" id="spStK"></div>
+          <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>Eingezahlt pro Monat</h3><span class="note">Sparpläne aus eigenem Geld und geschenktes Saveback, letzte 24 Monate</span></div>
+            <div class="legend-b"><span><i style="background:var(--accent)"></i>Sparpläne</span><span><i style="background:var(--gain)"></i>Saveback</span></div></div>
+            <div class="spbars" id="spStBars"></div></div>
+          <div class="card"><div class="card-h"><h3>Je Sparplan</h3><span class="note">Nur die Käufe aus dem Sparplan, zum aktuellen Kurs</span></div>
+            <div class="tablewrap"><table id="spStTbl"></table></div>
+            <div class="mlist" id="spStList"></div></div>
         </div>
 
         <!-- Details -->
@@ -970,6 +1003,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       <div class="field" data-for="div"><label for="fAmount">Betrag brutto (€)</label><input id="fAmount" inputmode="decimal" placeholder="12,40"></div>
       <div class="field" data-for="trade"><label for="fFee">Gebühren (€)</label><input id="fFee" inputmode="decimal" placeholder="0"></div>
       <div class="field"><label for="fTax">Steuern (€)</label><input id="fTax" inputmode="decimal" placeholder="0"></div>
+      <label class="field full chk" id="rowBonus"><input type="checkbox" id="fBonus"><span><b>Saveback, Cashback oder Prämie</b><small>Die Anteile gab es geschenkt, das Geld kam nicht von deinem Konto</small></span></label>
     </div>
     <p class="err" id="txErr" hidden></p>
     <div class="dfoot"><button type="button" class="btn danger left" id="txDelete" hidden>Löschen</button><button type="button" class="btn ghost" data-close>Abbrechen</button><button class="btn" type="submit">Speichern</button></div>
@@ -1069,6 +1103,20 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       s: { Industrie: 25, Finanzen: 20, Technologie: 17, "Zyklischer Konsum": 12, Gesundheit: 6.5, Grundstoffe: 6.5, Kommunikation: 6, Versorger: 4, Basiskonsum: 1.5, Immobilien: 1.5 } },
     japan: { label: "MSCI Japan", c: { Japan: 100 },
       s: { Industrie: 23, "Zyklischer Konsum": 17, Technologie: 14, Finanzen: 15, Gesundheit: 7, Kommunikation: 8, Basiskonsum: 5, Grundstoffe: 5, Immobilien: 3, Versorger: 1.5, Energie: 1.5 } },
+    estx50: { label: "EURO STOXX 50", c: { Frankreich: 36, Deutschland: 30, Niederlande: 15, Spanien: 9, Italien: 7, Belgien: 2, Finnland: 1 },
+      s: { Finanzen: 21, Industrie: 16, "Zyklischer Konsum": 16, Technologie: 15, Basiskonsum: 7, Gesundheit: 7, Grundstoffe: 6, Energie: 5, Versorger: 4, Kommunikation: 3 } },
+    ev: { label: "Thema Elektromobilität (grob)", c: { USA: 42, Japan: 14, China: 12, "Südkorea": 8, Deutschland: 7, Taiwan: 6, Frankreich: 3, Niederlande: 3, Sonstige: 5 },
+      s: { Technologie: 42, "Zyklischer Konsum": 30, Industrie: 16, Grundstoffe: 12 } },
+    quantum: { label: "Thema Quantencomputer (grob)", c: { USA: 68, Japan: 8, Taiwan: 6, Kanada: 4, Niederlande: 3, Deutschland: 3, Frankreich: 2, Sonstige: 6 },
+      s: { Technologie: 76, Kommunikation: 12, Industrie: 8, Gesundheit: 4 } },
+    battery: { label: "Thema Batterie-Wertschöpfung (grob)", c: { USA: 30, China: 20, Japan: 14, "Südkorea": 12, Australien: 8, Chile: 4, Deutschland: 3, Sonstige: 9 },
+      s: { Grundstoffe: 36, Industrie: 28, Technologie: 20, "Zyklischer Konsum": 16 } },
+    tech: { label: "Technologie-Sektor (grob)", c: { USA: 88, Taiwan: 3, Niederlande: 3, Japan: 2, Sonstige: 4 },
+      s: { Technologie: 90, Kommunikation: 10 } },
+    semi: { label: "Halbleiter (grob)", c: { USA: 72, Taiwan: 12, Niederlande: 8, Japan: 4, Sonstige: 4 },
+      s: { Technologie: 100 } },
+    clean: { label: "Saubere Energie (grob)", c: { USA: 40, China: 12, Spanien: 8, "Dänemark": 7, Deutschland: 5, Kanada: 5, Sonstige: 23 },
+      s: { Versorger: 45, Industrie: 30, Technologie: 25 } },
   };
   const PROFILE_BY_ISIN = {
     IE00B4L5Y983: "world", IE00BJ0KDQ92: "world", LU0274208692: "world", IE00BFY0GT14: "world", IE00BK1PV551: "world", LU1781541179: "world", IE00B0M62Q58: "world", FR0010315770: "world", LU0340285161: "world",
@@ -1085,10 +1133,17 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     if (!/^(ETF|Fonds)$/.test(a.cls || "")) return null;
     const n = (a.name || "").toLowerCase();
     if (/all.?world|acwi/.test(n)) return PROFILES.allworld;
+    if (/euro ?stoxx ?50|eurostoxx|estx ?50/.test(n)) return PROFILES.estx50;
     if (/emerging|\bem\b|em imi|schwellen/.test(n)) return PROFILES.em;
     if (/nasdaq/.test(n)) return PROFILES.ndx;
     if (/s&p ?500|sp500/.test(n)) return PROFILES.sp500;
-    if (/stoxx europe|msci europe|europe 600|ftse developed europe/.test(n)) return PROFILES.europe;
+    if (/stoxx europe|msci europe|europe 600|stoxx 600|ftse developed europe/.test(n)) return PROFILES.europe;
+    if (/electric|e-?mobility|driving|vehicle/.test(n)) return PROFILES.ev;
+    if (/quantum/.test(n)) return PROFILES.quantum;
+    if (/batter|lithium/.test(n)) return PROFILES.battery;
+    if (/semiconductor|halbleiter|chip/.test(n)) return PROFILES.semi;
+    if (/clean energy|renewable|solar|erneuerbar/.test(n)) return PROFILES.clean;
+    if (/\btech|information technology|technolog/.test(n)) return PROFILES.tech;
     if (/\bdax\b/.test(n)) return PROFILES.dax;
     if (/japan/.test(n)) return PROFILES.japan;
     if (/msci world|developed world|ftse developed/.test(n)) return PROFILES.world;
@@ -1266,12 +1321,12 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   function compute(d) {
     const txs = sortTx(d.txs);
     const pos = {};
-    let fees = 0, taxes = 0;
+    let fees = 0, taxes = 0, bonus = 0;
     const get = (id) => pos[id] || (pos[id] = { id, shares: 0, cost: 0, realized: 0, div: 0, divGross: 0, bought: 0 });
     for (const t of txs) {
       const p = get(t.asset);
       fees += t.fee || 0; taxes += t.tax || 0;
-      if (t.type === "buy") { p.cost += t.shares * t.price + (t.fee || 0); p.shares += t.shares; p.bought += t.shares * t.price; }
+      if (t.type === "buy") { p.cost += t.shares * t.price + (t.fee || 0); p.shares += t.shares; p.bought += t.shares * t.price; if (t.bonus) { p.bonus = (p.bonus || 0) + t.shares * t.price; bonus += t.shares * t.price; } }
       else if (t.type === "sell") {
         const n = Math.min(t.shares, p.shares);
         const avg = p.shares > 0 ? p.cost / p.shares : 0;
@@ -1300,7 +1355,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     list.forEach((p) => { p.weight = value > 0 ? p.value / value : 0; });
     const yearAgo = isoDate(new Date(Date.now() - 365 * 864e5));
     const div12 = txs.filter((t) => t.type === "div" && t.date > yearAgo).reduce((s, t) => s + (t.amount || 0) - (t.tax || 0), 0);
-    return { txs, list, value, cost, realized, div, div12, fees, taxes, unreal: value - cost, total: value - cost + realized + div };
+    return { txs, list, value, cost, realized, div, div12, fees, taxes, bonus, unreal: value - cost, total: value - cost + realized + div };
   }
 
   // Wöchentliche Zeitreihe: Depotwert und Einstandswert
@@ -1480,6 +1535,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   let C = null;
   const PAGE_RENDER = {};
   function render() {
+    if (fixAssets(S.data)) Store.save(S.data);
     const d = view();
     C = compute(d);
     C.series = series(d, C.txs);
@@ -1503,9 +1559,9 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   const days = (a, b) => (parseIso(b) - parseIso(a)) / 864e5;
   function detectPlans(txs, list) {
     const plans = [], byTx = {};
-    const assets = [...new Set(txs.filter((t) => t.type === "buy").map((t) => t.asset))];
+    const assets = [...new Set(txs.filter((t) => t.type === "buy" && !t.bonus).map((t) => t.asset))];
     for (const id of assets) {
-      const buys = txs.filter((t) => t.type === "buy" && t.asset === id);
+      const buys = txs.filter((t) => t.type === "buy" && t.asset === id && !t.bonus);
       const used = new Set();
       for (let s = 0; s < buys.length; s++) {
         if (used.has(buys[s].id)) continue;
@@ -1514,8 +1570,9 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
           const chain = [buys[s]];
           let last = buys[s];
           for (;;) {
-            // nächster passender Kauf im Zeitfenster, Betrag ähnlich dem letzten (±25 %)
-            const cand = buys.filter((b) => !used.has(b.id) && !chain.includes(b) && days(last.date, b.date) >= r.min && days(last.date, b.date) <= r.max && Math.abs(buyAmt(b) - buyAmt(last)) <= 0.25 * buyAmt(last) + 1);
+            // nächster Kauf im Zeitfenster. Die Rate darf sich ändern (halb bis doppelt so viel wie zuletzt),
+            // bei mehreren Käufen zählt der mit dem ähnlichsten Betrag
+            const cand = buys.filter((b) => !used.has(b.id) && !chain.includes(b) && days(last.date, b.date) >= r.min && days(last.date, b.date) <= r.max && buyAmt(b) >= 0.5 * buyAmt(last) - 1 && buyAmt(b) <= 2 * buyAmt(last) + 1);
             if (!cand.length) break;
             cand.sort((x, y) => Math.abs(buyAmt(x) - buyAmt(last)) - Math.abs(buyAmt(y) - buyAmt(last)));
             last = cand[0]; chain.push(last);
@@ -1533,7 +1590,12 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
         const held = (list.find((p) => p.id === id) || {}).shares > 0;
         const overdue = days(nextIso, today());
         const status = !held ? "beendet" : overdue > r.max ? "pausiert" : overdue > 3 ? "fällig" : "aktiv";
-        const plan = { id: id + "-" + ch[0].date, asset: id, rhythm: r, txs: ch, count: ch.length, first: ch[0].date, last: lastT.date, rate: buyAmt(lastT), total: ch.reduce((x, t) => x + buyAmt(t), 0), typDay, next: nextIso, status };
+        // Ratenänderungen: ab hier gilt ein neuer Betrag (Abweichung über 3 %, gerundet auf ganze Euro)
+        const changes = [];
+        for (let k = 1; k < ch.length; k++) { const a0 = buyAmt(ch[k - 1]), a1 = buyAmt(ch[k]); if (Math.abs(a1 - a0) > 0.03 * a0 + 0.5 && (k === ch.length - 1 || Math.abs(buyAmt(ch[k + 1]) - a1) <= 0.03 * a1 + 0.5)) changes.push({ date: ch[k].date, from: a0, to: a1 }); }
+        const until = isoDate(new Date(parseIso(lastT.date).getTime() + r.max * 864e5));
+        const bon = txs.filter((t) => t.type === "buy" && t.bonus && t.asset === id && t.date >= ch[0].date && t.date <= until);
+        const plan = { id: id + "-" + ch[0].date, asset: id, rhythm: r, txs: ch, count: ch.length, first: ch[0].date, last: lastT.date, rate: buyAmt(lastT), total: ch.reduce((x, t) => x + buyAmt(t), 0), typDay, next: nextIso, status, changes, bonusTxs: bon, bonus: bon.reduce((x, t) => x + t.shares * t.price, 0) };
         plans.push(plan);
         ch.forEach((t) => (byTx[t.id] = plan));
       }
@@ -1571,6 +1633,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   // ---------- Erklärungen (ⓘ) ----------
   const INFO = {
     "Budget": "Dein Monat auf einen Blick: Das Geldfluss-Diagramm zeigt, wie deine Einnahmen in Fixkosten, Lebenshaltung, Freizeit und Sparen fließen und was übrig bleibt. Jährliche oder wöchentliche Beträge rechnet Depotblick auf den Monat um. Was übrig bleibt, kannst du als Sparrate in die Hochrechnung übernehmen.",
+    "Saveback": "Geschenkte Anteile, z. B. Saveback oder Cashback bei Trade Republic. Sie zählen zu deinem Depot und zum Kaufwert, aber nicht zu dem Geld, das du selbst in Sparpläne gesteckt hast. Beim CSV-Import erkennt Depotblick sie am Wort „Saveback“ oder „Cashback“, von Hand markierst du sie in der Transaktion.",
     "Faustregel 50 / 30 / 20": "Eine verbreitete Orientierung, keine Pflicht: etwa 50 % der Einnahmen für Nötiges (Fixkosten und Lebenshaltung), höchstens 30 % für Wünsche (Freizeit) und mindestens 20 % zum Sparen. Grün heißt, du liegst im Rahmen.",
     "Sparquote": "Anteil deiner Einnahmen, den du sparst oder anlegst: Posten der Art „Sparen“ plus das, was am Monatsende übrig bleibt.",
     "Speicherdatei": "Deine Daten liegen zusätzlich in einer Datei auf deinem PC, z. B. in „Dokumente“. Depotblick speichert jede Änderung automatisch hinein. Die Datei kannst du sichern, in die Cloud legen oder verschicken und auf einem anderen Gerät mit „Speicherdatei öffnen“ laden. Klappt in Chrome und Edge am PC; in anderen Browsern nutzt du Backup exportieren und einspielen.",
@@ -1667,7 +1730,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   window.addEventListener("scroll", closePop, { passive: true });
 
   const TYPE_L = { buy: "Kauf", sell: "Verkauf", div: "Dividende" };
-  const planChip = (t) => (C.plans && C.plans.byTx[t.id] ? ' <span class="chip sm">Sparplan</span>' : "");
+  const planChip = (t) => (t.bonus ? ' <span class="chip sm bonus">Saveback</span>' : C.plans && C.plans.byTx[t.id] ? ' <span class="chip sm">Sparplan</span>' : "");
   const short = (iso) => { const [y, m, dd] = iso.split("-"); return dd + "." + m + "." + y.slice(2); };
   const gainPill = (v, pctv) => `<span class="pill ${v >= 0 ? "gain" : "loss"}">${v >= 0 ? "▲" : "▼"} ${pct(pctv).replace(" %", "")} %</span>`;
   const txAmount = (t) => (t.type === "div" ? (t.amount || 0) - (t.tax || 0) : t.type === "buy" ? -(t.shares * t.price + (t.fee || 0)) : t.shares * t.price - (t.fee || 0) - (t.tax || 0));
@@ -1699,22 +1762,23 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     renderTiles();
   };
   const sgn0 = (v) => (v >= 0 ? "+" : "−") + eur0.format(Math.abs(v));
-  // Veränderung zum vorigen Kurs je Position (nur wenn der vorige Kurs höchstens eine Woche älter ist)
+  // Kursänderung je Position zwischen den beiden letzten Marktkursen (nur abgerufene oder eingetragene Kurse,
+  // keine Kaufkurse: die stammen oft von anderen Börsen oder Uhrzeiten und verfälschen die Tagesbewegung)
   function moves() {
-    const lp = lastPriceDate();
-    return C.list.filter((p) => p.shares > 0).map((p) => {
-      const obs = priceObs(p.asset, C.txs);
-      if (obs.length < 2) return null;
-      const last = obs[obs.length - 1], prev = obs.slice(0, -1).filter((o) => o[0] < last[0]).pop();
+    const rows = C.list.filter((p) => p.shares > 0 && (p.asset.hist || []).length >= 2).map((p) => {
+      const h = p.asset.hist.slice().sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)), last = h[h.length - 1];
+      const prev = h.slice(0, -1).filter((o) => o[0] < last[0]).pop();
       if (!prev || !prev[1] || days(prev[0], last[0]) > 7) return null;
-      return { p, d: last[0], base: p.shares * prev[1], chg: p.shares * (last[1] - prev[1]), pct: last[1] / prev[1] - 1, latest: last[0] === lp };
+      return { p, d: last[0], from: prev[0], base: p.shares * prev[1], chg: p.shares * (last[1] - prev[1]), pct: last[1] / prev[1] - 1 };
     }).filter(Boolean);
+    const d = rows.map((r) => r.d).sort().pop();
+    return { d, rows: rows.filter((r) => r.d === d) };
   }
   function renderHero() {
     const tw = ttwrPa(C.series), yoc = C.cost > 0 ? C.div12 / C.cost : NaN, lp = lastPriceDate();
     $("#hVal").textContent = eur0.format(C.value); $("#hVal").title = eur.format(C.value);
-    const mv = moves().filter((m) => m.latest), base = mv.reduce((x, m) => x + m.base, 0), chg = mv.reduce((x, m) => x + m.chg, 0);
-    const day = mv.length && base > 0 ? `<span class="pill ${chg >= 0 ? "gain" : "loss"}">${chg >= 0 ? "▲" : "▼"} ${signed(chg)} ${lp === today() ? "heute" : "am " + short(lp)} · ${pct(chg / base)}</span>` : "";
+    const M = moves(), mv = M.rows, base = mv.reduce((x, m) => x + m.base, 0), chg = mv.reduce((x, m) => x + m.chg, 0);
+    const day = mv.length && base > 0 ? `<span class="pill ${chg >= 0 ? "gain" : "loss"}">${chg >= 0 ? "▲" : "▼"} ${sgn0(chg)} ${M.d === today() ? "heute" : "am " + short(M.d)} · ${pct(chg / base)}</span>` : "";
     $("#hLine").innerHTML = day + (C.cost > 0 ? `<span class="muted">Gewinn gesamt <b class="num ${cls(C.total)}">${sgn0(C.total)}</b> · <span class="num">${pct(C.total / C.cost)}</span></span>` : "");
     const viaPlans = C.plans.plans.reduce((x, p) => x + p.total, 0);
     $("#hKv").innerHTML = `
@@ -1724,13 +1788,13 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       <div class="kv"><span class="eyebrow">Kursgewinn${ii("Gewinn gesamt")}</span><span class="v ${cls(C.unreal)}">${sgn0(C.unreal)}</span><span class="s desk">${C.cost > 0 ? pct(C.unreal / C.cost) + " auf den Kaufwert" : ""}</span></div>`;
   }
   function renderMovers() {
-    const mv = moves(), lp = lastPriceDate();
-    $("#moversH").textContent = lp === today() ? "Heute am meisten bewegt" : "Zuletzt am meisten bewegt";
-    const open = C.list.filter((p) => p.shares > 0).length;
+    const M = moves(), open = C.list.filter((p) => p.shares > 0).length;
+    $("#moversH").textContent = !M.d ? "Kursbewegung" : M.d === today() ? "Heute am meisten bewegt" : "Am " + short(M.d) + " am meisten bewegt";
     $("#topAll").textContent = "Alle " + open + " →";
-    const top = mv.sort((a, b) => Math.abs(b.pct) - Math.abs(a.pct)).slice(0, 4);
-    $("#movers").innerHTML = top.length ? top.map((m) => `<div class="mvr" data-pos="${esc(m.p.id)}"><span class="nm">${esc(m.p.asset.name || m.p.asset.symbol)}</span><span class="num ${cls(m.chg)}">${sgn0(m.chg)}</span>${gainPill(m.chg, m.pct)}</div>`).join("")
-      : '<p class="hint">Sobald es für deine Positionen mindestens zwei Kurse kurz hintereinander gibt, siehst du hier, was sich am stärksten bewegt hat.</p>';
+    const top = M.rows.slice().sort((a, b) => Math.abs(b.pct) - Math.abs(a.pct)).slice(0, 5);
+    const from = M.rows.length ? M.rows.map((r) => r.from).sort()[0] : null;
+    $("#movers").innerHTML = top.length ? top.map((m) => `<div class="mvr" data-pos="${esc(m.p.id)}"><span class="nm">${esc(m.p.asset.name || m.p.asset.symbol)}</span><span class="num ${cls(m.chg)}">${sgn0(m.chg)}</span>${gainPill(m.chg, m.pct)}</div>`).join("") + `<p class="note" style="margin-top:6px">Veränderung zum Kurs vom ${short(from)}, ${M.rows.length} von ${open} Positionen mit aktuellem Kurs</p>`
+      : '<p class="hint">Hier siehst du, welche Positionen sich zuletzt am stärksten bewegt haben. Dafür braucht es zwei Kurse kurz hintereinander, am einfachsten über „Kurse aktualisieren“ mit automatischem Kursabruf.</p>';
     bindPos($("#movers"));
   }
   // Nächste Dividende: gleicher Zahltag wie vor einem Jahr, Betrag nach heutiger Stückzahl
@@ -1781,7 +1845,10 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     return "0000";
   }
   function renderPerf() {
-    seg("#rangeSeg", RANGES, S.range, (v) => { S.range = v; savePrefs(); renderPerf(); });
+    // Knöpfe nur einmal bauen: neu gebaut springt die Leiste am Handy zurück an den Anfang
+    const rs = $("#rangeSeg");
+    if (!rs.children.length) seg("#rangeSeg", RANGES, S.range, (v) => { S.range = v; savePrefs(); renderPerf(); });
+    else $$("button", rs).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === S.range));
     const all = C.series;
     const from = rangeStart(S.range);
     let pts = all.filter((p) => p.d >= from);
@@ -2042,7 +2109,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   {
     const c = S.fc.crash || {};
     S.fc.crash = { on: !!c.on, scen: c.scen || "2008", at: c.at || c.year || 5, mode: c.mode === "every" ? "every" : "once", every: c.every || 20, drop: c.drop || 50, rec: c.rec || 0 };
-    if (!["fc", "cr", "dt"].includes(S.fc.tab)) S.fc.tab = "fc";
+    if (!["fc", "cr", "st", "dt"].includes(S.fc.tab)) S.fc.tab = "fc";
     delete S.fc.hist;
   }
   function depotDrop(drop, B) {
@@ -2120,7 +2187,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
         : p.status === "aktiv" ? `<span class="pill gain">aktiv</span><span class="note">nächste ca. ${fmtDate(p.next)}</span>`
         : `<span class="pill neu">${p.status}</span><span class="note">zuletzt ${fmtDate(p.last)}</span>`;
       return `<div class="card plan" data-pos="${esc(p.asset)}">
-        <div class="top"><div style="display:grid;gap:2px;min-width:0"><span class="nm">${esc(a.name || a.symbol)}</span><span class="note">${esc(planWhen(p))} · ${p.count}× seit ${fmtDate(p.first).slice(3)}</span></div>
+        <div class="top"><div style="display:grid;gap:2px;min-width:0"><span class="nm">${esc(a.name || a.symbol)}</span><span class="note">${esc(planWhen(p))} · ${p.count}× seit ${fmtDate(p.first).slice(3)}</span>${p.changes.length ? `<span class="note">Rate ${p.changes.slice(-2).map((c, i) => (i ? "" : eur0.format(c.from) + " → ") + eur0.format(c.to) + " ab " + fmtDate(c.date).slice(3)).join(" → ")}</span>` : ""}${p.bonus > 0 ? `<span class="note bonusc">+ ${eur0.format(p.bonus)} Saveback geschenkt</span>` : ""}</div>
         <div class="amt">${eur0.format(p.rate)}<small>${p.rhythm.key === "m" ? "pro Monat" : "≈ " + eur0.format(perM) + " / Monat"}</small></div></div>
         <div class="runs" aria-label="Ausführungen der letzten 12 Monate">${runs.map((r) => `<i class="${r.st === "ok" ? "" : r.st}" title="${r.label}: ${r.st === "ok" ? "ausgeführt" : r.st === "due" ? "fällig, noch nicht eingetragen" : "keine Ausführung"}"></i>`).join("")}</div>
         <div class="runs-l"><span>${runs[0].label}</span><span>${eur0.format(p.total)} eingezahlt</span><span>${runs[11].label}</span></div>
@@ -2134,7 +2201,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     S.fc.tab = t; savePrefs();
     $$(".sp .subtabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === t));
     $$(".sp [data-pane]").forEach((p) => (p.hidden = p.dataset.pane !== t));
-    if (t === "fc") renderFc(); else if (t === "cr") renderCr(); else renderDt();
+    if (t === "fc") renderFc(); else if (t === "cr") renderCr(); else if (t === "st") renderSt(); else renderDt();
   }
   PAGE_RENDER.sparplaene = (d) => {
     renderPlans(d || view());
@@ -2274,6 +2341,38 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   }
 
   // ---------- Details ----------
+  // ---------- Statistik zu den Sparplänen ----------
+  function planStats(p) {
+    const pos = C.list.find((x) => x.id === p.asset), price = pos ? pos.price : 0;
+    const shares = p.txs.reduce((x, t) => x + t.shares, 0), bShares = p.bonusTxs.reduce((x, t) => x + t.shares, 0);
+    const value = shares * price, bValue = bShares * price;
+    return { a: pos ? pos.asset : { name: p.asset }, price, shares, value, paid: p.total, gain: value - p.total, pct: p.total > 0 ? value / p.total - 1 : NaN, avg: shares > 0 ? p.total / shares : 0, bonus: p.bonus, bValue };
+  }
+  function renderSt() {
+    const P = C.plans.plans, sm = planSummary(P), st = P.map((p) => ({ p, s: planStats(p) }));
+    const paid = st.reduce((x, r) => x + r.s.paid, 0), value = st.reduce((x, r) => x + r.s.value, 0), runs = P.reduce((x, p) => x + p.count, 0);
+    const bonusTx = C.txs.filter((t) => t.type === "buy" && t.bonus), bonusSum = bonusTx.reduce((x, t) => x + t.shares * t.price, 0);
+    const bonusVal = bonusTx.reduce((x, t) => { const pos = C.list.find((q) => q.id === t.asset); return x + t.shares * (pos ? pos.price : t.price); }, 0);
+    $("#spStK").innerHTML = `
+      <div class="card kpi big"><span class="eyebrow">Über Sparpläne eingezahlt</span><span class="v">${eur0.format(paid)}</span><span class="s">${runs} Ausführungen · heute ${eur0.format(value)} wert</span></div>
+      <div class="card kpi"><span class="eyebrow">Gewinn der Sparplan-Käufe</span><span class="v ${cls(value - paid)}">${sgn0(value - paid)}</span><span class="s">${paid > 0 ? pct(value / paid - 1) : "–"} auf das Eingezahlte</span></div>
+      <div class="card kpi"><span class="eyebrow">Saveback geschenkt${ii("Saveback")}</span><span class="v gain">${eur0.format(bonusSum)}</span><span class="s">${bonusTx.length ? bonusTx.length + "× · heute " + eur0.format(bonusVal) + " wert" : "Noch keins erfasst"}</span></div>
+      <div class="card kpi"><span class="eyebrow">Aktive Sparpläne</span><span class="v">${sm.n}</span><span class="s">${eur0.format(sm.perMonth)} pro Monat</span></div>`;
+    // Monatsbalken: eigenes Geld unten, Saveback oben drauf
+    const now = new Date(), months = [], inPlan = C.plans.byTx;
+    for (let k = 23; k >= 0; k--) {
+      const dt = new Date(now.getFullYear(), now.getMonth() - k, 1), key = isoDate(dt).slice(0, 7);
+      const own = C.txs.filter((t) => inPlan[t.id] && t.date.startsWith(key)).reduce((x, t) => x + buyAmt(t), 0);
+      const gift = bonusTx.filter((t) => t.date.startsWith(key)).reduce((x, t) => x + t.shares * t.price, 0);
+      months.push({ l: MONTHS[dt.getMonth()], y: dt.getFullYear(), own, gift });
+    }
+    const mx = Math.max(...months.map((m) => m.own + m.gift), 1);
+    $("#spStBars").innerHTML = months.map((m, i) => `<div class="m" title="${m.l} ${m.y}: ${eur0.format(m.own)} Sparpläne${m.gift ? " + " + eur.format(m.gift) + " Saveback" : ""}"><div class="bars"><b class="g" style="height:${(m.gift / mx) * 100}%"></b><b class="o" style="height:${(m.own / mx) * 100}%"></b></div><span>${i % 3 === 0 ? m.l[0] + (m.l === "Jan" || i === 0 ? " " + String(m.y).slice(2) : "") : "&nbsp;"}</span></div>`).join("");
+    const rate = (p) => (p.changes.length ? p.changes.map((c, i) => (i ? "" : eur0.format(c.from) + " → ") + eur0.format(c.to)).join(" → ") : eur0.format(p.rate));
+    $("#spStTbl").innerHTML = st.length ? `<thead><tr><th>Sparplan</th><th class="r">Ausf.</th><th>Rate</th><th class="r">Eingezahlt</th><th class="r">Ø Kaufkurs</th><th class="r">Kurs</th><th class="r">Wert</th><th class="r">Gewinn</th><th class="r">Saveback</th></tr></thead><tbody>${st.map(({ p, s }) => `<tr class="click" data-pos="${esc(p.asset)}"><td><div class="nm">${esc(s.a.name || s.a.symbol)}</div><div class="note">${esc(planWhen(p))} · ${p.status}</div></td><td class="r num">${p.count}</td><td class="num" style="white-space:nowrap">${rate(p)}</td><td class="r num">${eur0.format(s.paid)}</td><td class="r num">${eur.format(s.avg)}</td><td class="r num">${eur.format(s.price)}</td><td class="r num">${eur0.format(s.value)}</td><td class="r">${gainPill(s.gain, s.pct)}</td><td class="r num ${s.bonus ? "gain" : "muted"}">${s.bonus ? "+" + eur0.format(s.bonus) : "–"}</td></tr>`).join("")}</tbody>` : '<tbody><tr><td class="empty">Noch kein Sparplan erkannt.</td></tr></tbody>';
+    $("#spStList").innerHTML = st.map(({ p, s }) => `<div class="li" data-pos="${esc(p.asset)}"><span style="min-width:0"><div class="nm">${esc(s.a.name || s.a.symbol)}</div><div class="sub">${p.count}× · Rate ${rate(p)} · Ø ${eur.format(s.avg)}${s.bonus ? ` · <span class="gain">+${eur0.format(s.bonus)} Saveback</span>` : ""}</div></span><span class="rv"><span class="num">${eur0.format(s.value)}</span>${gainPill(s.gain, s.pct)}</span></div>`).join("");
+    bindPos($("#spStTbl")); bindPos($("#spStList"));
+  }
   function renderDt() {
     const B = fcBase(), o = fcOpts(B), R = fcRun(o, B), Y = S.fc.years, y0 = new Date().getFullYear(), f = S.fc;
     $("#spDtNote").textContent = `erwartet ${numStr(f.ret)} %, Spanne ${numStr(f.retMin)}–${numStr(f.retMax)} %${R.crash ? ", mit Krise" : ""}`;
@@ -2625,6 +2724,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     $$("#txType button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === v));
     $$('#txForm [data-for="trade"]').forEach((e) => (e.hidden = v === "div"));
     $$('#txForm [data-for="div"]').forEach((e) => (e.hidden = v !== "div"));
+    $("#rowBonus").hidden = v !== "buy";
   }
   $$("#txType button").forEach((b) => b.addEventListener("click", () => setTxType(b.dataset.v)));
   function fillAssetList() {
@@ -2652,6 +2752,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     const de = (v) => (v ? nf(6).format(v) : "");
     $("#fShares").value = t ? de(t.shares) : ""; $("#fPrice").value = t ? de(t.price) : "";
     $("#fFee").value = t ? de(t.fee) : ""; $("#fTax").value = t ? de(t.tax) : ""; $("#fAmount").value = t ? de(t.amount) : "";
+    $("#fBonus").checked = !!(t && t.bonus);
     setTxType(t ? t.type : (preset && preset.type) || "buy");
     if (preset && preset.asset && S.data.assets[preset.asset]) { $("#fAsset").value = S.data.assets[preset.asset].symbol; $("#fName").value = S.data.assets[preset.asset].name; }
     if (preset && preset.date) $("#fDate").value = preset.date;
@@ -2679,9 +2780,10 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       if (!held || held.shares + 1e-9 < shares) return err("Du hältst am " + fmtDate(date) + " nur " + nf(4).format(held ? held.shares : 0) + " Stück.");
     }
     leaveDemo();
-    if (!S.data.assets[id]) S.data.assets[id] = { id, symbol: sym, name: $("#fName").value.trim() || sym, cls: guessClass(sym, $("#fName").value), country: guessCountry(sym), sector: guessSector(sym), hist: [] };
+    if (!S.data.assets[id]) S.data.assets[id] = newAsset(id, sym, $("#fName").value.trim() || sym);
     const tx = { id: editTx ? editTx.id : uid(), date, type: txType, asset: id, shares: txType === "div" ? (shares > 0 ? shares : 0) : shares, price: txType === "div" ? 0 : price, fee: txType === "div" ? 0 : fee, tax };
     if (txType === "div") tx.amount = amount;
+    if (txType === "buy" && $("#fBonus").checked) tx.bonus = true;
     if (editTx) S.data.txs[S.data.txs.indexOf(editTx)] = tx; else S.data.txs.push(tx);
     commit();
     $("#dlgTx").close();
@@ -2693,9 +2795,33 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     S.data.txs = S.data.txs.filter((t) => t !== editTx);
     commit(); $("#dlgTx").close(); toast("Transaktion gelöscht");
   });
+  // Broker wie Trade Republic exportieren ETFs oft ohne „ETF“ im Namen, z. B. „Core Stoxx 600 EUR (Acc)“
+  const ETF_RE = /\b(etf|etc|ucits|ishares|ishs|vanguard|xtrackers|amundi|spdr|lyxor|invesco|wisdomtree|vaneck|global x|hanetf|l&g|franklin|comstage|msci|stoxx|s&p|ftse|nasdaq|russell|dax|index|leveraged|levered|daily|short|[23]x)\b|\((acc|dist|thes|aussch)\)/;
+  // Bei ETFs und Fonds ist das ISIN-Land nur der Fondssitz, nicht das, worin investiert wird
+  function newAsset(id, sym, name) {
+    const cls = guessClass(sym, name), fund = /^(ETF|Fonds)$/.test(cls);
+    return { id, symbol: sym, name, cls, country: fund ? "" : guessCountry(sym), sector: fund ? "" : guessSector(sym), hist: [] };
+  }
+  // Ältere Einträge nachbessern, die als Aktie geraten wurden; von Hand gewählte Klassen bleiben
+  function fixAssets(d) {
+    let n = 0;
+    Object.values(d.assets).forEach((a) => {
+      if (a.clsManual || (a.cls && a.cls !== "Aktie")) return;
+      if (guessClass(a.symbol, a.name) !== "ETF") return;
+      a.cls = "ETF"; n++;
+      if (a.country && a.country === guessCountry(a.symbol)) a.country = "";
+      if (a.sector && a.sector === guessSector(a.symbol)) a.sector = "";
+    });
+    return n;
+  }
   function guessClass(sym, name) {
-    const n = (name || "").toLowerCase();
-    if (/etf|ishares|vanguard|xtrackers|amundi|spdr|msci|ucits|lyxor|invesco/.test(n)) return "ETF";
+    const n = (name || "").toLowerCase(), s = String(sym || "").trim().toUpperCase();
+    if (STOCKS[s]) return "Aktie";
+    // In Europa handelbare ETFs haben keine US- oder kanadische ISIN (z. B. „Nasdaq Inc.“ ist eine Aktie)
+    if (isIsin(s) && /^(US|CA)/.test(s)) return /\betf\b/.test(n) ? "ETF" : /bitcoin|ethereum/.test(n) ? "Krypto" : "Aktie";
+    if (ETF_RE.test(n)) return "ETF";
+    // Irland und Luxemburg sind fast immer Fondsstandorte; mit Währung im Namen eindeutig
+    if (/^(IE|LU)/.test(s) && isIsin(s) && /\b(usd|eur|gbp|chf|jpy)\b/.test(n)) return "ETF";
     if (/bitcoin|ethereum|btc|eth/.test(n) || /^(BTC|ETH|SOL)/i.test(sym)) return "Krypto";
     if (/anleihe|bond|treasury/.test(n)) return "Anleihe";
     if (/gold|silber|silver/.test(n)) return "Rohstoff";
@@ -2728,6 +2854,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   $("#assetForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const a = editAsset;
+    if (a.cls !== $("#aCls").value) a.clsManual = true;
     a.name = $("#aName").value.trim() || a.symbol; a.cls = $("#aCls").value; a.sector = $("#aSector").value.trim(); a.country = $("#aRegion").value.trim(); delete a.region;
     const tk = $("#aTicker").value.trim(); if (tk) a.ticker = tk; else delete a.ticker; if (tk && a.quote && a.quote.symbol !== tk) delete a.quote;
     a.countryMix = parseMix($("#aCMix").value); a.sectorMix = parseMix($("#aSMix").value);
@@ -2804,11 +2931,12 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     }
     out.push(cur); return out.map((s) => s.trim());
   }
+  const BONUS_RE = /saveback|cashback|cash back|bonus|prämie|praemie|gratisaktie|incentive|belohnung|reward/i;
   function mapType(v) {
     const s = String(v || "").toLowerCase();
     if (/verkauf|sell|sale|veräußerung/.test(s)) return "sell";
     if (/divid|ausschütt|distribution|ertrag|zins|interest|coupon|kupon/.test(s)) return "div";
-    if (/kauf|buy|purchase|sparplan|savings|einbuchung/.test(s)) return "buy";
+    if (/kauf|buy|purchase|sparplan|savings|einbuchung|saveback|cashback|bonus|prämie|praemie|reward/.test(s)) return "buy";
     return null;
   }
   function parseCsv(text) {
@@ -2843,7 +2971,9 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       } else if (!(amount > 0)) {
         if (shares > 0 && price > 0) { /* Dividende je Stück */ } else return errors.push(`Zeile ${line}: Dividendenbetrag fehlt`);
       }
-      rows.push({ date, type, sym, name: g("name") || "", shares: shares || 0, price: type === "div" ? 0 : price, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined });
+      // Saveback, Cashback, Prämien: Anteile gibt es geschenkt, das Geld kommt nicht vom eigenen Konto
+      const bonus = type === "buy" && BONUS_RE.test(l);
+      rows.push({ date, type, sym, name: g("name") || "", shares: shares || 0, price: type === "div" ? 0 : price, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined, bonus });
     });
     return { rows, errors, sep, col, head };
   }
@@ -2892,12 +3022,13 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     let n = 0;
     impParsed.rows.forEach((r) => {
       const id = assetId(r.sym);
-      if (!S.data.assets[id]) S.data.assets[id] = { id, symbol: r.sym, name: r.name || r.sym, cls: guessClass(r.sym, r.name), country: guessCountry(r.sym), sector: guessSector(r.sym), hist: [] };
+      if (!S.data.assets[id]) S.data.assets[id] = newAsset(id, r.sym, r.name || r.sym);
       else if (r.name && S.data.assets[id].name === S.data.assets[id].symbol) S.data.assets[id].name = r.name;
       const t = { id: uid(), date: r.date, type: r.type, asset: id, shares: r.shares, price: r.price, fee: r.fee, tax: r.tax };
       if (r.type === "div") t.amount = r.amount;
+      if (r.bonus) t.bonus = true;
       const k = txKey(t);
-      if (have[k] > 0) { have[k]--; return; }
+      if (have[k] > 0) { have[k]--; if (r.bonus) { const ex = S.data.txs.find((x) => !x.bonus && txKey(x) === k); if (ex) { ex.bonus = true; n++; } } return; }
       S.data.txs.push(t); n++;
     });
     commit();
