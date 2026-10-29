@@ -576,10 +576,10 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     <a class="nav" href="#uebersicht" data-r="uebersicht"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Übersicht</a>
     <a class="nav" href="#positionen" data-r="positionen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Positionen</a>
     <a class="nav" href="#sparplaene" data-r="sparplaene"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3 11l3.5-3.5 2.5 2L13 4.5M10.5 4.5H13V7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sparpläne<span class="pill acc" id="navPlanN" style="margin-left:auto;padding:0 7px;font-size:.7rem" hidden></span></a>
+    <a class="nav" href="#statistiken" data-r="statistiken"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
     <a class="nav" href="#budget" data-r="budget"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.5"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
     <a class="nav" href="#dividenden" data-r="dividenden"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v7M10 6.2c-.4-.7-1.1-1-2-1-1.1 0-1.9.6-1.9 1.4 0 1.9 3.9 1 3.9 3 0 .8-.8 1.4-2 1.4-.9 0-1.7-.4-2-1.1" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>Dividenden</a>
     <a class="nav" href="#transaktionen" data-r="transaktionen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10l-3-3M13 11H3l3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Transaktionen</a>
-    <a class="nav" href="#statistiken" data-r="statistiken"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
     <div class="sep"></div>
     <a class="nav" href="#import" data-r="import"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3M2.5 12.5v1h11v-1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Import</a>
     <a class="nav" href="#einstellungen" data-r="einstellungen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Einstellungen</a>
@@ -761,6 +761,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
           <div class="sumline" id="spSum"></div>
         </div>
         <div class="plans" id="plans"></div>
+        <button type="button" class="link" id="spOld" hidden style="justify-self:start"></button>
 
         <div class="subtabs" role="tablist" aria-label="Bereiche">
           <button type="button" role="tab" data-tab="fc">Hochrechnung</button>
@@ -978,8 +979,8 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       <a href="#uebersicht" data-r="uebersicht"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Übersicht</a>
       <a href="#positionen" data-r="positionen"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Positionen</a>
       <a href="#sparplaene" data-r="sparplaene"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3 11l3.5-3.5 2.5 2L13 4.5M10.5 4.5H13V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sparpläne</a>
-      <a href="#budget" data-r="budget"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.4"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
       <a href="#statistiken" data-r="statistiken"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
+      <a href="#budget" data-r="budget"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.4"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
       <a href="#mehr" data-r="mehr"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><circle cx="3.5" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="12.5" cy="8" r="1.4" fill="currentColor"/></svg>Mehr</a>
     </nav>
   </div>
@@ -2174,11 +2175,17 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     }
     return out;
   }
+  // Pausierte und beendete Pläne sind keine Sparpläne mehr: standardmäßig ausgeblendet
+  const isLive = (p) => p.status === "aktiv" || p.status === "fällig";
+  const shownPlans = () => C.plans.plans.filter((p) => S.fc.showOld || isLive(p));
   function renderPlans(d) {
-    const P = C.plans, host = $("#plans");
+    const P = { plans: shownPlans(), byTx: C.plans.byTx }, host = $("#plans"), nOld = C.plans.plans.filter((p) => !isLive(p)).length;
+    $("#spOld").hidden = !nOld;
+    $("#spOld").textContent = S.fc.showOld ? "Pausierte und beendete ausblenden" : (nOld === 1 ? "1 pausierten oder beendeten Sparplan" : nOld + " pausierte oder beendete Sparpläne") + " anzeigen";
     const sm = planSummary(P.plans);
-    $("#spSum").innerHTML = [["Pro Monat", eur0.format(sm.perMonth)], ["Bisher eingezahlt", eur0.format(P.plans.reduce((x, p) => x + p.total, 0))], ["Depot heute", eur0.format(C.value)]].map(([l, v]) => `<div><span class="eyebrow">${l}</span><span class="v">${v}</span></div>`).join("");
+    $("#spSum").innerHTML = [["Pro Monat", eur0.format(sm.perMonth)], ["Bisher eingezahlt", eur0.format(C.plans.plans.reduce((x, p) => x + p.total, 0))], ["Depot heute", eur0.format(C.value)]].map(([l, v]) => `<div><span class="eyebrow">${l}</span><span class="v">${v}</span></div>`).join("");
     host.classList.toggle("one", P.plans.length === 1);
+    if (!P.plans.length && nOld) { host.innerHTML = '<div class="card plans-empty"><p class="hint" style="margin:0">Gerade läuft kein Sparplan. Frühere findest du über den Link darunter.</p></div>'; return; }
     if (!P.plans.length) { host.innerHTML = '<div class="card plans-empty"><p class="hint" style="margin:0">Noch kein Sparplan erkannt. Sobald ein Wertpapier mindestens dreimal in festem Rhythmus mit ähnlichem Betrag gekauft wurde, erscheint es hier. Die Hochrechnung unten funktioniert auch so: trag einfach eine Sparrate ein.</p></div>'; return; }
     host.innerHTML = P.plans.map((p) => {
       const a = d.assets[p.asset] || { name: p.asset }, runs = planRuns(p), perM = p.rate * p.rhythm.perMonth;
@@ -2209,6 +2216,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     setTab(S.fc.tab);
   };
   function fcChanged() { savePrefs(); syncInputs(); setTab(S.fc.tab); }
+  $("#spOld").addEventListener("click", () => { S.fc.showOld = !S.fc.showOld; savePrefs(); PAGE_RENDER.sparplaene(); });
 
   // ---------- Eingaben ----------
   function syncInputs() {
@@ -2349,7 +2357,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     return { a: pos ? pos.asset : { name: p.asset }, price, shares, value, paid: p.total, gain: value - p.total, pct: p.total > 0 ? value / p.total - 1 : NaN, avg: shares > 0 ? p.total / shares : 0, bonus: p.bonus, bValue };
   }
   function renderSt() {
-    const P = C.plans.plans, sm = planSummary(P), st = P.map((p) => ({ p, s: planStats(p) }));
+    const P = shownPlans(), sm = planSummary(C.plans.plans), st = P.map((p) => ({ p, s: planStats(p) }));
     const paid = st.reduce((x, r) => x + r.s.paid, 0), value = st.reduce((x, r) => x + r.s.value, 0), runs = P.reduce((x, p) => x + p.count, 0);
     const bonusTx = C.txs.filter((t) => t.type === "buy" && t.bonus), bonusSum = bonusTx.reduce((x, t) => x + t.shares * t.price, 0);
     const bonusVal = bonusTx.reduce((x, t) => { const pos = C.list.find((q) => q.id === t.asset); return x + t.shares * (pos ? pos.price : t.price); }, 0);
