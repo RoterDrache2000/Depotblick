@@ -389,6 +389,16 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 @media (prefers-reduced-motion: reduce) { .sp .toggle input, .sp .toggle input::after { transition: none; } }
 /* Budget */
 .btn.sm { padding: 4px 10px; font-size: 0.78rem; }
+.sp .plan .pact { display: flex; justify-content: flex-end; margin-top: 8px; }
+.sp .plan.auto { border-style: dashed; }
+.plrates { display: grid; gap: 6px; }
+.plr { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.plr .pre { color: var(--muted); font-size: 0.82rem; }
+.plr .unit2 { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.plr .unit2 input { border: 0; text-align: right; font-family: var(--font-mono); border-radius: 0; min-width: 0; width: 100%; }
+.plr .unit2 span { padding: 0 8px; color: var(--muted); }
+.plr .del { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 4px 6px; }
+
 .chip.sm.bonus { background: var(--gain-soft); color: var(--gain); }
 .note.bonusc { color: var(--gain); }
 .field.chk { display: flex; flex-direction: row; gap: 10px; align-items: flex-start; cursor: pointer; background: var(--sunk); border-radius: 8px; padding: 10px 12px; }
@@ -761,7 +771,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
           <div class="sumline" id="spSum"></div>
         </div>
         <div class="plans" id="plans"></div>
-        <button type="button" class="link" id="spOld" hidden style="justify-self:start"></button>
+        <div class="row" style="justify-content:space-between;gap:8px 16px"><span class="row" style="gap:8px 16px"><button type="button" class="btn ghost sm" id="spAdd">+ Sparplan festlegen</button><span class="note" id="spAutoNote"></span></span><button type="button" class="link" id="spOld" hidden></button></div>
 
         <div class="subtabs" role="tablist" aria-label="Bereiche">
           <button type="button" role="tab" data-tab="fc">Hochrechnung</button>
@@ -985,6 +995,24 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     </nav>
   </div>
 </div>
+
+<!-- Sparplan festlegen -->
+<dialog id="dlgPlan">
+  <form method="dialog" id="planForm" novalidate>
+    <div class="dhead"><h2 id="plTitle">Sparplan festlegen</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
+    <p class="note" style="margin:0">Trag den Plan so ein, wie er bei deinem Broker steht. Depotblick ordnet deine Käufe dann diesem Plan zu, statt zu raten.</p>
+    <div class="fields">
+      <div class="field full"><label for="plAsset">Wertpapier</label><select id="plAsset"></select></div>
+      <div class="field"><label for="plRh">Rhythmus</label><select id="plRh"><option value="m">monatlich</option><option value="2m">alle 2 Monate</option><option value="q">vierteljährlich</option><option value="2w">alle 2 Wochen</option><option value="w">wöchentlich</option></select></div>
+      <div class="field"><label for="plDay">Ausführungstag</label><input id="plDay" inputmode="numeric" placeholder="z. B. 2 oder 16"></div>
+      <div class="field full"><label>Betrag <span class="note">bei Änderungen eine Zeile mehr mit „ab“-Datum</span></label><div class="plrates" id="plRates"></div><button type="button" class="link" id="plRateAdd" style="justify-self:start">+ Rate geändert ab …</button></div>
+      <label class="field full chk"><input type="checkbox" id="plEndOn"><span><b>Plan beendet</b><small>Ab dem Datum zählt er nicht mehr zu deinen laufenden Sparplänen</small></span></label>
+      <div class="field" id="plEndRow" hidden><label for="plEnd">Beendet am</label><input id="plEnd" type="date"></div>
+    </div>
+    <p class="err" id="plErr" hidden></p>
+    <div class="dfoot"><button type="button" class="btn danger left" id="plDelete" hidden>Löschen</button><button type="button" class="btn ghost" data-close>Abbrechen</button><button class="btn" type="submit">Speichern</button></div>
+  </form>
+</dialog>
 
 <!-- Buchung -->
 <dialog id="dlgTx">
@@ -1255,16 +1283,19 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   // ---------- Speicher (nur Browser, funktioniert überall) ----------
   const KEY = "depotblick.v1";
   const hooks = { saved: null, status: null };
+  // Selbst festgelegte Sparpläne: { id, asset, rhythm, day, start, end, rates: [{ from, amt }] }
+  const normPlans = (a) => (Array.isArray(a) ? a.filter((x) => x && x.asset && x.start && Array.isArray(x.rates) && x.rates.length) : []);
+  const mkData = (d) => ({ txs: (d && d.txs) || [], assets: (d && d.assets) || {}, budget: normBudget(d && d.budget), plans: normPlans(d && d.plans) });
   const normBudget = (b) => ({ inc: Array.isArray(b && b.inc) ? b.inc : [], exp: Array.isArray(b && b.exp) ? b.exp : [], cushion: b && b.cushion != null && isFinite(+b.cushion) ? +b.cushion : null, debt: b && (b.debt === "none" || b.debt === "some") ? b.debt : null });
   const Store = {
     ok: true,
     load() {
-      try { const raw = localStorage.getItem(KEY); if (raw) { const d = JSON.parse(raw); return { txs: d.txs || [], assets: d.assets || {}, budget: normBudget(d.budget) }; } }
+      try { const raw = localStorage.getItem(KEY); if (raw) return mkData(JSON.parse(raw)); }
       catch (e) { this.ok = false; }
-      return { txs: [], assets: {}, budget: normBudget() };
+      return mkData();
     },
     save(data) {
-      try { localStorage.setItem(KEY, JSON.stringify({ v: 1, txs: data.txs, assets: data.assets, budget: data.budget })); this.ok = true; }
+      try { localStorage.setItem(KEY, JSON.stringify({ v: 1, txs: data.txs, assets: data.assets, budget: data.budget, plans: data.plans || [] })); this.ok = true; }
       catch (e) { this.ok = false; }
       if (hooks.saved) hooks.saved(data);
       updateStatus();
@@ -1540,7 +1571,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     const d = view();
     C = compute(d);
     C.series = series(d, C.txs);
-    C.plans = detectPlans(C.txs, C.list);
+    C.plans = detectPlans(C.txs, C.list, S.data.plans || []);
     { const n = planSummary(C.plans.plans).n, b = $("#navPlanN"); b.hidden = !n; b.textContent = n; }
     $("#demoBanner").hidden = !isEmpty() || S.view !== "uebersicht";
     updateStatus();
@@ -1558,11 +1589,63 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   ];
   const buyAmt = (t) => t.shares * t.price + (t.fee || 0);
   const days = (a, b) => (parseIso(b) - parseIso(a)) / 864e5;
-  function detectPlans(txs, list) {
-    const plans = [], byTx = {};
-    const assets = [...new Set(txs.filter((t) => t.type === "buy" && !t.bonus).map((t) => t.asset))];
+  // Termine eines selbst festgelegten Plans bis zum Stichtag
+  function planSlots(def, until) {
+    const r = RHYTHMS.find((x) => x.key === def.rhythm) || RHYTHMS[0], s = parseIso(def.start), out = [];
+    const mstep = { m: 1, "2m": 2, q: 3 }[r.key];
+    if (mstep) {
+      const day = def.day || s.getDate();
+      for (let k = 0; k < 1200; k++) {
+        const y = s.getFullYear(), m = s.getMonth() + k * mstep, last = new Date(y, m + 1, 0).getDate(), d = new Date(y, m, Math.min(day, last));
+        if (d > until) break;
+        if (days(def.start, isoDate(d)) >= -6) out.push(isoDate(d));
+      }
+    } else {
+      const step = r.key === "w" ? 7 : 14;
+      for (let d = new Date(s); d <= until; d = new Date(d.getTime() + step * 864e5)) out.push(isoDate(d));
+    }
+    return { r, slots: out };
+  }
+  function manualPlan(def, txs, used) {
+    const t0 = today(), end = def.end || null, until = parseIso(end && end < t0 ? end : t0);
+    until.setDate(until.getDate() + 400);
+    const { r, slots } = planSlots(def, until), win = r.key === "w" || r.key === "2w" ? 3 : 6;
+    const buys = txs.filter((t) => t.type === "buy" && !t.bonus && t.asset === def.asset && !used.has(t.id) && t.date >= isoDate(new Date(parseIso(def.start).getTime() - win * 864e5)) && (!end || t.date <= end));
+    const got = [], round = (t) => Math.abs(t.shares * t.price - Math.round(t.shares * t.price)) < 0.02;
+    let lastHit = -1, extra = [];
+    if (buys.some((t) => t.plan)) {
+      // Der Broker kennzeichnet Ausführungen: alle glatten zählen, auch wenn sich der Tag mal geändert hat
+      buys.filter((t) => t.plan).forEach((t) => { used.add(t.id); if (round(t)) got.push(t); else extra.push(t); });
+      const lastD = got.length ? got[got.length - 1].date : null;
+      slots.forEach((sl, i) => { if (lastD && days(sl, lastD) >= -win) lastHit = i; });
+    } else {
+      slots.forEach((sl, i) => {
+        if (sl > t0 || (end && sl > end)) return;
+        const c = buys.filter((t) => !used.has(t.id) && Math.abs(days(sl, t.date)) <= win).sort((a, b) => Math.abs(days(sl, a.date)) - Math.abs(days(sl, b.date)))[0];
+        if (c) { used.add(c.id); got.push(c); lastHit = i; }
+      });
+    }
+    const rates = def.rates.slice().sort((a, b) => (a.from < b.from ? -1 : 1));
+    const cur = rates.filter((x) => x.from <= t0).pop() || rates[0];
+    const changes = rates.slice(1).map((x, i) => ({ date: x.from, from: rates[i].amt, to: x.amt }));
+    const next = slots.find((sl, i) => i > lastHit && (!end || sl <= end)) || null;
+    const status = end && end <= t0 ? "beendet" : next && days(next, t0) > 3 ? "fällig" : "aktiv";
+    got.sort((a, b) => (a.date < b.date ? -1 : 1));
+    const bon = txs.filter((t) => t.type === "buy" && t.bonus && t.asset === def.asset && t.date >= def.start && (!end || t.date <= end));
+    return { extra: extra.reduce((x, t) => x + buyAmt(t), 0), extraN: extra.length, id: def.id, manual: true, def, asset: def.asset, rhythm: r, txs: got, count: got.length, first: slots[0] || def.start, last: got.length ? got[got.length - 1].date : def.start, rate: cur.amt, total: got.reduce((x, t) => x + buyAmt(t), 0), typDay: def.day || parseIso(def.start).getDate(), next: next || def.start, status, changes, bonusTxs: bon, bonus: bon.reduce((x, t) => x + t.shares * t.price, 0) };
+  }
+  function detectPlans(txs, list, defs) {
+    const plans = [], byTx = {}, used = new Set(), own = new Set();
+    (defs || []).forEach((def) => { const p = manualPlan(def, txs, used); plans.push(p); own.add(def.asset); p.txs.forEach((t) => (byTx[t.id] = p)); });
+    const assets = [...new Set(txs.filter((t) => t.type === "buy" && !t.bonus && !own.has(t.asset)).map((t) => t.asset))];
     for (const id of assets) {
-      const buys = txs.filter((t) => t.type === "buy" && t.asset === id && !t.bonus);
+      // Kennzeichnet der Broker Sparplan-Ausführungen, zählen nur diese. Glatte Beträge sind die Rate,
+      // krumme Kleinbeträge (z. B. Aufrunden bei Trade Republic) laufen getrennt als Extra
+      const all = txs.filter((t) => t.type === "buy" && t.asset === id && !t.bonus);
+      const marked = all.some((t) => t.plan);
+      const round = (t) => Math.abs(t.shares * t.price - Math.round(t.shares * t.price)) < 0.02;
+      const buys = marked ? all.filter((t) => t.plan && round(t)) : all;
+      const extra = marked ? all.filter((t) => t.plan && !round(t)) : [];
       const used = new Set();
       for (let s = 0; s < buys.length; s++) {
         if (used.has(buys[s].id)) continue;
@@ -1573,12 +1656,14 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
           for (;;) {
             // nächster Kauf im Zeitfenster. Die Rate darf sich ändern (halb bis doppelt so viel wie zuletzt),
             // bei mehreren Käufen zählt der mit dem ähnlichsten Betrag
-            const cand = buys.filter((b) => !used.has(b.id) && !chain.includes(b) && days(last.date, b.date) >= r.min && days(last.date, b.date) <= r.max && buyAmt(b) >= 0.5 * buyAmt(last) - 1 && buyAmt(b) <= 2 * buyAmt(last) + 1);
+            // Eine ausgefallene Ausführung (z. B. ein Monat ohne Kauf) unterbricht den Plan nicht
+            const gap = (b) => { const g = days(last.date, b.date); return g >= r.min && g <= r.max ? 1 : g >= 2 * r.min && g <= 2 * r.max ? 2 : 0; };
+            const cand = buys.filter((b) => !used.has(b.id) && !chain.includes(b) && gap(b) && (marked || (buyAmt(b) >= 0.5 * buyAmt(last) - 1 && buyAmt(b) <= 2 * buyAmt(last) + 1)));
             if (!cand.length) break;
-            cand.sort((x, y) => Math.abs(buyAmt(x) - buyAmt(last)) - Math.abs(buyAmt(y) - buyAmt(last)));
+            cand.sort((x, y) => gap(x) - gap(y) || Math.abs(buyAmt(x) - buyAmt(last)) - Math.abs(buyAmt(y) - buyAmt(last)));
             last = cand[0]; chain.push(last);
           }
-          if (chain.length >= 3 && (!best || chain.length > best.chain.length)) best = { r, chain };
+          if (chain.length >= (marked ? 2 : 3) && (!best || chain.length > best.chain.length)) best = { r, chain };
         }
         if (!best) continue;
         best.chain.forEach((b) => used.add(b.id));
@@ -1596,7 +1681,8 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
         for (let k = 1; k < ch.length; k++) { const a0 = buyAmt(ch[k - 1]), a1 = buyAmt(ch[k]); if (Math.abs(a1 - a0) > 0.03 * a0 + 0.5 && (k === ch.length - 1 || Math.abs(buyAmt(ch[k + 1]) - a1) <= 0.03 * a1 + 0.5)) changes.push({ date: ch[k].date, from: a0, to: a1 }); }
         const until = isoDate(new Date(parseIso(lastT.date).getTime() + r.max * 864e5));
         const bon = txs.filter((t) => t.type === "buy" && t.bonus && t.asset === id && t.date >= ch[0].date && t.date <= until);
-        const plan = { id: id + "-" + ch[0].date, asset: id, rhythm: r, txs: ch, count: ch.length, first: ch[0].date, last: lastT.date, rate: buyAmt(lastT), total: ch.reduce((x, t) => x + buyAmt(t), 0), typDay, next: nextIso, status, changes, bonusTxs: bon, bonus: bon.reduce((x, t) => x + t.shares * t.price, 0) };
+        const ex = extra.filter((t) => t.date >= ch[0].date && t.date <= until);
+        const plan = { extra: ex.reduce((x, t) => x + buyAmt(t), 0), extraN: ex.length, auto: true, id: id + "-" + ch[0].date, asset: id, rhythm: r, txs: ch, count: ch.length, first: ch[0].date, last: lastT.date, rate: buyAmt(lastT), total: ch.reduce((x, t) => x + buyAmt(t), 0), typDay, next: nextIso, status, changes, bonusTxs: bon, bonus: bon.reduce((x, t) => x + t.shares * t.price, 0) };
         plans.push(plan);
         ch.forEach((t) => (byTx[t.id] = plan));
       }
@@ -2193,14 +2279,18 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       const foot = p.status === "fällig" ? `<span class="pill warn">${esc(miss.length ? miss[miss.length - 1].label.split(" ")[0] + ". fehlt" : "fällig")}</span><button type="button" class="btn ghost sm" data-plan-add="${esc(p.id)}" style="padding:4px 10px;font-size:.78rem">Nachtragen</button>`
         : p.status === "aktiv" ? `<span class="pill gain">aktiv</span><span class="note">nächste ca. ${fmtDate(p.next)}</span>`
         : `<span class="pill neu">${p.status}</span><span class="note">zuletzt ${fmtDate(p.last)}</span>`;
-      return `<div class="card plan" data-pos="${esc(p.asset)}">
-        <div class="top"><div style="display:grid;gap:2px;min-width:0"><span class="nm">${esc(a.name || a.symbol)}</span><span class="note">${esc(planWhen(p))} · ${p.count}× seit ${fmtDate(p.first).slice(3)}</span>${p.changes.length ? `<span class="note">Rate ${p.changes.slice(-2).map((c, i) => (i ? "" : eur0.format(c.from) + " → ") + eur0.format(c.to) + " ab " + fmtDate(c.date).slice(3)).join(" → ")}</span>` : ""}${p.bonus > 0 ? `<span class="note bonusc">+ ${eur0.format(p.bonus)} Saveback geschenkt</span>` : ""}</div>
+      const act2 = p.manual ? `<button type="button" class="link" data-plan-edit="${esc(p.id)}">Bearbeiten</button>` : `<span class="row" style="gap:10px"><span class="pill neu" title="Automatisch erkannt, nicht von dir festgelegt">erkannt</span><button type="button" class="link" data-plan-take="${esc(p.id)}">Übernehmen</button></span>`;
+      return `<div class="card plan${p.manual ? "" : " auto"}" data-pos="${esc(p.asset)}">
+        <div class="top"><div style="display:grid;gap:2px;min-width:0"><span class="nm">${esc(a.name || a.symbol)}</span><span class="note">${esc(planWhen(p))} · ${p.count}× seit ${fmtDate(p.first).slice(3)}</span>${p.changes.length ? `<span class="note">Rate ${p.changes.slice(-2).map((c, i) => (i ? "" : eur0.format(c.from) + " → ") + eur0.format(c.to) + " ab " + fmtDate(c.date).slice(3)).join(" → ")}</span>` : ""}${p.bonus > 0 ? `<span class="note bonusc">+ ${eur.format(p.bonus)} Saveback geschenkt</span>` : ""}${p.extra > 0 ? `<span class="note">+ ${eur.format(p.extra)} Aufrunden und Extras (${p.extraN}×)</span>` : ""}</div>
         <div class="amt">${eur0.format(p.rate)}<small>${p.rhythm.key === "m" ? "pro Monat" : "≈ " + eur0.format(perM) + " / Monat"}</small></div></div>
         <div class="runs" aria-label="Ausführungen der letzten 12 Monate">${runs.map((r) => `<i class="${r.st === "ok" ? "" : r.st}" title="${r.label}: ${r.st === "ok" ? "ausgeführt" : r.st === "due" ? "fällig, noch nicht eingetragen" : "keine Ausführung"}"></i>`).join("")}</div>
         <div class="runs-l"><span>${runs[0].label}</span><span>${eur0.format(p.total)} eingezahlt</span><span>${runs[11].label}</span></div>
-        <div class="pfoot">${foot}</div></div>`;
+        <div class="pfoot">${foot}</div><div class="pact">${act2}</div></div>`;
     }).join("");
     bindPlans(host, P);
+    const nAuto = P.plans.filter((p) => p.auto).length;
+    $("#spAutoNote").textContent = nAuto ? "„Erkannt“ heißt geraten. Übernimm die Pläne oder leg sie so an, wie sie bei deinem Broker stehen." : "";
+    $$("[data-plan-edit],[data-plan-take]", host).forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); const pl = C.plans.plans.find((x) => x.id === (b.dataset.planEdit || b.dataset.planTake)); if (pl) openPlan(pl); }));
   }
 
   // ---------- Unterreiter ----------
@@ -2725,6 +2815,55 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   });
   const leaveDemo = () => { if (isDemo()) S.demo = null; };
 
+  // Sparplan festlegen oder einen erkannten übernehmen
+  let editPlan = null;
+  // Ratenstufen aus den Ausführungen: ein neuer Betrag zählt, sobald er zweimal hintereinander vorkommt oder der letzte ist
+  function planSteps(list) {
+    const a = list.map((t) => ({ from: t.date, amt: Math.round(buyAmt(t) * 100) / 100 })), out = [];
+    a.forEach((x, i) => { const prev = out[out.length - 1]; if (!prev) out.push(x); else if (Math.abs(x.amt - prev.amt) > 0.5 && (i === a.length - 1 || Math.abs(a[i + 1].amt - x.amt) <= 0.5)) out.push(x); });
+    return out.length ? out : [{ from: today(), amt: 0 }];
+  }
+  function planRateRow(r) { return `<div class="plr"><span class="pre">ab</span><input type="date" class="pf" value="${esc(r.from || "")}" aria-label="Gilt ab"><span class="unit2"><input class="pa" inputmode="decimal" value="${r.amt ? numStr(r.amt) : ""}" placeholder="0" aria-label="Betrag"><span>€</span></span><button type="button" class="del" aria-label="Zeile entfernen">✕</button></div>`; }
+  function openPlan(pl) {
+    const d = S.data;
+    editPlan = pl && pl.manual ? pl.def : null;
+    const ids = [...new Set(d.txs.filter((t) => t.type === "buy").map((t) => t.asset))].concat(Object.keys(d.assets)).filter((v, i, a) => a.indexOf(v) === i && d.assets[v]);
+    ids.sort((a, b) => (d.assets[a].name || a).localeCompare(d.assets[b].name || b, "de"));
+    $("#plAsset").innerHTML = ids.map((id) => `<option value="${esc(id)}">${esc(d.assets[id].name || id)}</option>`).join("");
+    const src = editPlan || (pl ? { asset: pl.asset, rhythm: pl.rhythm.key, day: pl.typDay, start: pl.first, end: pl.status === "beendet" || pl.status === "pausiert" ? pl.last : null, rates: planSteps(pl.txs) } : { asset: ids[0], rhythm: "m", day: null, start: today(), end: null, rates: [{ from: today(), amt: 0 }] });
+    $("#plTitle").textContent = editPlan ? "Sparplan bearbeiten" : pl ? "Erkannten Sparplan übernehmen" : "Sparplan festlegen";
+    $("#plAsset").value = src.asset; $("#plRh").value = src.rhythm; $("#plDay").value = src.day || "";
+    $("#plRates").innerHTML = src.rates.map(planRateRow).join("");
+    $("#plEndOn").checked = !!src.end; $("#plEnd").value = src.end || ""; $("#plEndRow").hidden = !src.end;
+    $("#plDelete").hidden = !editPlan; $("#plDelete").textContent = "Löschen"; $("#plErr").hidden = true;
+    $("#dlgPlan").showModal();
+  }
+  $("#plRateAdd").addEventListener("click", () => { $("#plRates").insertAdjacentHTML("beforeend", planRateRow({ from: today(), amt: 0 })); });
+  $("#plRates").addEventListener("click", (e) => { const b = e.target.closest(".del"); if (b && $$("#plRates .plr").length > 1) b.closest(".plr").remove(); });
+  $("#plEndOn").addEventListener("change", () => { $("#plEndRow").hidden = !$("#plEndOn").checked; if ($("#plEndOn").checked && !$("#plEnd").value) $("#plEnd").value = today(); });
+  $("#spAdd").addEventListener("click", () => openPlan(null));
+  $("#planForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const err = (m) => { $("#plErr").textContent = m; $("#plErr").hidden = false; };
+    const rates = $$("#plRates .plr").map((r) => ({ from: $(".pf", r).value, amt: parseNum($(".pa", r).value) }));
+    if (rates.some((r) => !r.from)) return err("Bitte bei jeder Rate ein Datum eintragen.");
+    if (rates.some((r) => !(r.amt > 0))) return err("Bitte bei jeder Rate einen Betrag eintragen.");
+    rates.sort((a, b) => (a.from < b.from ? -1 : 1));
+    const day = parseInt($("#plDay").value, 10);
+    const def = { id: editPlan ? editPlan.id : "p" + uid(), asset: $("#plAsset").value, rhythm: $("#plRh").value, day: day >= 1 && day <= 31 ? day : null, start: rates[0].from, end: $("#plEndOn").checked ? $("#plEnd").value || today() : null, rates };
+    if (!def.asset) return err("Bitte ein Wertpapier wählen.");
+    leaveDemo();
+    if (!S.data.plans) S.data.plans = [];
+    const i = editPlan ? S.data.plans.indexOf(editPlan) : -1;
+    if (i >= 0) S.data.plans[i] = def; else S.data.plans.push(def);
+    commit(); $("#dlgPlan").close(); toast(editPlan ? "Sparplan gespeichert" : "Sparplan festgelegt");
+  });
+  $("#plDelete").addEventListener("click", () => {
+    const b = $("#plDelete");
+    if (b.textContent !== "Wirklich löschen?") { b.textContent = "Wirklich löschen?"; return; }
+    S.data.plans = S.data.plans.filter((x) => x !== editPlan); commit(); $("#dlgPlan").close(); toast("Sparplan gelöscht");
+  });
+
   // Buchung
   let txType = "buy", editTx = null;
   function setTxType(v) {
@@ -2806,8 +2945,8 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   // Broker wie Trade Republic exportieren ETFs oft ohne „ETF“ im Namen, z. B. „Core Stoxx 600 EUR (Acc)“
   const ETF_RE = /\b(etf|etc|ucits|ishares|ishs|vanguard|xtrackers|amundi|spdr|lyxor|invesco|wisdomtree|vaneck|global x|hanetf|l&g|franklin|comstage|msci|stoxx|s&p|ftse|nasdaq|russell|dax|index|leveraged|levered|daily|short|[23]x)\b|\((acc|dist|thes|aussch)\)/;
   // Bei ETFs und Fonds ist das ISIN-Land nur der Fondssitz, nicht das, worin investiert wird
-  function newAsset(id, sym, name) {
-    const cls = guessClass(sym, name), fund = /^(ETF|Fonds)$/.test(cls);
+  function newAsset(id, sym, name, known) {
+    const cls = known || guessClass(sym, name), fund = /^(ETF|Fonds)$/.test(cls);
     return { id, symbol: sym, name, cls, country: fund ? "" : guessCountry(sym), sector: fund ? "" : guessSector(sym), hist: [] };
   }
   // Ältere Einträge nachbessern, die als Aktie geraten wurden; von Hand gewählte Klassen bleiben
@@ -2929,7 +3068,15 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     fee: ["gebühren", "gebühr", "gebuehren", "fee", "fees", "provision", "kosten", "commission", "spesen"],
     tax: ["steuern", "steuer", "tax", "taxes", "quellensteuer", "kapitalertragsteuer", "withholding tax"],
     amount: ["betrag", "amount", "summe", "wert", "total", "gesamt", "brutto", "gross", "betrag (eur)", "value"],
+    cls: ["asset_class", "asset class", "anlageklasse", "assetklasse", "gattung", "wertpapierart", "wertpapiertyp", "instrument type"],
   };
+  // Anlageklasse aus Broker-Exporten (z. B. Trade Republic: FUND, STOCK, CRYPTO, BOND)
+  const CLS_MAP = [[/fund|etf|etp|fonds/i, "ETF"], [/stock|share|equity|aktie/i, "Aktie"], [/crypto|krypto/i, "Krypto"], [/bond|anleihe|renten/i, "Anleihe"], [/commodit|rohstoff/i, "Rohstoff"], [/deriv|zertifikat|option|warrant/i, "Sonstiges"]];
+  const mapCls = (v) => { const m = CLS_MAP.find(([re]) => re.test(String(v || ""))); return m ? m[1] : ""; };
+  // Merkmale in der ganzen Zeile, damit es mit vielen Brokern klappt
+  const PLAN_RE = /savings plan|sparplan|plan execution|sparplanausführung|sparplanausfuehrung/i;
+  const REWARD_RE = /saveback|cash reward|cashback|cash back|stockperk|prämie|praemie/i;
+  const FREE_RE = /free.?receipt|gratisaktie|freiaktie|gratis/i;
   function splitLine(line, sep) {
     const out = []; let cur = "", q = false;
     for (let i = 0; i < line.length; i++) {
@@ -2962,10 +3109,14 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     const missing = [["date", "Datum"], ["type", "Typ (Kauf, Verkauf, Dividende)"]].filter(([k]) => col[k] == null).map(([, l]) => l);
     if (col.isin == null && col.symbol == null && col.name == null) missing.push("ISIN, Kürzel oder Name");
     if (missing.length) return { error: "Diese Spalten fehlen: " + missing.join(", ") + ". Gefundene Überschriften: " + head.join(" | ") };
-    const rows = [], errors = [];
+    const rows = [], errors = [], rewards = [];
     lines.slice(1).forEach((l, n) => {
       const c = splitLine(l, sep), g = (k) => (col[k] != null ? c[col[k]] : "");
-      const date = parseDate(g("date")), type = mapType(g("type"));
+      const date = parseDate(g("date"));
+      // Gutschriften (Saveback, Stockperk …) ohne Stückzahl: merken, um den Kauf danach als geschenkt zu markieren
+      if (date && REWARD_RE.test(l) && !(Math.abs(parseNum(g("shares"))) > 0) && Math.abs(parseNum(g("amount"))) > 0) { rewards.push({ date, amt: Math.abs(parseNum(g("amount"))) }); return; }
+      const free = FREE_RE.test(l);
+      const type = free ? "buy" : mapType(g("type"));
       const sym = (g("isin") || g("symbol") || g("name") || "").trim();
       let shares = Math.abs(parseNum(g("shares"))), price = Math.abs(parseNum(g("price")));
       const fee = Math.abs(parseNum(g("fee"))) || 0, tax = Math.abs(parseNum(g("tax"))) || 0, amount = Math.abs(parseNum(g("amount")));
@@ -2975,13 +3126,18 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       if (!sym) return errors.push(`Zeile ${line}: Wertpapier fehlt`);
       if (type !== "div") {
         if (!(price > 0) && amount > 0 && shares > 0) price = Math.max(0, (amount - (type === "buy" ? fee : -fee)) / shares);
-        if (!(shares > 0) || !(price > 0)) return errors.push(`Zeile ${line}: Stück oder Kurs fehlt`);
+        if (!(shares > 0) || (!(price > 0) && !free)) return errors.push(`Zeile ${line}: Stück oder Kurs fehlt`);
       } else if (!(amount > 0)) {
         if (shares > 0 && price > 0) { /* Dividende je Stück */ } else return errors.push(`Zeile ${line}: Dividendenbetrag fehlt`);
       }
       // Saveback, Cashback, Prämien: Anteile gibt es geschenkt, das Geld kommt nicht vom eigenen Konto
-      const bonus = type === "buy" && BONUS_RE.test(l);
-      rows.push({ date, type, sym, name: g("name") || "", shares: shares || 0, price: type === "div" ? 0 : price, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined, bonus });
+      const bonus = type === "buy" && (free || BONUS_RE.test(l));
+      rows.push({ date, type, sym, name: g("name") || "", cls: mapCls(g("cls")), shares: shares || 0, price: type === "div" ? 0 : price || 0, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined, bonus, plan: type === "buy" && PLAN_RE.test(l), buyAmt: type === "buy" ? (amount > 0 ? amount : shares * price) : 0 });
+    });
+    // Kauf mit genau dem gutgeschriebenen Betrag in den Tagen danach = mit geschenktem Geld gekauft
+    rewards.forEach((rw) => {
+      const hit = rows.find((x) => x.type === "buy" && !x.bonus && Math.abs(x.buyAmt - rw.amt) < 0.015 && x.date >= rw.date && days(rw.date, x.date) <= 4);
+      if (hit) hit.bonus = true;
     });
     return { rows, errors, sep, col, head };
   }
@@ -3030,13 +3186,16 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     let n = 0;
     impParsed.rows.forEach((r) => {
       const id = assetId(r.sym);
-      if (!S.data.assets[id]) S.data.assets[id] = newAsset(id, r.sym, r.name || r.sym);
+      if (!S.data.assets[id]) S.data.assets[id] = newAsset(id, r.sym, r.name || r.sym, r.cls);
+      else if (r.cls && !S.data.assets[id].clsManual && S.data.assets[id].cls !== r.cls) { const a = S.data.assets[id]; a.cls = r.cls; if (/^(ETF|Fonds)$/.test(r.cls) && a.country === guessCountry(a.symbol)) a.country = ""; }
       else if (r.name && S.data.assets[id].name === S.data.assets[id].symbol) S.data.assets[id].name = r.name;
       const t = { id: uid(), date: r.date, type: r.type, asset: id, shares: r.shares, price: r.price, fee: r.fee, tax: r.tax };
       if (r.type === "div") t.amount = r.amount;
       if (r.bonus) t.bonus = true;
+      if (r.plan) t.plan = true;
       const k = txKey(t);
-      if (have[k] > 0) { have[k]--; if (r.bonus) { const ex = S.data.txs.find((x) => !x.bonus && txKey(x) === k); if (ex) { ex.bonus = true; n++; } } return; }
+      // Schon vorhanden: Merkmale aus der neuen Datei nachtragen (Sparplan, Saveback)
+      if (have[k] > 0) { have[k]--; const ex = S.data.txs.find((x) => txKey(x) === k && ((r.bonus && !x.bonus) || (r.plan && !x.plan))); if (ex) { if (r.bonus) ex.bonus = true; if (r.plan) ex.plan = true; n++; } return; }
       S.data.txs.push(t); n++;
     });
     commit();
@@ -3068,7 +3227,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   }
   $("#bkSave").addEventListener("click", () => {
     if (isDemo()) { toast("Noch keine eigenen Daten zum Sichern"); return; }
-    offerFile("depotblick-sicherung-" + today() + ".json", JSON.stringify({ app: "depotblick", v: 1, exported: new Date().toISOString(), txs: S.data.txs, assets: S.data.assets, budget: S.data.budget }, null, 1), "application/json");
+    offerFile("depotblick-sicherung-" + today() + ".json", JSON.stringify({ app: "depotblick", v: 1, exported: new Date().toISOString(), txs: S.data.txs, assets: S.data.assets, budget: S.data.budget, plans: S.data.plans }, null, 1), "application/json");
   });
   $("#csvSave").addEventListener("click", () => {
     if (isDemo()) { toast("Noch keine eigenen Buchungen"); return; }
@@ -3083,13 +3242,13 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
     try {
       const d = JSON.parse(await f.text());
       if (!Array.isArray(d.txs) || typeof d.assets !== "object") throw new Error("format");
-      S.data = { txs: d.txs, assets: d.assets, budget: normBudget(d.budget) }; S.demo = null; commit();
+      S.data = mkData(d); S.demo = null; commit();
       toast("Sicherung geladen: " + d.txs.length + " Buchungen");
     } catch (err) { $("#bkOut").innerHTML = '<p class="err">Die Datei ist keine Depotblick-Sicherung.</p>'; }
     e.target.value = "";
   });
   $("#wipe").addEventListener("click", () => { $("#wipeYes").hidden = false; });
-  $("#wipeYes").addEventListener("click", () => { S.data = { txs: [], assets: {}, budget: normBudget() }; S.demo = null; commit(); $("#wipeYes").hidden = true; toast("Alle Daten gelöscht"); });
+  $("#wipeYes").addEventListener("click", () => { S.data = mkData(); S.demo = null; commit(); $("#wipeYes").hidden = true; toast("Alle Daten gelöscht"); });
 
   // ---------- Budget ----------
   const PER = { m: ["monatlich", 1], y: ["jährlich", 1 / 12], q: ["vierteljährlich", 1 / 3], w: ["wöchentlich", 52 / 12] };
@@ -3318,7 +3477,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       r.onerror = () => rej(r.error);
     });
     const remember = (h) => idb("readwrite", (st) => (h ? st.put(h, "handle") : st.delete("handle"))).catch(() => {});
-    const payload = (data) => JSON.stringify({ app: "depotblick", v: 1, savedAt: new Date().toISOString(), txs: data.txs, assets: data.assets, budget: data.budget }, null, 1);
+    const payload = (data) => JSON.stringify({ app: "depotblick", v: 1, savedAt: new Date().toISOString(), txs: data.txs, assets: data.assets, budget: data.budget, plans: data.plans || [] }, null, 1);
     async function write(data) {
       if (!handle || !granted) return;
       try { const w = await handle.createWritable(); await w.write(payload(data)); await w.close(); lastSaved = new Date(); err = ""; }
@@ -3330,7 +3489,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
       if (!Array.isArray(d.txs) || typeof d.assets !== "object") throw new Error("format");
       return d;
     }
-    function adopt(d) { S.data = { txs: d.txs, assets: d.assets, budget: normBudget(d.budget) }; S.demo = null; try { localStorage.setItem(KEY, JSON.stringify({ v: 1, txs: d.txs, assets: d.assets, budget: S.data.budget })); } catch (e) {} render(); }
+    function adopt(d) { S.data = mkData(d); S.demo = null; try { localStorage.setItem(KEY, JSON.stringify({ v: 1, txs: S.data.txs, assets: S.data.assets, budget: S.data.budget, plans: S.data.plans })); } catch (e) {} render(); }
     async function connect(h, load) {
       handle = h; granted = true; await remember(h);
       if (load) { const d = await read(h); adopt(d); toast("Speicherdatei geladen: " + d.txs.length + " Buchungen"); }
@@ -3344,7 +3503,7 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
         try {
           const h = await window.showSaveFilePicker({ suggestedName: "Mein Depot.depotblick", types: FILE_TYPES });
           await connect(h, false);
-          if (!isDemo()) await write(S.data); else { await write({ txs: [], assets: {}, budget: normBudget() }); }
+          if (!isDemo()) await write(S.data); else { await write(mkData()); }
           toast("Speicherdatei angelegt. Änderungen werden ab jetzt automatisch gespeichert");
         } catch (e) { if (e.name !== "AbortError") toast("Speicherdatei konnte nicht angelegt werden"); }
       },
