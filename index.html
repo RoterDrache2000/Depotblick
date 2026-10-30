@@ -73,6 +73,9 @@ a { color: var(--accent); }
 .nav:hover { background: var(--sunk); color: var(--ink); }
 .nav.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 .nav svg { flex: none; }
+.side .navh { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 14px 10px 4px; }
+.side .sideadd { margin: 0 4px 12px; justify-content: center; }
+.gsw { display: none; }
 .side .sep { height: 1px; background: var(--line); margin: 10px 4px; }
 .deplist { display: grid; gap: 8px; }
 .riskcard .risks { display: grid; gap: 8px; }
@@ -293,6 +296,27 @@ tbody tr.click { cursor: pointer; } tbody tr.click:hover td { background: var(--
 textarea { font-family: var(--font-mono); font-size: 0.8rem; width: 100%; min-height: 120px; resize: vertical; }
 .morelist a, .morelist button { display: flex; justify-content: space-between; width: 100%; padding: 14px 0; border: 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 500; background: none; cursor: pointer; text-align: left; }
 .morelist > :last-child { border-bottom: 0; }
+.dgd > summary { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; cursor: pointer; list-style: none; }
+.dgd > summary::-webkit-details-marker { display: none; }
+.dgd > summary .link { margin-left: auto; font-size: 0.85rem; }
+.dgd[open] > summary .link { visibility: hidden; }
+.riskd > summary { display: flex; align-items: center; gap: 10px; cursor: pointer; list-style: none; min-width: 0; }
+.riskd > summary::-webkit-details-marker { display: none; }
+.riskd .riskone { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.88rem; }
+.riskd[open] .riskone, .riskd[open] .riskmore { display: none; }
+.riskd .riskmore { flex: none; font-size: 0.85rem; }
+.seth { grid-column: 1 / -1; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 10px 0 -4px; scroll-margin-top: 80px; }
+.setc { scroll-margin-top: 80px; }
+.setjump { display: flex; gap: 6px; flex-wrap: wrap; }
+.setjump a { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); text-decoration: none; font-size: 0.82rem; }
+.setjump a:hover { color: var(--ink); }
+.dangerzone { border-color: color-mix(in srgb, var(--loss) 45%, var(--line)); }
+
+.hub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hub a { display: grid; gap: 4px; padding: 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none; min-width: 0; }
+.hub a b { font-size: 0.95rem; }
+.hub a .v { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hub a .note { overflow-wrap: anywhere; }
 .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 0.82rem; }
 .step { border-top: 3px solid var(--line); padding-top: 8px; color: var(--muted); }
 .step.done { border-color: var(--gain); color: var(--ink); } .step.now { border-color: var(--accent); color: var(--ink); font-weight: 600; }
@@ -309,6 +333,9 @@ details summary { cursor: pointer; color: var(--muted); font-size: 0.86rem; }
 .stat .s { font-size: 0.78rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chip.warn, .stat .chip.warn { background: var(--div-soft); color: var(--div); border-color: transparent; font-size: 0.7rem; padding: 1px 7px; cursor: default; }
 .statpick { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.stattop { gap: 10px; flex-wrap: nowrap; } .stattop select { max-width: 100%; min-width: 0; flex: 1 1 auto; } @media (min-width: 821px) { .stattop select { flex: 0 1 360px; } }
+[data-page="statistiken"] .sthide { display: none !important; }
+#statCore { grid-template-columns: repeat(4, minmax(0, 1fr)); } @media (max-width: 820px) { #statCore { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .statpick .chip { flex: none; }
 .page.st-empty > :not(.view-title):not(#statEmpty) { display: none !important; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -407,10 +434,10 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 .sp .runs-l { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--faint); font-family: var(--font-mono); margin-top: -6px; }
 .sp .plan .pfoot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 10px; }
 .sp .plans-empty { padding: 16px; }
-.sp .subtabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
-.sp .subtabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer; white-space: nowrap; margin-bottom: -1px; }
-.sp .subtabs button[aria-selected="true"] { color: var(--ink); border-color: var(--accent); font-weight: 600; }
-.sp .subtabs button:hover { color: var(--ink); }
+.sp .subtabs, #stTabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.sp .subtabs button, #stTabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer; white-space: nowrap; margin-bottom: -1px; }
+.sp .subtabs button[aria-selected="true"], #stTabs button[aria-selected="true"] { color: var(--ink); border-color: var(--accent); font-weight: 600; }
+.sp .subtabs button:hover, #stTabs button:hover { color: var(--ink); }
 .sp .fcg { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 16px; align-items: start; }
 .sp .ctrl { display: grid; gap: 18px; position: sticky; top: 16px; }
 .sp .field { display: grid; gap: 6px; }
@@ -458,6 +485,12 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 .sp .toggle input:checked::after { transform: translateX(14px); }
 .sp .crpane { display: grid; gap: 14px; }
 .sp [data-pane][hidden] { display: none; }
+.sp .spmode[hidden] { display: none; }
+.sp .spmode { justify-self: start; }
+.sp .sph { margin: 6px 0 0; }
+.sp .phr { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sp .phr .phy { flex-basis: 100%; margin-top: -4px; font-size: 0.72rem; }
+.sp .phr .icon-btn { flex: none; }
 .pctseg button { padding: 4px 10px; font-family: var(--font-mono); }
 .chart-h { display: flex; justify-content: space-between; align-items: center; gap: 8px 12px; flex-wrap: wrap; }
 .home .hsegs { display: flex; gap: 8px; align-items: center; min-width: 0; }
@@ -618,6 +651,12 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 .rpsteps button.done::before, .rpsteps button[aria-selected="true"]::before { background: var(--accent); }
 .rpsteps button span { position: relative; z-index: 1; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line); font-size: 0.8rem; font-weight: 600; box-sizing: border-box; }
 .rpsteps button em { font-style: normal; overflow-wrap: anywhere; hyphens: auto; }
+.rpsteps button small { font-size: 0.66rem; color: var(--faint); margin-top: -4px; }
+.rpsteps button.filled:not([aria-selected="true"]) span { font-size: 0; border-color: var(--gain); color: var(--gain); }
+.rpsteps button.filled:not([aria-selected="true"]) span::after { content: "✓"; font-size: 0.85rem; }
+.rpline { display: none; }
+@media (max-width: 820px) { .rpline:not([hidden]) { display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: baseline; position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 62px); z-index: 5; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 0 0 -6px; font-size: 0.88rem; box-shadow: 0 4px 12px rgb(0 0 0 / 0.06); } }
+@media (max-width: 600px) { .rpsteps button small { display: none; } }
 .rpsteps button.done span { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 .rpsteps button[aria-selected="true"] { color: var(--ink); font-weight: 600; }
 .rpsteps button[aria-selected="true"] span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
@@ -713,6 +752,7 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 }
 /* Rentenplaner Ergebnis v34 */
 .rpsum .rpdelta { position: absolute; top: 12px; right: 12px; }
+@media (max-width: 600px) { .hkdebt { display: none; } }
 .rphero { display: grid; gap: 8px; padding: 16px; border-radius: 12px; background: var(--sunk); border: 1px solid var(--line); }
 .rphero.ok { background: var(--gain-soft); border-color: transparent; }
 .rphero.gap { background: var(--div-soft); border-color: transparent; }
@@ -745,6 +785,15 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 }
 @media (max-width: 820px) { .rpsum { position: relative; } }
 @media (max-width: 400px) { .rpsum { min-height: 290px; } }
+.rplab { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.rplab label { min-width: 0; }
+.rpchk b .info { vertical-align: 1px; }
+.term { text-decoration: underline dotted; text-decoration-color: var(--faint); text-underline-offset: 3px; cursor: help; }
+.term:hover, .term:focus-visible { text-decoration-color: var(--accent); }
+html:not([data-im="btn"]) .info.info-x { display: none; }
+html[data-im="btn"] .term { text-decoration: none; cursor: inherit; }
+.rpwishn { font-size: 0.78rem; color: var(--muted); display: block; line-height: 1.45; min-height: 2.9em; }
+@media (max-width: 600px) { .rpwishn { min-height: 4.35em; } }
 /* kein Zoomen per Doppeltipp */
 html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overflow-x: hidden; max-width: 100%; }
 body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
@@ -812,9 +861,13 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   .side .sidetools { display: none; }
   .content { padding-block: 16px 96px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 14px; }
   .page { gap: 14px; }
-  .tabbar { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line); padding-block: 6px calc(8px + env(safe-area-inset-bottom, 0px)); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+  .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line); padding-block: 6px calc(8px + env(safe-area-inset-bottom, 0px)); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
   .tabbar a { display: grid; justify-items: center; gap: 2px; font-size: 0.66rem; color: var(--muted); text-decoration: none; padding: 4px 0; }
   .tabbar a.on { color: var(--accent); font-weight: 600; }
+  .gsw:not([hidden]) { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px 4px; padding: 2px 16px 6px; }
+  .gsw::-webkit-scrollbar { display: none; }
+  .gsw a { flex: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); text-decoration: none; font-size: 0.82rem; }
+  .gsw a.on { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .kpi.big { grid-column: 1 / -1; background: transparent; border: 0; padding: 4px 0 0; }
   .kpi.big .v { font-size: 2.5rem; }
@@ -836,12 +889,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   .sp .sumline .eyebrow { font-size: 0.62rem; letter-spacing: 0.06em; }
   .sp .fcg, .sp .crisis { grid-template-columns: minmax(0, 1fr); }
   .sp .ctrl { position: static; order: 2; }
-  .sp [data-pane="zl"] .ctrl { order: 0; }
+  .sp [data-pane="zl"] .ctrl, .sp [data-pane="hk"] .ctrl, .sp [data-pane="dv"] .ctrl { order: 0; }
   .sp .hero .big { font-size: 2.2rem; }
   .sp .hero .side2 { text-align: left; }
   .sp .terg { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp .tercmp .r { grid-template-columns: 5.5rem minmax(0, 1fr) auto; }
-  .sp .subtabs { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 57px); z-index: 4; background: var(--bg); margin: 0 -16px; padding-inline: 16px; }
+  .sp .subtabs, #stTabs { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 57px); z-index: 4; background: var(--bg); margin: 0 -16px; padding-inline: 16px; }
   .monly { display: block; }
   .bud .brow, .bud .brow.exp { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "mv name del" "mv amt amt" "mv per kind"; }
   .bud .brow.inc { grid-template-areas: "mv name del" "mv amt per"; }
@@ -865,18 +918,23 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   <aside class="side" aria-label="Navigation">
     <a class="logo" href="#uebersicht"><svg width="24" height="24" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="5" fill="var(--accent)"/><path d="M6 15 L10 10 L13 12.5 L17 7" stroke="var(--on-accent)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Depotblick</a>
     <div class="sidetools"><select id="depotSel" class="depotsel" aria-label="Depot wählen" hidden></select><button type="button" class="eye" data-priv aria-label="Datenschutz-Modus" title="Beträge verbergen"></button></div>
+    <button type="button" class="btn sm sideadd" data-act="add">+ Transaktion</button>
     <a class="nav" href="#uebersicht" data-r="uebersicht"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Übersicht</a>
+    <span class="navh">Depot</span>
     <a class="nav" href="#positionen" data-r="positionen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Positionen</a>
-    <a class="nav" href="#sparplaene" data-r="sparplaene"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3 11l3.5-3.5 2.5 2L13 4.5M10.5 4.5H13V7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sparpläne<span class="pill acc" id="navPlanN" style="margin-left:auto;padding:0 7px;font-size:.7rem" hidden></span></a>
-    <a class="nav" href="#statistiken" data-r="statistiken"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
-    <a class="nav" href="#budget" data-r="budget"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.5"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
-<a class="nav" href="#vermoegen" data-r="vermoegen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><ellipse cx="8" cy="4" rx="5.5" ry="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 4v4c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V4M2.5 8v4c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Vermögen</a>
-<a class="nav" href="#rente" data-r="rente"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.5 1.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rentenplaner</a>
-    <a class="nav" href="#dividenden" data-r="dividenden"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v7M10 6.2c-.4-.7-1.1-1-2-1-1.1 0-1.9.6-1.9 1.4 0 1.9 3.9 1 3.9 3 0 .8-.8 1.4-2 1.4-.9 0-1.7-.4-2-1.1" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>Dividenden</a>
-    <a class="nav" href="#steuern" data-r="steuern"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.8" cy="4.8" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="11.2" cy="11.2" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Steuern</a>
-    <a class="nav" href="#watchlist" data-r="watchlist"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Watchlist</a>
     <a class="nav" href="#transaktionen" data-r="transaktionen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10l-3-3M13 11H3l3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Transaktionen</a>
-    <div class="sep"></div>
+    <a class="nav" href="#dividenden" data-r="dividenden"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v7M10 6.2c-.4-.7-1.1-1-2-1-1.1 0-1.9.6-1.9 1.4 0 1.9 3.9 1 3.9 3 0 .8-.8 1.4-2 1.4-.9 0-1.7-.4-2-1.1" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>Dividenden</a>
+    <a class="nav" href="#watchlist" data-r="watchlist"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Watchlist</a>
+    <span class="navh">Auswerten</span>
+    <a class="nav" href="#statistiken" data-r="statistiken"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
+    <a class="nav" href="#rueckblick" data-r="rueckblick"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Jahresrückblick</a>
+    <a class="nav" href="#steuern" data-r="steuern"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.8" cy="4.8" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="11.2" cy="11.2" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Steuern</a>
+    <span class="navh">Planen</span>
+    <a class="nav" href="#sparplaene" data-r="sparplaene"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3 11l3.5-3.5 2.5 2L13 4.5M10.5 4.5H13V7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sparpläne<span class="pill acc" id="navPlanN" style="margin-left:auto;padding:0 7px;font-size:.7rem" hidden></span></a>
+    <a class="nav" href="#budget" data-r="budget"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.5"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
+    <a class="nav" href="#vermoegen" data-r="vermoegen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><ellipse cx="8" cy="4" rx="5.5" ry="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 4v4c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V4M2.5 8v4c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Vermögen</a>
+    <a class="nav" href="#rente" data-r="rente"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.5 1.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rentenplaner</a>
+    <span class="navh">Verwalten</span>
     <a class="nav" href="#import" data-r="import"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3M2.5 12.5v1h11v-1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Import</a>
     <a class="nav" href="#einstellungen" data-r="einstellungen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Einstellungen</a>
     <div class="foot"><span id="sideFoot1"></span><span id="sideFoot2"></span><span data-status></span></div>
@@ -889,6 +947,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     </header>
 
     <main class="content">
+      <nav class="gsw" id="gsw" aria-label="Seiten in diesem Bereich" hidden></nav>
       <div class="banner" id="fileBanner" hidden>
         <p><strong>Speicherdatei verbinden.</strong> <span id="fileBannerTxt"></span></p>
         <div class="row"><button class="btn" type="button" id="fileReconnect">Verbinden</button><button class="btn ghost" type="button" id="fileForget">Nur im Browser weiter</button></div>
@@ -906,7 +965,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <!-- Übersicht -->
       <section class="page home" data-page="uebersicht">
         <div class="phead"><div class="t"><span class="eyebrow" id="greet"></span><h1 class="desk">Übersicht</h1></div>
-          <div class="row acts desk"><a class="btn ghost" href="#import">CSV importieren</a><button class="btn ghost" type="button" data-act="prices">Kurse aktualisieren</button><button class="btn" type="button" data-act="add">+ Transaktion</button></div></div>
+          <div class="row acts desk"><button class="btn ghost" type="button" data-act="prices">Kurse aktualisieren</button></div></div>
         <div class="card hero" data-depot>
           <div class="l">
             <div style="display:grid;gap:6px"><span class="eyebrow">Depotwert<button type="button" class="info" data-info="Depotwert" aria-label="Erklärung: Depotwert">i</button></span><span class="big" id="hVal"></span><div class="ln" id="hLine"></div></div>
@@ -976,12 +1035,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         <div class="phead"><div class="t"><span class="eyebrow desk">Ausschüttungen</span><h1>Dividenden</h1></div>
           <div class="row acts" id="divYearSeg" role="group" aria-label="Jahr"></div></div>
         <div class="kpis" id="divKpis"></div>
-        <div class="g2e">
+        <details class="card dgd" id="dgD"><summary><b>Dividenden-Ziel</b><span class="note" id="dgSum"></span><span class="link">ändern</span></summary><div class="dgoal" id="dgGoal" style="margin-top:12px"></div></details>
+        <div>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>Die nächsten 12 Monate<button type="button" class="info" data-info="Dividenden-Prognose" aria-label="Erklärung: Dividenden-Prognose">i</button></h3><span class="note" id="dfSum"></span></div><div class="legend" style="margin:0"><span><i style="background:var(--div)"></i>erhalten</span><span><i class="hatch"></i>erwartet</span></div></div>
             <div class="fcal" id="dfCal"></div>
             <div class="tx" id="dfList" style="margin-top:10px"></div></div>
-          <div class="card"><div class="card-h"><h3>Dividenden-Ziel<button type="button" class="info" data-info="Dividenden-Ziel" aria-label="Erklärung: Dividenden-Ziel">i</button></h3></div>
-            <div class="dgoal" id="dgGoal"></div></div>
         </div>
         <div class="card"><div class="card-h"><h3>Monat für Monat<button type="button" class="info" data-info="Monat für Monat" aria-label="Erklärung: Monat für Monat">i</button></h3><div class="legend" style="margin:0" id="calLegend"></div></div>
           <div class="cal" id="calBig" style="height:170px"></div></div>
@@ -996,6 +1054,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <section class="page rp" data-page="rente" hidden>
         <div class="phead"><div class="t"><span class="eyebrow">Gesetzlich, betrieblich, privat und dein Depot</span><h1>Rentenplaner</h1></div><div class="row acts"><div class="seg" id="rpView" role="group" aria-label="Sicht"><button type="button" data-v="real">Heutige Kaufkraft</button><button type="button" data-v="nom">Euro von später</button></div><button type="button" class="info" data-info="Kaufkraft" aria-label="Erklärung: Kaufkraft">i</button></div></div>
         <div class="rpsteps" id="rpSteps" role="tablist" aria-label="Schritte"></div>
+        <div class="rpline" id="rpLine" hidden></div>
         <div class="rpgrid"><div id="rpPanes"></div><aside class="card rpsum" id="rpSum"></aside></div>
       </section>
       <section class="page verm" data-page="vermoegen" hidden>
@@ -1090,49 +1149,47 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     </button>
   </div>
   <div class="card" id="statEmpty" hidden><p class="empty" style="margin:0">Sobald du Transaktionen angelegt oder importiert hast, siehst du hier Rendite, Risiko, Länder, Sektoren und vieles mehr.</p><div class="row" style="justify-content:center;margin-top:12px"><button class="btn" type="button" data-act="add">Erste Transaktion</button><a class="btn ghost" href="#import">CSV importieren</a></div></div>
-  <div class="row statpick" id="statPick" role="group" aria-label="Schnellauswahl"></div>
-  <section class="panel" aria-labelledby="hSelChart" id="selChartPanel">
+  <div class="row stattop"><label class="note" for="statPick">Ansicht</label><select id="statPick" class="depotsel" aria-label="Ganzes Depot oder ein Wertpapier"></select></div>
+  <section class="stats" id="statCore" aria-label="Die wichtigsten Kennzahlen"></section>
+  <div class="subtabs" id="stTabs" role="tablist" aria-label="Bereiche"><button type="button" role="tab" data-stt="rendite">Rendite</button><button type="button" role="tab" data-stt="risiko">Risiko</button><button type="button" role="tab" data-stt="kosten">Kosten</button><button type="button" role="tab" data-stt="struktur">Struktur</button><button type="button" role="tab" data-stt="quellen">Herkunft der Daten</button></div>
+  <section class="panel" aria-labelledby="hSelChart" id="selChartPanel" data-st="rendite">
     <div class="panel-head"><h2 id="hSelChart">Verlauf der Auswahl</h2><div class="row" style="gap:8px"><div class="row" id="selChartSeg" role="group" aria-label="Ansicht"></div><div class="seg pctseg" id="selPct" role="group" aria-label="Anzeige in Euro oder Prozent"></div></div></div>
     <div class="chart" id="selChart"></div>
     <div class="legend" id="selChartLegend"></div>
   </section>
-  <section class="panel" aria-labelledby="hRet">
+  <section class="panel" aria-labelledby="hRet" data-st="rendite">
     <h2 id="hRet">Rendite und Ertrag<button type="button" class="info" data-info="Rendite und Ertrag" aria-label="Erklärung: Rendite und Ertrag">i</button></h2>
     <div class="stats" id="statRet"></div>
   </section>
-  <div class="grid2">
-    <section class="panel" aria-labelledby="hRisk">
+    <section class="panel" aria-labelledby="hRisk" data-st="risiko">
       <h2 id="hRisk">Risiko und Schwankung<button type="button" class="info" data-info="Risiko und Schwankung" aria-label="Erklärung: Risiko und Schwankung">i</button></h2>
       <div class="stats" id="statRisk"></div>
       <div class="tablewrap"><table id="heat" class="heat"></table></div>
       <p class="foot">Monatsrenditen zeitgewichtet (Einzahlungen herausgerechnet, Dividenden eingerechnet). Volatilität aus Monatsrenditen, auf ein Jahr hochgerechnet.</p>
     </section>
-    <section class="panel" aria-labelledby="hFlow">
+    <section class="panel" aria-labelledby="hFlow" data-st="kosten">
       <h2 id="hFlow">Sparen und Kosten<button type="button" class="info" data-info="Sparen und Kosten" aria-label="Erklärung: Sparen und Kosten">i</button></h2>
       <div class="stats" id="statFlow"></div>
       <div class="chart" id="flowChart"></div>
       <p class="foot">Netto investiert je Jahr: Käufe inkl. Gebühren minus Verkaufserlöse.</p>
     </section>
-  </div>
-  <section class="panel" aria-labelledby="hCost">
+  <section class="panel" aria-labelledby="hCost" data-st="kosten">
     <div class="panel-head"><h2 id="hCost">Kosten<button type="button" class="info" data-info="Kosten-Übersicht" aria-label="Erklärung: Kosten-Übersicht">i</button></h2><span class="hint" id="costSentence"></span></div>
     <div class="stats" id="statCost"></div>
     <div class="chart" id="costChart"></div>
     <div id="costMissing"></div>
   </section>
-  <div class="grid2">
-    <section class="panel" aria-labelledby="hWin">
+    <section class="panel" aria-labelledby="hWin" data-st="rendite">
       <h2 id="hWin">Gewinner und Verlierer</h2>
       <div id="winners"></div>
     </section>
-    <section class="panel" aria-labelledby="hStruct">
+    <section class="panel" aria-labelledby="hStruct" data-st="struktur">
       <div class="panel-head"><h2 id="hStruct">Struktur<button type="button" class="info" data-info="Struktur" aria-label="Erklärung: Struktur">i</button></h2><span class="hint" id="structCount"></span></div>
       <div id="clsBars"></div>
       <div class="stats" id="statStruct"></div>
     </section>
-  </div>
-  <section class="stats" id="concStats" aria-label="Konzentration"></section>
-  <div class="grid2">
+  <section class="stats" id="concStats" aria-label="Konzentration" data-st="risiko"></section>
+  <div class="grid2" data-st="struktur">
     <section class="panel" aria-labelledby="hCountries">
       <div class="panel-head"><h2 id="hCountries">Länder<button type="button" class="info" data-info="Länder" aria-label="Erklärung: Länder">i</button></h2><span class="hint" id="countryCount"></span></div>
       <div class="stack" id="contStack" aria-hidden="true"></div>
@@ -1145,7 +1202,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <p class="foot">Der Strich auf jedem Balken zeigt den Anteil im MSCI World. ETFs sind anteilig auf ihre Länder und Sektoren verteilt.</p>
     </section>
   </div>
-  <section class="panel" aria-labelledby="hSrc">
+  <section class="panel" aria-labelledby="hSrc" data-st="quellen">
     <h2 id="hSrc">Woher die Zahlen kommen</h2>
     <div class="tablewrap"><table id="srcTable"></table></div>
     <p class="foot">ETF-Gewichte sind gerundete Näherungswerte des jeweiligen Index (Stand Herbst 2026) und weichen vom Factsheet deines Anbieters leicht ab. Tippe auf ein Wertpapier, um eigene Werte einzutragen.</p>
@@ -1161,19 +1218,18 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <div class="sumline" id="spSum"></div>
         </div>
         <div class="plans" id="plans"></div>
-        <div class="row" style="justify-content:space-between;gap:8px 16px"><span class="row" style="gap:8px 16px"><button type="button" class="btn ghost sm" id="spAdd">+ Sparplan festlegen</button><span class="note" id="spAutoNote"></span></span><button type="button" class="link" id="spOld" hidden></button></div>
+        <div class="row" style="justify-content:space-between;gap:8px 16px"><span class="row" style="gap:8px 16px"><button type="button" class="btn ghost sm" id="spAdd">+ Sparplan festlegen</button><button type="button" class="btn ghost sm" id="spTakeAll" hidden></button><span class="note" id="spAutoNote"></span></span><button type="button" class="link" id="spOld" hidden></button></div>
         <div class="card" id="spVorsorge" hidden></div>
 
         <div class="subtabs" role="tablist" aria-label="Bereiche">
-          <button type="button" role="tab" data-tab="fc">Hochrechnung</button>
-          <button type="button" role="tab" data-tab="zl">Zielrechner</button>
+          <button type="button" role="tab" data-tab="fc">Zukunft</button>
           <button type="button" role="tab" data-tab="cr">Krisen-Test</button>
-          <button type="button" role="tab" data-tab="st">Statistik</button>
-          <button type="button" role="tab" data-tab="rb">Zielaufteilung</button>
-          <button type="button" role="tab" data-tab="lg">Verlauf</button>
-          <button type="button" role="tab" data-tab="dt">Details</button>
+          <button type="button" role="tab" data-tab="dv">Dividenden</button>
+          <button type="button" role="tab" data-tab="hk">Haus kaufen?</button>
+          <button type="button" role="tab" data-tab="my">Meine Sparpläne</button>
         </div>
 
+        <div class="sseg spmode" id="spMode" role="group" aria-label="Was willst du ausrechnen"></div>
         <!-- Hochrechnung -->
         <div data-pane="fc" class="fcg">
           <div class="card ctrl" id="spCtrl" aria-label="Annahmen">
@@ -1186,6 +1242,13 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
               <div class="unit" style="margin-top:6px"><input id="spYearsIn" inputmode="numeric" aria-label="Laufzeit in Jahren, 1 bis 100"><span>Jahre</span></div></div>
             <div class="field"><label for="spStop">Nur die ersten … Jahre sparen<button type="button" class="info" data-info="Sparphase" aria-label="Erklärung: Sparphase">i</button></label>
               <div class="unit"><input id="spStop" inputmode="numeric" placeholder="die ganze Zeit"><span>J.</span></div></div>
+            <div class="field"><span class="lab">Sparrate ändern<button type="button" class="info" data-info="Sparrate ändern" aria-label="Erklärung: Sparrate ändern">i</button></span>
+              <div id="spPh" style="display:grid;gap:8px"></div>
+              <button type="button" class="btn ghost sm" id="spPhAdd" style="justify-self:start;margin-top:6px">+ Rate ändern ab Jahr …</button></div>
+            <div class="field"><label class="toggle"><input type="checkbox" id="spTax"> Steuern einrechnen<button type="button" class="info" data-info="Steuern in der Hochrechnung" aria-label="Erklärung: Steuern in der Hochrechnung">i</button></label><span class="note" id="spTaxNote"></span></div>
+            <div class="field"><label class="toggle"><input type="checkbox" id="spAvd"> Als Altersvorsorgedepot, mit Zulagen<button type="button" class="info" data-info="Altersvorsorgedepot im Sparplan" aria-label="Erklärung: Altersvorsorgedepot">i</button></label>
+              <div class="g3 two" id="spAvdF" hidden style="margin-top:8px"><div class="field"><label for="spAvdKids">Kinder mit Kindergeld</label><div class="unit"><input id="spAvdKids" inputmode="numeric" placeholder="0"><span>Kinder</span></div></div></div>
+              <span class="note" id="spAvdNote" hidden></span></div>
             <div class="field"><span class="lab">Rendite pro Jahr vor Kosten<button type="button" class="info" data-info="Rendite-Spanne" aria-label="Erklärung: Rendite-Spanne">i</button></span><div class="sseg" id="spRet" role="group" aria-label="Renditestufe"></div></div>
             <details class="more" id="spMore"><summary>Weitere Annahmen</summary>
               <div class="more-in">
@@ -1214,6 +1277,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
               <div class="hero">
                 <div><span class="eyebrow" id="spHYear"></span><div class="big num" id="spHVal"></div><div class="sub" id="spHRange"></div></div>
                 <div class="side2"><span class="eyebrow">In heutiger Kaufkraft<button type="button" class="info" data-info="Kaufkraft heute" aria-label="Erklärung: Kaufkraft heute">i</button></span><span class="v" id="spHReal"></span><span class="note" id="spHInf"></span></div>
+                <p class="note" id="spHTax" style="margin:0;grid-column:1/-1" hidden></p>
               </div>
               <button type="button" class="crashrow mob" id="spToCtrl"><span id="spCtrlSum"></span><span class="link">Ändern ↓</span></button>
               <div class="chart-h"><span class="note" id="fcPctNote"></span><div class="seg pctseg" id="fcPct" role="group" aria-label="Anzeige in Euro oder Prozent"></div></div>
@@ -1223,11 +1287,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div>
             <div class="card split">
               <div class="row" style="justify-content:space-between"><h3>Woraus der Endwert besteht<button type="button" class="info" data-info="Zinseszins" aria-label="Erklärung: Zinseszins">i</button></h3><span class="note" id="spCost"></span></div>
-              <div class="bar"><b id="spBStart" style="background:var(--muted)"></b><b id="spBPaid" style="background:var(--accent);opacity:.55"></b><b id="spBGrow" style="background:var(--accent)"></b></div>
+              <div class="bar"><b id="spBStart" style="background:var(--muted)"></b><b id="spBPaid" style="background:var(--accent);opacity:.55"></b><b id="spBGrow" style="background:var(--accent)"></b><b id="spBZul" style="background:var(--c2)"></b></div>
               <div class="lg">
                 <span><i style="background:var(--muted)"></i>Startkapital <b class="num" id="spVStart"></b></span>
                 <span><i style="background:var(--accent);opacity:.55"></i>Deine Raten <b class="num" id="spVPaid"></b></span>
                 <span><i style="background:var(--accent)"></i>Zinseszins <b class="num" id="spVGrow"></b></span>
+                <span id="spLZul" hidden><i style="background:var(--c2)"></i>Zulagen vom Staat <b class="num" id="spVZul"></b></span>
               </div>
             </div>
             <div class="card" style="display:grid;gap:14px">
@@ -1281,6 +1346,18 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           </div>
         </div>
 
+        <!-- Dividendensparen -->
+        <div data-pane="dv" hidden class="fcg">
+          <div class="card ctrl" aria-label="Annahmen zum Dividendensparen"><div id="dvCtl" style="display:grid;gap:14px"></div></div>
+          <div class="res" id="dvRes"></div>
+        </div>
+
+        <!-- Haus kaufen oder mieten, selbst wohnen oder vermieten -->
+        <div data-pane="hk" hidden class="fcg">
+          <div class="card ctrl" aria-label="Annahmen zur Immobilie"><div class="sseg" id="hkMode" role="group" aria-label="Was hast du vor"></div><div id="hkCtl" style="display:grid;gap:14px"></div></div>
+          <div class="res" id="hkRes"></div>
+        </div>
+
         <!-- Krisen-Test -->
         <div data-pane="cr" hidden class="crpane">
           <div class="row" id="spCrChips" role="group" aria-label="Krise wählen"></div>
@@ -1316,6 +1393,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 
         <!-- Statistik -->
         <div data-pane="st" hidden class="crpane">
+          <h2 class="seth sph">Statistik</h2>
           <div class="kpis" id="spStK"></div>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>Eingezahlt pro Monat</h3><span class="note">Sparpläne aus eigenem Geld und geschenktes Saveback, letzte 24 Monate</span></div>
             <div class="legend-b"><span><i style="background:var(--accent)"></i>Sparpläne</span><span><i style="background:var(--gain)"></i>Saveback</span></div></div>
@@ -1327,6 +1405,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 
         <!-- Zielaufteilung und Rebalancing -->
         <div data-pane="rb" hidden class="crpane">
+          <h2 class="seth sph">Zielaufteilung</h2>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>So soll dein Depot aufgeteilt sein<button type="button" class="info" data-info="Zielaufteilung" aria-label="Erklärung: Zielaufteilung">i</button></h3><span class="note" id="rbSumNote"></span></div><div class="seg" id="rbBy" role="group" aria-label="Ebene"></div></div>
             <div class="rbtbl" id="rbTbl"></div>
             <div class="row" style="gap:8px 14px;margin-top:12px"><button type="button" class="btn ghost sm" id="rbFromIst">Heutige Aufteilung übernehmen</button><button type="button" class="btn ghost sm" id="rbEven">Gleich verteilen</button><span class="row" style="gap:6px"><span class="note">Toleranz ±</span><span class="unit2" style="width:5.5rem"><input id="rbTol" inputmode="decimal"><span>Pp.</span></span></span></div></div>
@@ -1338,12 +1417,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 
         <!-- Sparplan-Tagebuch -->
         <div data-pane="lg" hidden class="crpane">
+          <h2 class="seth sph">Verlauf</h2>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>Sparplan-Tagebuch<button type="button" class="info" data-info="Sparplan-Tagebuch" aria-label="Erklärung: Sparplan-Tagebuch">i</button></h3><span class="note">Gestartet, Rate geändert, ausgesetzt, wieder aufgenommen, beendet</span></div></div>
             <div id="lgList"></div></div>
         </div>
 
         <!-- Details -->
         <div data-pane="dt" hidden class="crpane">
+          <h2 class="seth sph">Details</h2>
           <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3>Alle Laufzeiten</h3><span class="note" id="spDtNote"></span></div>
             <div class="tablewrap"><table id="fcTable"></table></div></div>
           <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3>Laufende Kosten deiner ETFs<button type="button" class="info" data-info="TER" aria-label="Erklärung: TER">i</button></h3><span class="note" id="spTerHidden"></span></div>
@@ -1398,9 +1479,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <!-- Einstellungen -->
       <section class="page" data-page="einstellungen" hidden>
         <div class="phead"><div class="t"><h1>Einstellungen</h1></div></div>
+        <nav class="setjump" aria-label="Bereiche"><a href="#" data-jump="setDep">Depots</a><a href="#" data-jump="setKurse">Kurse</a><a href="#" data-jump="setSave">Speichern und Sichern</a><a href="#" data-jump="setWarn">Warnungen</a><a href="#" data-jump="setApp">Darstellung und App</a><a href="#" data-jump="setDanger">Gefahrenbereich</a></nav>
         <div class="g2e">
-          <div class="card rpcta" style="grid-column:1/-1"><div><h3>Rentenplaner</h3><p class="note" style="margin:4px 0 0">Wie viel hast du im Alter wirklich? Gesetzliche Rente oder Pension, Betriebsrente, Riester, Altersvorsorgedepot, Immobilien und Erbe, nach Steuern und Krankenkasse.</p></div><a class="btn" href="#rente">Rentenplaner öffnen</a></div>
-          <div class="card" style="grid-column:1/-1"><div class="card-h"><h3>Kurse</h3><span class="note" id="pLast"></span></div>
+          <div id="setDep" class="card setc" style="grid-column:1/-1"><div class="card-h"><h3>Depots<button type="button" class="info" data-info="Depots" aria-label="Erklärung: Depots">i</button></h3><button type="button" class="btn ghost sm" id="depAdd">+ Depot</button></div>
+            <div class="deplist" id="depList"></div>
+            <p class="hint" style="margin:8px 0 0">Der Freistellungsauftrag ist der Betrag, den du bei dieser Bank steuerfrei gestellt hast. Er wird in der Steuer-Ecke verwendet.</p></div>
+          <div id="setKurse" class="card setc" style="grid-column:1/-1"><div class="card-h"><h3>Kurse</h3><span class="note" id="pLast"></span></div>
             <div class="set">
               <div class="it"><span><b>Kursquelle</b><small id="priceInfo">Kurse werden von Hand gepflegt</small></span><div class="seg" id="srcSeg" role="group" aria-label="Kursquelle"><button type="button" data-src="manual">Manuell</button><button type="button" data-src="yahoo">Yahoo (Proxy)</button><button type="button" data-src="twelve">Twelve Data</button></div></div>
               <div class="it" id="rowProxy"><span style="flex:1 1 320px"><b>Adresse deines Kurs-Proxys</b><small>Einmal kostenlos bei Cloudflare einrichten, ohne API-Schlüssel. Findet Aktien und ETFs per ISIN, auch auf Xetra.</small>
@@ -1419,7 +1503,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
               <div class="it"><span><b>Abruf</b><small>Der Schlüssel und die Adresse bleiben nur in diesem Browser. In der Claude-Vorschau sind Abrufe gesperrt, dort gilt die manuelle Eingabe.</small></span><button class="btn" type="button" id="pFetch">Jetzt abrufen</button></div>
             </div>
             <div id="priceLog" style="display:grid;gap:2px;margin-top:8px"></div></div>
-          <div class="card"><div class="card-h"><h3>Daten und Sicherung</h3></div>
+          <h2 class="seth" id="setSave">Speichern und Sichern</h2>
+          <div class="card" style="grid-column:1/-1"><div class="card-h"><h3>Speicherort</h3></div>
+            <div class="set">
+              <div class="it"><span><b>Im Browser</b><small data-status></small></span></div>
+            </div></div>          <div class="card"><div class="card-h"><h3>Daten und Sicherung</h3></div>
             <div class="set">
               <div class="it"><span><b>Backup exportieren</b><small>Alle Daten als JSON-Datei, auf Wunsch mit Passwort</small></span><button class="btn ghost" type="button" id="bkSave">Exportieren</button></div>
               <div class="it"><label class="toggle"><input type="checkbox" id="bkPwOn"> Sicherung mit Passwort schützen<button type="button" class="info" data-info="Passwort" aria-label="Erklärung: Passwort">i</button></label></div>
@@ -1429,50 +1517,53 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
               <div class="it"><span><b>Transaktionen als CSV</b><small>Im gleichen Format wie die Import-Vorlage</small></span><button class="btn ghost" type="button" id="csvSave">Exportieren</button></div>
             </div>
             <div id="bkOut"></div></div>
-          <div class="card" style="grid-column:1/-1"><div class="card-h"><h3>Depots<button type="button" class="info" data-info="Depots" aria-label="Erklärung: Depots">i</button></h3><button type="button" class="btn ghost sm" id="depAdd">+ Depot</button></div>
-            <div class="deplist" id="depList"></div>
-            <p class="hint" style="margin:8px 0 0">Der Freistellungsauftrag ist der Betrag, den du bei dieser Bank steuerfrei gestellt hast. Er wird in der Steuer-Ecke verwendet.</p></div>
-          <div class="card"><div class="card-h"><h3>Warnungen zum Klumpenrisiko</h3></div>
-            <div class="set">
-              <div class="it"><span><b>Ein Titel über</b><small>direkt und über ETFs zusammen</small></span><span class="unit2" style="width:6.5rem"><input id="wT" inputmode="decimal"><span>%</span></span></div>
-              <div class="it"><span><b>Ein Land über</b></span><span class="unit2" style="width:6.5rem"><input id="wC" inputmode="decimal"><span>%</span></span></div>
-              <div class="it"><span><b>Ein Sektor über</b></span><span class="unit2" style="width:6.5rem"><input id="wS" inputmode="decimal"><span>%</span></span></div>
-            </div></div>
-          <div class="card"><div class="card-h"><h3>Darstellung</h3></div>
-            <div class="set"><div class="it"><span><b>Farbmodus</b><small>Folgt sonst deiner Systemeinstellung</small></span><div class="seg" id="themeSeg" role="group" aria-label="Farbmodus"><button type="button" data-t="">System</button><button type="button" data-t="light">Hell</button><button type="button" data-t="dark">Dunkel</button></div></div></div></div>
           <div class="card" style="grid-column:1/-1"><div class="card-h"><h3>Speicherdatei auf dem PC<button type="button" class="info" data-info="Speicherdatei" aria-label="Erklärung: Speicherdatei">i</button></h3><span class="pill" id="fileState"></span></div>
             <div class="set" id="fileSet">
               <div class="it"><label class="toggle"><input type="checkbox" id="filePwOn"> Speicherdatei mit Passwort verschlüsseln</label><span class="note" id="filePwNote"></span></div>
               <div class="it"><span><b id="fileName">Keine Speicherdatei</b><small id="fileInfo"></small></span><span class="row" style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" type="button" id="fileNew">Neue Speicherdatei</button><button class="btn ghost" type="button" id="fileOpen">Speicherdatei öffnen</button><button class="btn ghost" type="button" id="fileSaveNow" hidden>Jetzt speichern</button><button class="btn ghost" type="button" id="fileClose" hidden>Trennen</button></span></div>
             </div>
             <p class="hint" id="fileHint" style="margin:8px 0 0"></p></div>
+          <div id="setWarn" class="card setc" style="grid-column:1/-1"><div class="card-h"><h3>Warnungen zum Klumpenrisiko</h3></div>
+            <div class="set">
+              <div class="it"><span><b>Ein Titel über</b><small>direkt und über ETFs zusammen</small></span><span class="unit2" style="width:6.5rem"><input id="wT" inputmode="decimal"><span>%</span></span></div>
+              <div class="it"><span><b>Ein Land über</b></span><span class="unit2" style="width:6.5rem"><input id="wC" inputmode="decimal"><span>%</span></span></div>
+              <div class="it"><span><b>Ein Sektor über</b></span><span class="unit2" style="width:6.5rem"><input id="wS" inputmode="decimal"><span>%</span></span></div>
+            </div></div>
+          <h2 class="seth" id="setApp">Darstellung und App</h2>
+          <div class="card"><div class="card-h"><h3>Darstellung</h3></div>
+            <div class="set"><div class="it"><span><b>Farbmodus</b><small>Folgt sonst deiner Systemeinstellung</small></span><div class="seg" id="themeSeg" role="group" aria-label="Farbmodus"><button type="button" data-t="">System</button><button type="button" data-t="light">Hell</button><button type="button" data-t="dark">Dunkel</button></div></div>
+              <div class="it"><span><b>Erklärungen</b><small>Am Begriff: gepunktet unterstrichene Wörter antippen. Als Knopf: kleines „i“ daneben.</small></span><div class="seg" id="infoSeg" role="group" aria-label="Erklärungen"><button type="button" data-im="term">Am Begriff</button><button type="button" data-im="btn">Als Knopf</button></div></div></div></div>
           <div class="card"><div class="card-h"><h3>App</h3><span class="pill" id="appState"></span></div>
             <div class="set">
               <div class="it"><span><b>Als App installieren</b><small id="appInfo"></small></span><button class="btn" type="button" id="appInstall">App installieren</button></div>
             </div></div>
-          <div class="card"><div class="card-h"><h3>Speicherort</h3></div>
+          <h2 class="seth" id="setDanger">Gefahrenbereich</h2>
+          <div class="card dangerzone" style="grid-column:1/-1"><div class="card-h"><h3>Alle Daten löschen</h3></div>
             <div class="set">
-              <div class="it"><span><b>Im Browser</b><small data-status></small></span></div>
               <div class="it"><span><b>Alle Daten löschen</b><small>Kann nicht rückgängig gemacht werden</small></span><span class="row" style="display:flex"><button class="btn danger" type="button" id="wipe">Löschen</button><button class="btn danger solid" type="button" id="wipeYes" hidden>Ja, endgültig löschen</button></span></div>
             </div></div>
+
         </div>
       </section>
 
       <!-- Mehr (Handy) -->
+      <section class="page" data-page="planen" hidden>
+        <div class="phead"><div class="t"><h1 class="desk">Planen</h1></div></div>
+        <div class="hub" id="planHub"></div>
+      </section>
       <section class="page" data-page="mehr" hidden>
         <div class="phead"><div class="t"><h1>Mehr</h1></div></div>
-        <div class="card morelist"><a href="#rente"><b>Rentenplaner</b> <span class="muted">→</span></a><a href="#vermoegen">Vermögen und Ziele <span class="muted">→</span></a><a href="#dividenden">Dividenden <span class="muted">→</span></a><a href="#steuern">Steuern <span class="muted">→</span></a><a href="#watchlist">Watchlist <span class="muted">→</span></a><a href="#rueckblick">Jahresrückblick <span class="muted">→</span></a><a href="#transaktionen">Transaktionen <span class="muted">→</span></a><button type="button" data-act="prices">Kurse aktualisieren <span class="muted">→</span></button><a href="#import">Depot importieren <span class="muted">→</span></a><a href="#einstellungen">Einstellungen <span class="muted">→</span></a></div>
+        <div class="card morelist"><a href="#import">Depot importieren <span class="muted">→</span></a><a href="#einstellungen">Einstellungen <span class="muted">→</span></a><button type="button" data-act="prices">Kurse aktualisieren <span class="muted">→</span></button></div>
         <p class="note" id="moreNote"></p>
       </section>
     </main>
 
     <nav class="tabbar" aria-label="Navigation">
-      <a href="#uebersicht" data-r="uebersicht"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Übersicht</a>
-      <a href="#positionen" data-r="positionen"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Positionen</a>
-      <a href="#sparplaene" data-r="sparplaene"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3 11l3.5-3.5 2.5 2L13 4.5M10.5 4.5H13V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Sparpläne</a>
-      <a href="#statistiken" data-r="statistiken"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Statistiken</a>
-      <a href="#budget" data-r="budget"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.5 6.5h13" stroke="currentColor" stroke-width="1.4"/><circle cx="11.2" cy="10" r="1.1" fill="currentColor"/></svg>Budget</a>
-      <a href="#mehr" data-r="mehr"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><circle cx="3.5" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="12.5" cy="8" r="1.4" fill="currentColor"/></svg>Mehr</a>
+      <a href="#uebersicht" data-g="uebersicht"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Übersicht</a>
+      <a href="#positionen" data-g="depot"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Depot</a>
+      <a href="#statistiken" data-g="auswerten"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8H8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 1.8A6.5 6.5 0 0 1 14.2 6H10z" fill="currentColor"/></svg>Auswerten</a>
+      <a href="#planen" data-g="planen"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M11.75 9v5.5M9 11.75h5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Planen</a>
+      <a href="#mehr" data-g="mehr"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><circle cx="3.5" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="12.5" cy="8" r="1.4" fill="currentColor"/></svg>Mehr</a>
     </nav>
   </div>
 </div>
@@ -1859,7 +1950,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     priv: !!prefs.priv,
     ui: Object.assign({ lastBackup: 0, bkEvery: 30, since: Date.now(), bench: "", benchOn: true, mvView: "list", warnTitle: 5, warnCountry: 60, warnSector: 30 }, prefs.ui || {}),
     mvMode: "", mvAll: false,
-    fc: Object.assign({ start: null, rate: null, ret: 7, retMin: 5, retMax: 9, inf: 2, dyn: 0, dynMode: "pct", dynEur: 0, years: 30, stop: 0, goal: null }, prefs.fc || {}),
+    fc: Object.assign({ start: null, rate: null, ret: 7, retMin: 5, retMax: 9, inf: 2, dyn: 0, dynMode: "pct", dynEur: 0, years: 30, stop: 0, goal: null, avd: false, avdKids: 0, phases: [], tax: true }, prefs.fc || {}),
   };
   // Kein Beispieldepot mehr: die App startet leer
   const isDemo = () => false;
@@ -2452,6 +2543,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   // ---------- Erklärungen (ⓘ) ----------
   const INFO = {
+    "Steuern auf Dividenden": "Ausschüttungen sind jedes Jahr steuerpflichtig. Bei Aktien-ETFs sind 30 % steuerfrei (Teilfreistellung). Dein Freistellungsauftrag aus Einstellungen → Depots bleibt jedes Jahr frei (höchstens 1.000 €, verheiratet 2.000 €). Auf den Rest zahlst du 25 % plus Soli und, wenn eingestellt, Kirchensteuer.",
+    "Steuern in der Hochrechnung": "Jedes Jahr fällt auf thesaurierende ETFs die Vorabpauschale an (Basiszins × 0,7 × Depotwert am Jahresanfang, höchstens der Gewinn). Davon sind bei Aktien-ETFs 30 % steuerfrei (Teilfreistellung). Dein Freistellungsauftrag aus Einstellungen → Depots bleibt jedes Jahr steuerfrei. Die Steuer wird hier aus dem Depot bezahlt. Beim Verkauf am Ende ist der restliche Gewinn steuerpflichtig, die schon versteuerte Vorabpauschale wird angerechnet. Steuersatz: 25 % plus Soli und, wenn eingestellt, Kirchensteuer.",
+    "Sparrate ändern": "Hier legst du fest, dass sich deine Sparrate später ändert. Beispiel: die ersten 20 Jahre 200 € im Monat, ab Jahr 20 dann 300 €. Du kannst mehrere Änderungen eintragen. Eine eingestellte Erhöhung pro Jahr läuft ab der neuen Rate weiter.",
+    "Altersvorsorgedepot im Sparplan": "Ab 2027 gibt es das staatlich geförderte Altersvorsorgedepot. Auf deine Eigenbeiträge zahlt der Staat Zulagen: 50 % auf die ersten 360 € im Jahr, 25 % auf alles bis 1.800 € (also bis 150 € im Monat), dazu 300 € pro Kind. Mehr als 150 € im Monat wird nicht gefördert. Zulagen gibt es nur, wenn du pflichtversichert in die Rentenversicherung einzahlst. Das Geld ist bis zur Rente gebunden (frühestens 65), die Auszahlung ist dann voll steuerpflichtig. Genauer rechnet der Rentenplaner.",
     "Kaufkraft": "Heutige Kaufkraft: Beträge aus der Zukunft werden um die Inflation zurückgerechnet (Betrag ÷ (1 + Inflation)^Jahre). So siehst du, was die Rente in heutigem Geld wert ist. „Euro von später“ zeigt die Zahl, die dann wirklich auf dem Konto steht.",
     "Wirkung": "Für jeden Baustein rechnet Depotblick: Was kostet er dich heute netto (nach Steuer- und SV-Ersparnis), und wie viel Netto-Rente bringt er später? Daneben steht, was derselbe Netto-Aufwand in einem ETF-Sparplan bringen würde.",
     "Was-wäre-wenn": "Hak Ereignisse an und passe die Werte an. Mehrere lassen sich kombinieren. Die Tabelle vergleicht jedes Szenario mit deinem Plan. Gespeichert wird nur, was du einstellst, dein Plan bleibt unverändert.",
@@ -2561,19 +2656,40 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   let popFor = null;
   function closePop() { pop.hidden = true; popFor = null; }
   document.addEventListener("click", (e) => {
-    const b = e.target.closest && e.target.closest(".info");
+    const b = e.target.closest && e.target.closest(".info, .term");
     if (!b) { if (!pop.contains(e.target)) closePop(); return; }
     e.preventDefault(); e.stopPropagation();
     if (popFor === b) { closePop(); return; }
     const k = b.dataset.info;
-    pop.innerHTML = `<b>${esc(k)}</b><p>${esc(INFO[k] || "")}</p>`;
+    pop.innerHTML = `<b>${esc(b.dataset.title || k)}</b><p>${esc(INFO[k] || "")}</p>`;
     pop.hidden = false; popFor = b;
     const r = b.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight, vw = document.documentElement.clientWidth;
     let left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), vw - w - 8);
     let top = r.bottom + 8; if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 8);
     pop.style.left = left + "px"; pop.style.top = top + "px";
   }, true);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePop(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePop(); if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("term")) { e.preventDefault(); e.target.click(); } });
+  // Erklärungen am Begriff: der Text vor jedem i-Knopf wird gepunktet unterstrichen und öffnet dieselbe Erklärung
+  const termOf = new WeakMap();
+  function termify() {
+    $$("button.info").forEach((b) => {
+      const t0 = termOf.get(b); if (t0 && t0.isConnected) return;
+      let prev = b.previousSibling;
+      while (prev && prev.nodeType === 3 && !prev.textContent.trim()) prev = prev.previousSibling;
+      if (prev && prev.nodeType === 1 && /^(LABEL|B|SPAN|STRONG|H3|H2)$/.test(prev.tagName) && !prev.classList.contains("term") && prev.childNodes.length === 1 && prev.firstChild.nodeType === 3) prev = prev.firstChild;
+      if (prev && prev.nodeType === 1 && prev.classList.contains("term")) { termOf.set(b, prev); b.classList.add("info-x"); return; }
+      if (!prev || prev.nodeType !== 3) { b.classList.remove("info-x"); return; }
+      const txt = prev.textContent, m = txt.match(/^([\s\S]*?)(\S[^]*?)(\s*)$/); if (!m || m[2].length > 60) { b.classList.remove("info-x"); return; }
+      const sp = document.createElement("span"); sp.className = "term"; sp.textContent = m[2]; sp.tabIndex = 0; sp.setAttribute("role", "button");
+      sp.dataset.info = b.dataset.info; if (b.dataset.title) sp.dataset.title = b.dataset.title; sp.setAttribute("aria-label", b.getAttribute("aria-label") || m[2]);
+      const frag = document.createDocumentFragment(); if (m[1]) frag.appendChild(document.createTextNode(m[1])); frag.appendChild(sp); if (m[3]) frag.appendChild(document.createTextNode(m[3]));
+      prev.parentNode.replaceChild(frag, prev); termOf.set(b, sp); b.classList.add("info-x");
+    });
+  }
+  let termQ = false;
+  new MutationObserver(() => { if (termQ) return; termQ = true; requestAnimationFrame(() => { termQ = false; termify(); }); }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  function applyInfoMode() { document.documentElement.setAttribute("data-im", (S.ui && S.ui.infoMode) || "term"); $$("#infoSeg button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.im === ((S.ui && S.ui.infoMode) || "term"))); }
+  $$("#infoSeg button").forEach((x) => x.addEventListener("click", () => { S.ui = S.ui || {}; S.ui.infoMode = x.dataset.im; savePrefs(); applyInfoMode(); }));
   window.addEventListener("scroll", closePop, { passive: true });
 
   const TYPE_L = { buy: "Kauf", sell: "Verkauf", div: "Dividende" };
@@ -2615,7 +2731,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $$('[data-page="uebersicht"] [data-depot]').forEach((el) => (el.hidden = !has));
     if (!has) $("#riskCard").hidden = true;
     { const n = new Date(), yy = n.getMonth() === 11 ? n.getFullYear() : n.getMonth() === 0 ? n.getFullYear() - 1 : null; $("#yrBanner").hidden = !has || !yy; if (yy) $("#yrBannerT").textContent = "Dein Jahr " + yy + " im Rückblick."; }
-    if (has) { renderHero(); renderPerf(d); renderMovers(); renderAlloc(); renderRisk(); const r = $("#recent"); r.innerHTML = recentHtml(C.txs.slice(-6).reverse(), d, !isDemo()); bindTx(r); }
+    if (has) { renderHero(); renderPerf(d); renderMovers(); renderAlloc(); renderRisk(); const r = $("#recent"); r.innerHTML = recentHtml(C.txs.slice(-4).reverse(), d, !isDemo()); bindTx(r); }
     renderTiles();
   };
   const sgn0 = (v) => (v >= 0 ? "+" : "−") + eur0.format(Math.abs(v));
@@ -2731,9 +2847,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     aggregate("s", K).filter((e) => e.label !== "Sonstige" && e.label !== "Ohne Angabe" && (e.v / tot) * 100 > u.warnSector).forEach((e) => w.push(["Sektor", `<b>${esc(e.label)}</b> macht ${nf(0).format((e.v / tot) * 100)} % aus.`]));
     card.hidden = !w.length;
     if (!w.length) return;
-    card.innerHTML = `<div class="card-h"><h3>Klumpenrisiko<button type="button" class="info" data-info="Klumpenrisiko" aria-label="Erklärung: Klumpenrisiko">i</button></h3><a class="link" href="#einstellungen">Schwellen ändern</a></div>
+    const wasOpen = !!card.querySelector("details[open]");
+    card.innerHTML = `<details class="riskd"${wasOpen ? " open" : ""}><summary><span class="pill warn">${w.length === 1 ? "1 Klumpen-Hinweis" : w.length + " Klumpen-Hinweise"}</span><span class="riskone">${w[0][1]}</span><span class="link riskmore">${w.length > 1 ? "alle zeigen" : "mehr"}</span></summary>
+      <div class="card-h" style="margin-top:10px"><h3>Klumpenrisiko<button type="button" class="info" data-info="Klumpenrisiko" aria-label="Erklärung: Klumpenrisiko">i</button></h3><a class="link" href="#einstellungen">Schwellen ändern</a></div>
       <div class="risks">${w.map(([k, t]) => `<div class="risk"><span class="pill warn">${k}</span><span>${t}</span></div>`).join("")}</div>
-      <p class="note" style="margin:8px 0 0">Grenzen: Titel über ${u.warnTitle} %, Land über ${u.warnCountry} %, Sektor über ${u.warnSector} %. ETFs sind über ihre größten Titel, Länder und Sektoren durchgerechnet.</p>`;
+      <p class="note" style="margin:8px 0 0">Grenzen: Titel über ${u.warnTitle} %, Land über ${u.warnCountry} %, Sektor über ${u.warnSector} %. ETFs sind über ihre größten Titel, Länder und Sektoren durchgerechnet.</p></details>`;
   }
   // Nächste Dividende: gleicher Zahltag wie vor einem Jahr, Betrag nach heutiger Stückzahl
   function nextDividend() {
@@ -3023,6 +3141,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const depY = V > 0 ? (Math.max(fc12, C.div12) / V) * 100 : 0, y = G.divYield != null ? G.divYield : Math.round(depY * 100) / 100;
     const open = C.list.filter((p) => p.value > 0), tf = V > 0 ? open.reduce((x, p) => x + p.value * tfOf(p.asset), 0) / V : 0, tr = taxRate() * (1 - tf);
     const nowNet = F.reduce((x, f) => x + f.net, 0) / 12, goal = G.divMonthly || 0;
+    $("#dgSum").textContent = goal > 0 ? `${eur0.format(nowNet)} von ${eur0.format(goal)} im Monat erreicht (${nf(0).format(Math.min(999, (nowNet / goal) * 100))} %)` : `Heute rund ${eur0.format(nowNet)} im Monat. Setz dir ein Ziel.`;
     let hit = null;
     if (goal > 0 && y > 0) {
       let v = V; const g = Math.pow(1 + (G.divGrowth || 0) / 100, 1 / 12);
@@ -3068,7 +3187,18 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   };
 
   // --- Statistiken, Import, Einstellungen ---
-  PAGE_RENDER.statistiken = () => renderAnalysen();
+  PAGE_RENDER.statistiken = () => { renderAnalysen(); stSync(); };
+  // Statistiken: vier Kernzahlen oben, der Rest in Reitern
+  let stTab = (() => { try { return localStorage.getItem("depotblick-sttab") || "rendite"; } catch (e) { return "rendite"; } })();
+  function stSync() {
+    const pg = $('[data-page="statistiken"]');
+    $$("#stTabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.stt === stTab));
+    $$("[data-st]", pg).forEach((el) => el.classList.toggle("sthide", el.dataset.st !== stTab));
+    const pick = (l) => $$(".stat", pg).find((t) => !t.closest("#statCore") && t.querySelector(".label") && t.querySelector(".label").firstChild && t.querySelector(".label").firstChild.textContent.trim() === l);
+    $("#statCore").innerHTML = ["Gesamtgewinn", "Rendite pro Jahr", "Volatilität p. a.", "Laufende Fondskosten"].map(pick).filter(Boolean).map((t) => t.outerHTML).join("");
+    $("#statCore").hidden = !$("#statCore").innerHTML || pg.classList.contains("st-empty"); $("#stTabs").hidden = pg.classList.contains("st-empty");
+  }
+  $$("#stTabs button").forEach((b) => b.addEventListener("click", () => { stTab = b.dataset.stt; try { localStorage.setItem("depotblick-sttab", stTab); } catch (e) {} stSync(); if (stTab === "rendite" || stTab === "kosten" || stTab === "risiko") renderAnalysen(), stSync(); }));
   PAGE_RENDER.import = () => {
     $("#impDepotRow").hidden = !multiDepot();
     const cur = $("#impDepot").value;
@@ -3088,6 +3218,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#wT").value = numStr(S.ui.warnTitle); $("#wC").value = numStr(S.ui.warnCountry); $("#wS").value = numStr(S.ui.warnSector);
   };
   PAGE_RENDER.mehr = () => {};
+  $$(".setjump [data-jump]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); const t = document.getElementById(a.dataset.jump); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }));
+  PAGE_RENDER.planen = () => {
+    const sm = C && C.plans ? planSummary(C.plans.plans) : { n: 0, perMonth: 0 }, B = budCalc(), R = S.data.retire || {}, hasR = (R.jobs || []).some((j) => +j.brutto > 0 || +j.rente > 0);
+    let rv = "Jetzt starten", rn = "In 9 Schritten zur Rentenlücke";
+    if (hasR) { try { const X = rpCalc(R); rv = eur0.format(X.net); rn = "Netto-Rente im Monat ab " + X.ra + (X.need > 0 ? (X.gap > 0 ? ", Lücke " + eur0.format(X.gap) : ", Ziel erreicht") : ""); } catch (e) {} }
+    const T = [["#sparplaene", "Sparpläne", eur0.format(sm.perMonth), "im Monat, " + (sm.n === 1 ? "1 Plan aktiv" : sm.n + " Pläne aktiv")],
+      ["#budget", "Budget", B.inc > 0 ? sEur(B.rest) + " übrig" : "Noch leer", B.inc > 0 && isFinite(B.quote) ? "Sparquote " + nf(0).format(B.quote * 100) + " %" : "Einnahmen und Ausgaben"],
+      ["#vermoegen", "Vermögen", eur0.format(netWorth()), "Ziele, Freiheit, Entnahme"],
+      ["#rente", "Rentenplaner", rv, rn]];
+    $("#planHub").innerHTML = T.map(([h, l, v, n]) => `<a href="${h}"><b>${l}</b><span class="v num">${v}</span><span class="note">${n}</span></a>`).join("");
+  };
   // ---------- Watchlist ----------
   const wlKey = (w) => w.isin || w.symbol;
   function wlPct(w) { const h = w.hist || []; if (!(w.price > 0)) return { add: NaN, y1: NaN }; const yAgo = isoDate(new Date(Date.now() - 365 * 864e5)), b = (h.filter((x) => x[0] <= yAgo).pop() || h[0] || [0, 0])[1]; return { add: w.addedPrice > 0 ? w.price / w.addedPrice - 1 : NaN, y1: b > 0 && h.length && h[0][0] <= isoDate(new Date(Date.now() - 300 * 864e5)) ? w.price / b - 1 : NaN }; }
@@ -3346,7 +3487,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     return R;
   }
   const rpAge = (R) => num(R.age, 30);
-  const jobOn = (j, a, R) => a >= num(j.from, -1) && a < num(j.to, 999);
+  // Ohne "Ab Alter" beginnt eine Zeile dort, wo die vorige (z. B. Schule bis 25) endet
+  const jobFrom = (j, R) => { const f = num(j.from, null); if (f != null) return f; if (j.status === "mini") return -1; const J = (R && R.jobs) || []; for (let k = J.indexOf(j) - 1; k >= 0; k--) { const t = num(J[k].to, null); if (t != null) return t; } return -1; };
+  const jobOn = (j, a, R) => a >= jobFrom(j, R) && a < num(j.to, 999);
   const jobsAt = (R, a) => (R.jobs || []).filter((j) => jobOn(j, a, R));
   // Status, der fürs Alter zählt: die Beschäftigung kurz vor Rentenbeginn, sonst die letzte
   function rpMain(R) {
@@ -3357,7 +3500,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const rpHas = (R, st) => (R.jobs || []).some((j) => j.status === st);
   const rpKv = (R) => (R.kvSet && R.kv ? R.kv : ["beamt"].includes(rpMain(R)) ? "pkv" : ["selbst", "frei", "vw"].includes(rpMain(R)) ? "frei" : "kvdr");
   const rpMode = (R) => R.grvMode || (["beamt", "vw", "landwirt"].includes(rpMain(R)) || (["selbst", "frei"].includes(rpMain(R)) && !(R.jobs || []).some((j) => j.rv || j.ksk)) ? "none" : "est");
-  const rpRiesterOk = (R) => !["selbst", "frei", "vw"].includes(rpMain(R)) || (R.jobs || []).some((j) => j.rv || j.ksk);
+  const rpRiesterOk = (R) => !["selbst", "frei", "vw"].includes(rpMain(R)) || (R.jobs || []).some((j) => (j.rv && j.rvArt !== "frei") || j.ksk);
   // Monatliches Brutto heute (für Steuer- und SV-Vorteile)
   const rpRvBrutto = (R) => Math.min(RP.bbg / 12, jobsAt(R, rpAge(R)).filter((j) => ["ang", "azubi", "mini", "beamt"].includes(j.status) || (j.status === "selbst" && j.rv) || (j.status === "frei" && j.ksk)).reduce((x, j) => x + num(j.brutto, 0), 0));
   const rpBruttoNow = (R) => jobsAt(R, rpAge(R)).filter((j) => RP_EARN.includes(j.status)).reduce((x, j) => x + num(j.brutto, 0), 0);
@@ -3370,15 +3513,18 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const sv = b * svR, zve = Math.max(0, b * 12 - sv * 12 * 0.8 - 1230 - 36), est = main === "mini" ? 0 : estTax(zve, split) + soliOf(estTax(zve, split), split) + estTax(zve, split) * (+R.church || 0) / 100;
     return { b, net: Math.max(0, b - sv - est / 12), sv, svR, zve, split };
   }
+  // Zulageberechtigt (AVD, § 10a): Pflicht in der Rentenversicherung, bei Freiberuflern über die KSK
+  const rpZulJob = (j) => !["schule", "rentner", "vw"].includes(j.status) && (j.status !== "selbst" || (j.rv && j.rvArt !== "frei")) && (j.status !== "frei" || j.ksk);
   function rpNow(R) {
     const N = rpNetNow(R), st = R.stkl || "1", ch = (+R.church || 0) / 100;
     let zve = N.zve; if (st === "5" || st === "6") zve += 12348;
     const m = N.b > 0 ? margRate(zve, N.split) * (1 + ch + (estTax(zve, N.split) > RP.soli * (N.split ? 2 : 1) ? 0.055 : 0)) : 0;
     const sv = N.b <= RP.kvMax ? N.svR : N.b <= RP.bbg / 12 ? 0.106 : 0;
     const o = { marg: m, sv, net: N.net, brutto: N.b, bav: [] };
-    (R.bavs || []).forEach((b) => { const own = num(b.own, 0), free = Math.min(own, (RP.bbg * 0.04) / 12); o.bav.push(own * (1 - m) - free * sv); });
-    const learnOnly = jobsAt(R, rpAge(R)).every((j) => j.status === "schule");
-    if (R.avd && +R.avdRate > 0 && learnOnly) { o.avdZul = 0; o.avdTax = 0; o.avdLater = true; }
+    let svLeft = (RP.bbg * 0.04) / 12, taxLeft = (RP.bbg * 0.08) / 12;
+    (R.bavs || []).forEach((b) => { const own = num(b.own, 0), free = Math.min(own, svLeft), tf = Math.min(own, taxLeft); svLeft -= free; taxLeft -= tf; o.bav.push(own - tf * m - free * sv); });
+    const ageNow = rpAge(R), eligNow = jobsAt(R, ageNow).some(rpZulJob);
+    if (R.avd && +R.avdRate > 0 && !eligNow) { o.avdZul = 0; o.avdTax = 0; let later = false; for (let a = ageNow + 1; a < Math.min(70, Math.max(65, num(R.retire, 67))); a++) if (jobsAt(R, a).some(rpZulJob)) { later = true; break; } o.avdLater = later; o.avdNone = !later; }
     else if (R.avd && +R.avdRate > 0) { const own = Math.min(1800, +R.avdRate * 12), zul = avdZulage(own) + (+R.kids || 0) * 300 * Math.min(1, own / 300); o.avdZul = zul; o.avdTax = Math.max(0, m * (own + zul) - zul); }
     o.rue = (R.contracts || []).filter((c) => c.type === "ruerup").reduce((x, c) => x + num(c.rate, 0) * 12 * m, 0);
     o.riester = (R.contracts || []).filter((c) => c.type === "riester").map((c) => rpRiester(R, c));
@@ -3520,7 +3666,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (R.avd && +R.avdRate > 0) {
       const own = +R.avdRate * 12, zul = avdZulage(own), kidZ = (+R.kids || 0) * 300 * Math.min(1, own / 300), start = Math.max(y0, 2027), payAge = Math.min(70, Math.max(65, ra));
       const r = Math.pow(1 + (ret - Math.max(0, num(R.avdCost, 0.4) - RP.ter)) / 100, 1 / 12) - 1, refund = R.avdRefund === "avd" ? rpNow(R).avdTax || 0 : 0; let v = 0, zSum = 0, rSum = 0; const path = [];
-      const eligFrom = (() => { for (let a = age; a < payAge; a++) if (jobsAt(R, a).some((j) => !["schule", "rentner", "vw"].includes(j.status) && (j.status !== "selbst" || j.rv) && (j.status !== "frei" || j.ksk))) return a; return payAge; })();
+      const eligFrom = (() => { for (let a = age; a < payAge; a++) if (jobsAt(R, a).some(rpZulJob)) return a; return payAge; })();
       const z0 = Math.max(start, y0 + (eligFrom - age));
       for (let a = age; a < payAge; a++) {
         const y = y0 + (a - age); path.push(v / Math.pow(1 + inf, a - age));
@@ -3530,11 +3676,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         v += zz; zSum += zz;
         if (el && refund > 0) { v += refund; rSum += refund; }
       }
-      if (eligFrom > age) A.push(`Altersvorsorgedepot: Zulagen gibt es erst, wenn du in die Rentenversicherung einzahlst, hier ab ${eligFrom}.`);
+      if (eligFrom >= payAge) A.push("Altersvorsorgedepot: keine Zulagen, weil du nicht in der Rentenversicherung pflichtversichert bist. Freiwillig Versicherte bekommen keine.");
+      else if (eligFrom > age) A.push(`Altersvorsorgedepot: Zulagen gibt es erst, wenn du pflichtversichert in die Rentenversicherung einzahlst, hier ab ${eligFrom}.`);
       const capT = v / Math.pow(1 + inf, payAge - age), m = annuityM(capT, rPay, (endAge - payAge) * 12);
       let vr = capT; for (let a = payAge; a <= endAge; a++) { path.push(Math.max(0, vr)); for (let mm = 0; mm < 12; mm++) vr = vr * (1 + rPay) - m; }
       paths.avd = path;
-      avdInfo = { own, zul, kidZ, zSum, rSum, refund, payAge, start, z0, capNom: v, capT, ownSum: own * Math.max(0, y0 + (payAge - age) - start) };
+      avdInfo = { none: eligFrom >= payAge, own, zul, kidZ, zSum, rSum, refund, payAge, start, z0, capNom: v, capT, ownSum: own * Math.max(0, y0 + (payAge - age) - start) };
       push({ k: "avd", l: "Altersvorsorgedepot", m, tax: "full", kv: "priv", c: "--c2", start: payAge });
       if (payAge !== ra) A.push(`Altersvorsorgedepot zahlt erst ab ${payAge} aus`);
     }
@@ -3544,7 +3691,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const NG = rpCushion(R);
     // Depot: Monat für Monat bis Rentenbeginn
     const depNow = Math.max(0, (R.depotOn === false ? 0 : depotAll() + (R.wealthOn === false ? 0 : Math.max(0, netWorth({ liquid: true }) - depotAll()))) - num(R._depMinus, 0));
-    const base = (R.depotRate != null && R.depotRate !== "" ? +R.depotRate : rpPlanRate()) + extra, rmD = Math.pow(1 + real(ret), 1 / 12) - 1;
+    const base = (R.depotRate != null && R.depotRate !== "" ? +R.depotRate : rpPlanRate()) + extra, div = R.payMode === "div", dy = Math.max(0.1, num(R.divYield, 3)) / 100, rDiv = Math.pow(1 + dy, 1 / 12) - 1, rmD = Math.pow(1 + real(div ? ret - dy * 100 * 0.7 * taxRate() : ret), 1 / 12) - 1;
     const ngDelay = R.ngFirst && NG.gap > 0 ? (NG.fill != null ? NG.fill : Math.ceil(NG.gap / Math.max(1, base))) : 0;
     let cap = depNow, paid = depNow, freedSum = 0; const dpath = [];
     const erb = [].concat(R.erbe && +R.erbeAmt > 0 ? [{ amt: +R.erbeAmt, age: num(R.erbeAge, ra) }] : [], R._erbeX || []);
@@ -3568,10 +3715,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (sa > ra) { const st = src.filter((x) => x.start === sa && x.start > ra).reduce((x, y) => x + y.m, 0); bridge = st * 12 * (sa - ra); short = bridge > cap; cap = cap - bridge; if (st > 0) A.push(`Gesetzliche Rente und Pension gibt es frühestens mit 63. Die ${sa - ra} Jahre bis dahin zahlt dein Depot (${shortEur(bridge)}).`); }
     cap = Math.max(0, cap);
     if (retired) A.push(rentnerNow ? "Du bist schon in Rente: Depotblick rechnet ab heute mit deiner jetzigen Rente." : "Du bist schon im Rentenalter: Depotblick rechnet ab heute, ohne Zu- oder Abschläge.");
-    const wd = annuityM(cap, rPay, payM), gainShare = cap > 0 ? Math.max(0, 1 - paid / cap) : 0;
-    let vr = cap; for (let a = ra; a <= endAge; a++) { dpath.push(Math.max(0, vr)); for (let mm = 0; mm < 12; mm++) vr = vr * (1 + rPay) - wd; }
+    // Dividenden: nur die Ausschüttung wird entnommen, das Kapital bleibt (Kurse wachsen etwa mit der Inflation)
+    const wd = div ? cap * rDiv : annuityM(cap, rPay, payM), gainShare = div ? 1 : cap > 0 ? Math.max(0, 1 - paid / cap) : 0, rD = div ? rDiv : rPay;
+    let vr = cap; for (let a = ra; a <= endAge; a++) { dpath.push(Math.max(0, vr)); for (let mm = 0; mm < 12; mm++) vr = vr * (1 + rD) - wd; }
     paths.dep = dpath;
-    push({ k: "dep", l: "Depot und Ersparnisse", m: wd, tax: "abg", kv: "cap", gain: gainShare, c: "--div", start: ra });
+    push({ k: "dep", l: div ? "Depot (Dividenden)" : "Depot und Ersparnisse", m: wd, tax: "abg", kv: "cap", gain: gainShare, c: "--div", start: ra });
     push({ k: "lv", l: "Lebensversicherung", m: annuityM(lvCap, rPay, payM), tax: "none", kv: "free", c: "--c8", start: ra });
     if (R.immo && +R.immoRent > 0) push({ k: "miet", l: "Mieteinnahmen", m: +R.immoRent, tax: "full", kv: "priv", c: "--muted", start: ra });
     if (+R.other > 0) push({ k: "oth", l: "Sonstige Einkünfte", m: +R.other, tax: "full", kv: "priv", c: "--faint", start: ra });
@@ -3591,13 +3739,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     zvE = Math.max(0, zvE - kvpv * 12 * 0.96 - (split ? 72 : 36));
     const estAll = estTax(zvE + partner, split), share = zvE + partner > 0 ? zvE / (zvE + partner) : 1;
     const est = estAll * share, sol = soliOf(estAll, split) * share, kist = ((estAll * ch) / 100) * share;
-    const depS = src.find((s) => s.k === "dep"), abg = depS ? (Math.max(0, depS.m * 12 * depS.gain * 0.7 - (split ? 2000 : 1000)) * taxRate()) / 12 : 0;
+    // Abgeltungsteuer mit Günstigerprüfung: liegt der persönliche Steuersatz darunter, zählt er
+    const depS = src.find((s) => s.k === "dep"), dT = depS ? Math.max(0, depS.m * 12 * depS.gain * 0.7 - (split ? 2000 : 1000)) : 0;
+    const est2 = estTax(zvE + partner + dT, split), persT = ((est2 - estAll) * (1 + ch / 100) + soliOf(est2, split) - soliOf(estAll, split)) * share;
+    const abg = dT > 0 ? Math.max(0, Math.min(dT * taxRate(), persT)) / 12 : 0;
     const gross = src.reduce((x, s) => x + s.m, 0), taxM = (est + sol + kist) / 12, net = gross - kvpv - taxM - abg;
-    const need = Math.max(0, num(R.wish, 0) - (R.immo ? num(R.immoSave, 0) : 0));
+    const wishR = R.wishMode === "nom" ? num(R.wish, 0) / Math.pow(1 + inf, Math.max(0, yrs)) : num(R.wish, 0);
+    const need = Math.max(0, wishR - (R.immo ? num(R.immoSave, 0) : 0));
     // Wie lange reicht das Depot, wenn es die Lücke mit deckt?
     let lastAge = endAge;
-    if (need > 0) { const want = wd + Math.max(0, need - net); let v = cap; lastAge = ra; for (let mm = 0; mm < (110 - ra) * 12 && v > 0; mm++) { v = v * (1 + rPay) - want; if (v > 0) lastAge = ra + (mm + 1) / 12; } if (want <= 0.5) lastAge = 110; }
-    return { R, real, inf, rPay, depNow, age, ra, yrs, ry, src, grv, ep, kvpv, taxM, abg, gross, net, need, gap: Math.max(0, need - net), retired, rentnerNow, bridge, short, sa, cap, rate: base, bs, ea, zvE, avdInfo, bavInfo, cCap, paths, A, W, endAge, lastAge, LO, debtAtRa, NG, ngDelay, marg: margRate(zvE + partner, split) };
+    if (need > 0) { const want = wd + Math.max(0, need - net); let v = cap; lastAge = ra; for (let mm = 0; mm < (110 - ra) * 12 && v > 0; mm++) { v = v * (1 + rD) - want; if (v > 0) lastAge = ra + (mm + 1) / 12; } if (want <= 0.5) lastAge = 110; }
+    return { R, real, inf, rPay, depNow, age, ra, yrs, ry, src, grv, ep, kvpv, taxM, abg, gross, net, need, gap: Math.max(0, need - net), retired, rentnerNow, bridge, short, sa, cap, div, dy, wd, rate: base, bs, ea, zvE, avdInfo, bavInfo, cCap, paths, A, W, endAge, lastAge, LO, debtAtRa, NG, ngDelay, marg: margRate(zvE + partner, split) };
   }
   function rpNeedExtra(R, base) {
     if (base.gap <= 0 || base.retired) return 0;
@@ -3642,6 +3794,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       { k: "from", l: "Ab Alter", t: "int", ph: "heute" },
       { k: "to", l: "Bis Alter", t: "int", ph: "Rente" },
       { k: "rv", l: "In der Rentenversicherung (freiwillig oder Pflicht)", t: "chk", full: 1, show: (j) => j.status === "selbst" },
+      { k: "rvArt", l: "Art der Versicherung", t: "sel", o: [["pflicht", "Pflichtversichert"], ["frei", "Freiwillig versichert"]], show: (j) => j.status === "selbst" && j.rv },
       { k: "ksk", l: "Über die Künstlersozialkasse versichert (dann Rentenpflicht)", t: "chk", full: 1, show: (j) => j.status === "frei" },
       { k: "befreit", l: "Von der Rentenversicherungspflicht befreit", t: "chk", full: 1, show: (j) => j.status === "mini", h: "Dann zahlt nur der Arbeitgeber 15 %, du bekommst weniger Rente." },
       { k: "art", l: "Leistung", t: "seg", o: [["alg1", "ALG I"], ["bg", "Bürgergeld"]], show: (j) => j.status === "alo", h: "Mit ALG I zahlt die Arbeitsagentur Rentenbeiträge auf 80 % deines letzten Bruttos, beim Bürgergeld nicht." },
@@ -3712,6 +3865,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     ["du", "Über dich", [
       { k: "age", l: "Dein Alter", t: "int", ph: "30" },
       { k: "retire", l: "In Rente mit", t: "int", ph: "67", h: "Regelaltersgrenze ist 67. Jeder Monat früher kostet 0,3 % gesetzliche Rente, frühestens geht es mit 63. Davor zahlt nur dein Depot." },
+      { k: "wish", l: "Mein Ziel: so viel netto im Monat in der Rente", t: "eur", ph: "3.000", full: 1, h: "" },
+      { k: "wishMode", l: "Der Betrag gilt in", t: "seg", o: [["real", "heutiger Kaufkraft"], ["nom", "Euro von später"]], full: 1 },
       { t: "list", k: "jobs", l: "Beschäftigung", h: "Mehrere Zeilen für Kombinationen oder Abschnitte, z. B. Studium bis 24 mit Minijob, danach angestellt." },
       { k: "stkl", l: "Steuerklasse", t: "seg", o: [["1", "I"], ["2", "II"], ["3", "III"], ["4", "IV"], ["5", "V"]], show: (R) => jobsAt(R, rpAge(R)).some((j) => ["ang", "beamt", "azubi"].includes(j.status)) },
       { k: "married", l: "Verheiratet oder verpartnert", t: "chk", h: "Dann gilt auch im Alter der Splittingtarif.", full: 1 },
@@ -3767,6 +3922,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       { k: "depotRate", l: "Sparrate ins Depot im Monat", t: "eur", ph: "aus Sparplänen", h: "Leer lassen, dann nimmt Depotblick deine Sparpläne." },
       { k: "ret", l: "Rendite pro Jahr (%)", t: "pct", ph: "6" },
       { k: "inf", l: "Inflation pro Jahr (%)", t: "pct", ph: "2", h: "Gilt für alles: Wunsch-Rente, Verträge, Entnahme. Oben kannst du zwischen heutiger Kaufkraft und echten Euro später umschalten." },
+      { k: "payMode", l: "So lebst du in der Rente vom Depot", t: "seg", full: 1, def: "verzehr", o: [["verzehr", "Nach und nach aufbrauchen"], ["div", "Nur von Dividenden"]] },
+      { k: "divYield", l: "Ausschüttung pro Jahr (%)", t: "pct", ph: "3", show: (R) => R.payMode === "div", h: "Breite Dividenden-ETFs schütten meist 3 bis 4 % aus." },
       { k: "payRet", l: "Rendite in der Rente (%)", t: "pct", ph: "3", h: "Im Alter meist vorsichtiger angelegt." },
       { k: "endAge", l: "Geld soll reichen bis", t: "int", ph: "90" },
       { k: "immo", l: "Ich habe Immobilien", t: "chk", full: 1 },
@@ -3778,7 +3935,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       { k: "other", l: "Sonstige Einkünfte im Alter (Monat)", t: "eur", ph: "0", h: "Zum Beispiel ein Minijob." },
     ]],
     ["ziel", "Ergebnis", [
-      { k: "wish", l: "So viel netto möchte ich im Monat haben", t: "eur", ph: "2.500", full: 1, h: "In heutiger Kaufkraft. Faustregel: rund 80 % deines heutigen Nettos." },
+      { k: "wish", l: "Mein Ziel: so viel netto im Monat in der Rente", t: "eur", ph: "3.000", full: 1, h: "" },
+      { k: "wishMode", l: "Der Betrag gilt in", t: "seg", o: [["real", "heutiger Kaufkraft"], ["nom", "Euro von später"]], full: 1 },
     ]],
   ];
   const RP_SC = [
@@ -3798,17 +3956,122 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const rpR = () => rpMigrate(S.data.retire);
   let rpStep = "du", rpBuilt = false, rpSaveT, rpRenderT, rpLast = null, rpUser = false, rpCmpOpen = new Set();
   const rpVal = (v, t) => (v == null || v === "" ? "" : t === "eur" ? nf(0).format(v) : String(v).replace(".", ","));
+  // Erklärungen hinter den i-Symbolen im Rentenplaner
+  const RP_HELP = {
+    age: "Dein heutiges Alter. Daraus rechnet Depotblick, wie viele Jahre du noch sparen kannst und wie viele Rentenpunkte noch dazukommen.",
+    retire: "Ab welchem Alter du keine Arbeit mehr willst. Die gesetzliche Regelaltersgrenze ist 67. Mit 35 Versicherungsjahren geht es ab 63, dann mit 0,3 % weniger Rente je Monat früher, höchstens 14,4 %. Willst du vor 63 aufhören, muss dein Depot die Zeit bis 63 allein bezahlen.",
+    wishMode: "Heutige Kaufkraft heißt: Du gibst an, wie viel dir das Geld heute wert wäre. 3.000 € heutige Kaufkraft sind in 30 Jahren bei 2 % Inflation rund 5.400 € auf dem Konto, kaufen aber dasselbe wie 3.000 € heute. Das ist fast immer die richtige Wahl.",
+    wish: "Wie viel Geld du im Alter jeden Monat zum Leben haben möchtest, nach Steuern und Krankenkasse. Faustregel: rund 80 % deines heutigen Nettos. Wohnst du dann mietfrei, kann es weniger sein.",
+    stkl: "Deine Steuerklasse heute. Sie beeinflusst nur, wie viel Steuern du jetzt sparst, z. B. bei der Betriebsrente. Im Alter rechnet Depotblick mit der Jahressteuer.",
+    married: "Verheiratete werden im Alter zusammen veranlagt (Splitting). Das senkt die Steuer, wenn einer von beiden weniger Rente hat.",
+    partner: "Die Brutto-Rente deines Partners. Sie zählt nur für die gemeinsame Steuer, nicht zu deinem Geld.",
+    kids: "Kinder zählen für Zulagen (Altersvorsorgedepot 300 € je Kind, Riester), die Pflegeversicherung (ohne Kinder 0,6 % mehr) und Kindererziehungszeiten in der gesetzlichen Rente.",
+    church: "Kirchensteuer: 8 % in Bayern und Baden-Württemberg, sonst 9 % der Einkommensteuer. Sie gilt auch im Alter.",
+    kv: "Wie du im Alter krankenversichert bist. KVdR heißt Krankenversicherung der Rentner: Wer im zweiten Teil des Berufslebens zu 90 % gesetzlich versichert war, zahlt nur auf Rente und Betriebsrente. Freiwillig Versicherte zahlen auch auf andere Einkünfte. Privat Versicherte zahlen einen festen Beitrag.",
+    pkv: "Dein privater Krankenkassen-Beitrag im Alter, in heutigem Geld. Beamte haben meist Beihilfe und zahlen weniger.",
+    ngMonths: "Der Notgroschen ist Geld für Unvorhergesehenes, z. B. kaputte Waschmaschine oder Jobverlust. Üblich sind 3 Monatsausgaben, für Selbstständige eher 6.",
+    ngExp: "Was du im Monat zum Leben ausgibst, mit Miete. Hast du schon ein Budget angelegt, nimmt Depotblick die Zahl von dort.",
+    ngHave: "Wie viel davon schon auf Konto oder Tagesgeld liegt. Leer lassen, dann nimmt Depotblick die Konten aus „Vermögen“.",
+    ngRate: "Wie viel du jeden Monat zurücklegst, bis der Notgroschen voll ist.",
+    ngFirst: "Ist das an, spart Depotblick erst den Notgroschen voll und erst danach ins Depot. So musst du im Notfall keine Aktien verkaufen.",
+    loanStrat: "Lawine: Erst die teuerste Schuld (höchster Zins) zurückzahlen, das spart am meisten Zinsen. Schneeball: Erst die kleinste Schuld, das gibt schnelle Erfolge. Normal: jede Schuld mit ihrer Rate.",
+    loanFree: "Ist ein Kredit abbezahlt, wird seine Rate frei. Ist das an, spart Depotblick das Geld danach ins Depot.",
+    grvMode: "Aus Renteninformation: der genaueste Weg, die Zahl steht im Brief der Rentenversicherung. Schätzen: Depotblick rechnet aus deinem Gehalt. Keine: du zahlst nicht in die gesetzliche Rente ein.",
+    grvInfo: "In der Renteninformation steht „Höhe Ihrer künftigen Regelaltersrente“. Nimm diese Zahl, ohne Rentenanpassungen. Sie gilt, wenn du bis 67 weiter so verdienst.",
+    grvEP: "Entgeltpunkte sind deine Rentenpunkte. Wer ein Jahr genau den Durchschnitt verdient, bekommt einen Punkt. Ein Punkt bringt heute 42,52 € Rente im Monat. Die Zahl steht im Versicherungsverlauf.",
+    grvYears: "Wie viele Jahre du schon gearbeitet und in die Rente eingezahlt hast, auch Ausbildung. Depotblick rechnet dann mit deinem heutigen Gehalt zurück.",
+    safe: "Zieht 10 % von der gesetzlichen Rente ab, falls das Rentenniveau in Zukunft sinkt. Gut für eine vorsichtige Planung.",
+    penBez: "Die Bezüge, aus denen die Pension berechnet wird: Grundgehalt der Endstufe plus Familienzuschlag. Steht in der Besoldungsmitteilung.",
+    penYears: "Wie viele Dienstjahre du bis zur Pension zusammen hast. Je Jahr gibt es 1,79375 % der Bezüge, höchstens 71,75 % nach 40 Jahren.",
+    avd: "Das Altersvorsorgedepot startet 2027 und ersetzt Riester. Du sparst in ETFs, der Staat legt Zulagen dazu. Im Alter wird die Auszahlung voll versteuert, dafür sparst du heute Steuern.",
+    avdRate: "Dein eigener Beitrag im Monat. Gefördert werden bis 150 € (1.800 € im Jahr). Auf die ersten 30 € gibt es 50 % Zulage, darüber 25 %. Mehr einzuzahlen lohnt sich kaum, dafür ist ein normaler ETF-Sparplan besser.",
+    avdRefund: "Zusätzlich zu den Zulagen kannst du die Beiträge von der Steuer absetzen. Was das mehr bringt als die Zulagen, kommt mit der Steuererklärung zurück. Du kannst es behalten oder wieder einzahlen.",
+    avdCost: "Was das Depot im Jahr kostet: Fondskosten (TER) plus Depotgebühr. Günstige ETF-Depots liegen bei 0,2 bis 0,5 %, das Standardprodukt darf bis 1 % kosten.",
+    avdKidYears: "Wie viele Jahre du noch Kindergeld bekommst. So lange gibt es die Kinderzulage von bis zu 300 € je Kind und Jahr.",
+    depotOn: "Rechnet dein Depot aus Depotblick als Startkapital mit ein.",
+    wealthOn: "Rechnet auch Geld auf Konten, Tagesgeld und Krypto aus „Vermögen“ mit ein. Immobilien und Schulden zählen hier nicht.",
+    depotRate: "Wie viel du jeden Monat in dein Depot sparst. Leer lassen, dann nimmt Depotblick deine erkannten Sparpläne. Depotblick rechnet so, als ob die Rate mit der Inflation steigt.",
+    ret: "Wie viel dein Depot im Jahr im Schnitt bringen soll, nach Kosten. Ein weltweiter Aktien-ETF hat langfristig etwa 6 bis 7 % gebracht. Vorsichtig sind 5 %.",
+    inf: "Wie stark die Preise im Jahr steigen. Die Europäische Zentralbank peilt 2 % an. Alle Beträge rechnet Depotblick damit in heutige Kaufkraft um.",
+    payMode: "Aufbrauchen: Du entnimmst jeden Monat einen festen Betrag, bis das Geld zum gewünschten Alter aufgebraucht ist. Nur von Dividenden: Du lebst von den Ausschüttungen deiner ETFs, das Depot selbst bleibt erhalten und kann vererbt werden. Dafür brauchst du ein deutlich größeres Depot.",
+    divYield: "Wie viel Prozent vom Depotwert die ETFs pro Jahr ausschütten. Breite Dividenden-ETFs liegen meist bei 3 bis 4 %, die Ausschüttung steigt dann ungefähr mit der Inflation. Auf Ausschüttungen fällt Abgeltungsteuer an, bei Aktien-ETFs sind 30 % davon steuerfrei (Teilfreistellung). Ist dein persönlicher Steuersatz niedriger, rechnet Depotblick mit ihm (Günstigerprüfung). Auch beim Sparen kostet die Steuer auf die Ausschüttungen etwas Rendite, das ist eingerechnet.",
+    payRet: "Was dein Geld in der Rente noch bringt, während du es nach und nach entnimmst. Meist vorsichtiger als beim Sparen, z. B. 3 %.",
+    endAge: "Bis zu welchem Alter dein Erspartes reichen soll. Danach ist es aufgebraucht. Wer sicher gehen will, nimmt 95.",
+    immo: "Hast du eine eigene Wohnung oder ein Haus? Mietfrei wohnen senkt, was du im Alter brauchst. Vermietete Immobilien bringen Einnahmen.",
+    immoSave: "Wie viel Miete du im Alter sparst, weil du im Eigentum wohnst. Rechne Nebenkosten und Instandhaltung ab.",
+    immoRent: "Mieteinnahmen, die nach allen Kosten übrig bleiben. Sie werden voll versteuert.",
+    erbe: "Ein erwartetes Erbe oder eine Schenkung. Rechne vorsichtig, darauf verlassen kann man sich nie.",
+    erbeAmt: "Wie viel ungefähr, in heutigem Geld.",
+    erbeAge: "In welchem Alter du es ungefähr erwartest. Ab dann legt Depotblick es im Depot an.",
+    other: "Andere regelmäßige Einkünfte im Alter, z. B. eine Witwenrente oder ein Minijob. Wie viel davon versteuert wird, hängt von der Art ab. Depotblick rechnet vorsichtig mit voller Steuer.",
+    "jobs.status": "Was du in diesem Zeitraum machst. Mehrere Zeilen sind möglich, z. B. Studium bis 24 und danach angestellt, oder angestellt und daneben selbstständig.",
+    "jobs.brutto": "Dein Brutto-Gehalt im Monat, ohne Weihnachtsgeld. Bei Selbstständigen der Gewinn vor Steuern. Depotblick rechnet in heutigem Geld, Gehaltserhöhungen über der Inflation sind nicht drin.",
+    "jobs.rente": "Was du heute schon an Rente bekommst, brutto.",
+    "jobs.hours": "Wochenstunden, nur zur Übersicht. Für die Rechnung zählt das Brutto.",
+    "jobs.from": "Ab welchem Alter diese Zeile gilt. Leer heißt ab heute, oder ab dem Ende der Zeile davor (z. B. Schule bis 25, dann Job ab 25). Ein Minijob ohne Angabe läuft ab heute neben der Arbeit.",
+    "jobs.to": "Bis zu welchem Alter diese Zeile gilt. Leer heißt bis zur Rente.",
+    "jobs.rv": "Selbstständige sind meist nicht in der gesetzlichen Rente. Zahlst du ein, hak das an, dann gibt es Rentenpunkte. Zulagen für das Altersvorsorgedepot und Riester gibt es aber nur, wenn du pflichtversichert bist, nicht bei freiwilligen Beiträgen.",
+    "jobs.rvArt": "Pflichtversichert sind z. B. Handwerker, Lehrer oder Hebammen, oder wer die Pflicht beantragt hat. Nur dann gibt es Zulagen. Freiwillige Beiträge bringen nur Rentenpunkte.",
+    "jobs.ksk": "Künstler und Publizisten sind über die Künstlersozialkasse rentenversichert. Die zahlt die Hälfte der Beiträge.",
+    "jobs.befreit": "Im Minijob kann man sich von der Rentenpflicht befreien lassen. Dann gibt es weniger Rentenpunkte und keine Zulagen.",
+    "jobs.art": "Arbeitslosengeld I zahlt Rentenbeiträge auf 80 % deines alten Bruttos. Bürgergeld zahlt keine.",
+    "reserves.name": "Wofür du sparst, z. B. Auto, Urlaub oder Waschmaschine.",
+    "reserves.amount": "Wie viel das ungefähr kostet.",
+    "reserves.have": "Was du dafür schon zur Seite gelegt hast.",
+    "reserves.due": "Wann du das Geld brauchst, als Jahr und Monat, z. B. 2029-06. Depotblick rechnet die Monatsrate bis dahin.",
+    "reserves.every": "Kommt die Ausgabe jedes Jahr wieder, z. B. Urlaub oder Versicherung, rechnet Depotblick sie dauerhaft als Monatsrate.",
+    "loans.rest": "Wie viel du noch schuldest. Steht im Kontoauszug des Kredits.",
+    "loans.zins": "Der Zins im Jahr, am besten der effektive Jahreszins.",
+    "loans.rate": "Was du jeden Monat zahlst, Zins und Tilgung zusammen.",
+    "loans.sonder": "Wie viel du zusätzlich im Jahr tilgen kannst oder willst. Bei Baukrediten sind oft 5 % im Jahr kostenlos erlaubt.",
+    "loans.bind": "Bis wann der Zins fest ist. Danach kann er steigen oder fallen.",
+    "bavs.weg": "Wie die Betriebsrente organisiert ist, z. B. Direktversicherung, Pensionskasse oder Pensionsfonds. Steht im Vertrag. Für die Rechnung macht es kaum einen Unterschied.",
+    "bavs.start": "Seit wann der Vertrag läuft. Wichtig für Abschlusskosten, die meist auf die ersten 5 Jahre verteilt werden.",
+    "bavs.endAge": "Bis zu welchem Alter du einzahlst. Leer heißt bis zur Rente.",
+    "bavs.own": "Wie viel von deinem Brutto in die Betriebsrente fließt (Entgeltumwandlung). Bis 4 % der Beitragsbemessungsgrenze (2026: 338 € im Monat) zahlst du darauf keine Sozialabgaben, bis 8 % (676 €) keine Steuern. Deshalb kostet es dich netto oft nur etwa die Hälfte.",
+    "bavs.ag": "Was der Arbeitgeber dazu gibt. Mindestens 15 % deines Beitrags muss er weitergeben, weil er selbst Sozialabgaben spart.",
+    "bavs.cap": "Wie viel schon im Vertrag steckt. Steht in der jährlichen Standmitteilung.",
+    "bavs.anw": "Wie viel Rente du schon sicher hast, wenn du heute aufhörst einzuzahlen. Steht in der Standmitteilung.",
+    "bavs.gRente": "Die garantierte Rente laut Vertrag, wenn du bis zum Ende einzahlst. Weniger gibt es nicht.",
+    "bavs.pRente": "Die erwartete Rente laut Standmitteilung, mit Überschüssen. Hast du sie, rechnet Depotblick damit statt selbst zu schätzen.",
+    "bavs.gz": "Der Zins, den der Versicherer garantiert. Bei neuen Verträgen meist 1 % oder weniger.",
+    "bavs.ak": "Abschluss- und Vertriebskosten in Euro, meist auf 5 Jahre verteilt. Stehen im Produktinformationsblatt.",
+    "bavs.vk": "Verwaltungskosten in Prozent von jedem Beitrag.",
+    "bavs.fk": "Kosten der Fonds im Vertrag pro Jahr (TER).",
+    "bavs.ek": "Die Effektivkosten fassen alle Kosten in einer Zahl zusammen: um so viel Prozent sinkt die Rendite im Jahr. Steht im Produktinformationsblatt. Hast du sie, brauchst du die einzelnen Kosten nicht.",
+    "bavs.ret": "Wie viel das Geld im Vertrag vor Kosten bringen soll. Klassische Verträge 2 bis 3 %, fondsgebundene mehr.",
+    "bavs.rgz": "Stirbst du früh, wird die Rente bis zum Ende dieser Zeit an die Erben weitergezahlt.",
+    "bavs.radj": "Um wie viel die Betriebsrente jedes Jahr steigt. Viele Verträge garantieren 1 % im Jahr. Sonst muss der Arbeitgeber alle 3 Jahre prüfen, ob er die Rente anpasst.",
+    "bavs.bu": "Manche Betriebsrenten haben eine Berufsunfähigkeitsversicherung dabei. Ein Teil des Beitrags geht dann dafür drauf.",
+    "bavs.buRente": "Wie viel die BU im Monat zahlt, wenn du nicht mehr arbeiten kannst.",
+    "bavs.buShare": "Wie viel deines Beitrags für die BU verwendet wird. Das fehlt beim Sparen.",
+    "contracts.type": "Riester: mit Zulagen, im Alter voll versteuert. Rürup: steuerlich absetzbar, gut für Selbstständige. Private Rentenversicherung: ohne Förderung, nur der Ertragsanteil wird versteuert. Kapital-Lebensversicherung: Auszahlung auf einmal.",
+    "contracts.rate": "Wie viel du im Monat einzahlst.",
+    "contracts.end": "Bis zu welchem Alter du einzahlst. Leer heißt bis zur Rente.",
+    "contracts.cap": "Wie viel schon im Vertrag steckt, laut Standmitteilung. Bei der Lebensversicherung die erwartete Ablaufleistung.",
+    "contracts.rente": "Die Rente laut Standmitteilung, in Euro von später. Hast du sie, rechnet Depotblick damit statt selbst zu schätzen.",
+    "contracts.kidsOld": "Für Kinder vor 2008 gibt es bei Riester 185 € statt 300 € Zulage.",
+    "contracts.paid": "Was du insgesamt eingezahlt hast. Nur der Gewinn wird versteuert.",
+    "contracts.old": "Lebensversicherungen von vor 2005 sind nach 12 Jahren Laufzeit steuerfrei.",
+    "ins.type": "Berufsunfähigkeit: zahlt, wenn du nicht mehr arbeiten kannst, das wichtigste Risiko. Risikolebensversicherung: zahlt deiner Familie, wenn du stirbst. Pflegezusatz: ergänzt die gesetzliche Pflege.",
+    "ins.rente": "Wie viel die BU im Monat zahlt. Empfohlen sind 70 bis 80 % deines Nettos.",
+    "ins.sum": "Wie viel die Versicherung im Todesfall auszahlt. Faustregel: 3 bis 5 Jahresgehälter, wenn jemand von dir abhängt.",
+    "ins.beitrag": "Was die Versicherung im Monat kostet. Das fehlt dir beim Sparen.",
+    "ins.end": "Bis zu welchem Alter die Versicherung läuft. Bei der BU am besten bis 67.",
+  };
+  Object.keys(RP_HELP).forEach((k) => (INFO["rp:" + k] = RP_HELP[k]));
+  const rpInfoBtn = (f) => { const hk = f.hk || f.k; return hk && RP_HELP[hk] ? `<button type="button" class="info" data-info="rp:${hk}" data-title="${esc(f.l)}" aria-label="Erklärung: ${esc(f.l)}">i</button>` : ""; };
   function rpInput(f, v, attrs) {
     const help = f.h ? `<span class="note">${f.h}</span>` : "";
     if (f.t === "h") return `<div class="field full rph"><span class="eyebrow">${f.l}</span></div>`;
-    if (f.t === "chk") return `<label class="rpchk${f.full ? " full" : ""}" data-f="${f.k}"><input type="checkbox" ${attrs}${(f.def ? v !== false : v) ? " checked" : ""}><span><b>${f.l}</b>${help}</span></label>`;
-    if (f.t === "seg") return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><label>${f.l}</label><div class="seg rpseg" ${attrs}>${f.o.map(([val, l]) => `<button type="button" data-v="${val}" aria-pressed="${String(v ?? "") === val}">${l}</button>`).join("")}</div>${help}</div>`;
-    if (f.t === "sel") return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><label>${f.l}</label><select ${attrs}>${f.o.map(([val, l]) => `<option value="${val}"${String(v ?? f.o[0][0]) === val ? " selected" : ""}>${l}</option>`).join("")}</select>${help}</div>`;
-    return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><label>${f.l}</label><input ${attrs} data-t="${f.t}" value="${esc(rpVal(v, f.t))}" ${f.t === "txt" ? 'inputmode="text"' : `inputmode="${f.t === "int" ? "numeric" : "decimal"}"`} placeholder="${f.ph || ""}" autocomplete="off">${help}</div>`;
+    if (f.t === "chk") return `<label class="rpchk${f.full ? " full" : ""}" data-f="${f.k}"><input type="checkbox" ${attrs}${(f.def ? v !== false : v) ? " checked" : ""}><span><b>${f.l}${rpInfoBtn(f) ? " " + rpInfoBtn(f) : ""}</b>${help}</span></label>`;
+    if (f.t === "seg") return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><div class="rplab"><label>${f.l}</label>${rpInfoBtn(f)}</div><div class="seg rpseg" ${attrs}>${f.o.map(([val, l]) => `<button type="button" data-v="${val}" aria-pressed="${String(v ?? f.def ?? "") === val}">${l}</button>`).join("")}</div>${help}</div>`;
+    if (f.t === "sel") return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><div class="rplab"><label>${f.l}</label>${rpInfoBtn(f)}</div><select ${attrs}>${f.o.map(([val, l]) => `<option value="${val}"${String(v ?? f.o[0][0]) === val ? " selected" : ""}>${l}</option>`).join("")}</select>${help}</div>`;
+    return `<div class="field${f.full ? " full" : ""}" data-f="${f.k}"><div class="rplab"><label>${f.l}</label>${rpInfoBtn(f)}</div><input ${attrs} data-t="${f.t}" value="${esc(rpVal(v, f.t))}" ${f.t === "txt" ? 'inputmode="text"' : `inputmode="${f.t === "int" ? "numeric" : "decimal"}"`} placeholder="${f.ph || ""}" autocomplete="off">${help}</div>`;
   }
   function rpList(k) {
     const L = RP_LISTS[k], items = rpR()[k] || [];
-    return items.map((it, i) => `<div class="rpitem" data-l="${k}" data-i="${i}"><div class="rpitem-h"><b class="rpit-t">${esc(L.title(it, i))}</b>${L.keep1 && items.length < 2 ? "" : '<button type="button" class="link" data-del>Entfernen</button>'}</div><div class="fields">${L.fields.map((f) => rpInput(f, it[f.k], `data-lk="${f.k || ""}"`)).join("")}</div>${L.cmp ? `<div class="row"><button type="button" class="btn ghost sm" data-cmp="${i}">${rpCmpOpen.has(i) ? "Vergleich schließen" : "Mit ETF vergleichen"}</button></div><div class="rpcmp" id="rpCmp${i}"${rpCmpOpen.has(i) ? "" : " hidden"}></div>` : ""}${L.rie ? '<div class="rprie" hidden></div>' : ""}</div>`).join("") + `<button type="button" class="btn ghost sm" data-add="${k}">${L.add}</button>`;
+    return items.map((it, i) => `<div class="rpitem" data-l="${k}" data-i="${i}"><div class="rpitem-h"><b class="rpit-t">${esc(L.title(it, i))}</b>${L.keep1 && items.length < 2 ? "" : '<button type="button" class="link" data-del>Entfernen</button>'}</div><div class="fields">${L.fields.map((f) => rpInput(Object.assign({}, f, { hk: k + "." + f.k }), it[f.k], `data-lk="${f.k || ""}"`)).join("")}</div>${L.cmp ? `<div class="row"><button type="button" class="btn ghost sm" data-cmp="${i}">${rpCmpOpen.has(i) ? "Vergleich schließen" : "Mit ETF vergleichen"}</button></div><div class="rpcmp" id="rpCmp${i}"${rpCmpOpen.has(i) ? "" : " hidden"}></div>` : ""}${L.rie ? '<div class="rprie" hidden></div>' : ""}</div>`).join("") + `<button type="button" class="btn ghost sm" data-add="${k}">${L.add}</button>`;
   }
   function rpField(f) {
     if (f.t === "list") return `<div class="field full rplist" data-f="${f.k}"><span class="eyebrow">${f.l}</span>${f.h ? `<span class="note">${f.h}</span>` : ""}${f.k === "loans" ? '<button type="button" class="link" id="rpLoanImp" hidden></button>' : ""}<div class="rplist-in" id="rpL_${f.k}">${rpList(f.k)}</div></div>`;
@@ -3816,7 +4079,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     return rpInput(f, rpR()[f.k], `data-k="${f.k}"`);
   }
   function rpBuild() {
-    $("#rpSteps").innerHTML = RP_STEPS.map(([k, l], i) => `<button type="button" data-st="${k}" title="${l}"><span>${i + 1}</span><em>${l}</em></button>`).join("");
+    $("#rpSteps").innerHTML = RP_STEPS.map(([k, l], i) => `<button type="button" data-st="${k}" title="${l}${RP_OPT.includes(k) ? " (optional)" : ""}"><span>${i + 1}</span><em>${l}</em>${RP_OPT.includes(k) ? "<small>optional</small>" : ""}</button>`).join("");
     $("#rpPanes").innerHTML = RP_STEPS.map(([k, l, fs], i) => `<div class="card rppane" data-pane="${k}" hidden><div class="card-h"><h3>${i + 1}. ${l}</h3></div><div class="fields">${fs.map(rpField).join("")}</div>${k === "ziel" ? '<div id="rpResult"></div>' : ""}<div class="row rpnav">${i ? '<button type="button" class="btn ghost" data-go="-1">Zurück</button>' : ""}${i < RP_STEPS.length - 1 ? '<button type="button" class="btn" data-go="1">Weiter</button>' : ""}</div></div>`).join("");
     rpBuilt = true;
   }
@@ -3824,21 +4087,26 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const R = rpR();
     $$("#rpPanes input[data-k][data-t]").forEach((el) => { if (el !== document.activeElement) el.value = rpVal(R[el.dataset.k], el.dataset.t); });
     $$("#rpPanes input[type=checkbox][data-k]").forEach((el) => { const f = RP_STEPS.flatMap((s) => s[2]).find((x) => x.k === el.dataset.k); el.checked = f && f.def ? R[el.dataset.k] !== false : !!R[el.dataset.k]; });
-    $$("#rpPanes .rpseg[data-k]").forEach((g) => { const k = g.dataset.k, cur = String(k === "grvMode" ? rpMode(R) : k === "kv" ? rpKv(R) : k === "ngMonths" ? rpCushion(R).months : k === "loanStrat" ? R.loanStrat || "lawine" : k === "avdRefund" ? R.avdRefund || "keep" : R[k] ?? ""); $$("button", g).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === cur ? "true" : "false")); });
+    $$("#rpPanes .rpseg[data-k]").forEach((g) => { const k = g.dataset.k, cur = String(k === "grvMode" ? rpMode(R) : k === "kv" ? rpKv(R) : k === "ngMonths" ? rpCushion(R).months : k === "loanStrat" ? R.loanStrat || "lawine" : k === "avdRefund" ? R.avdRefund || "keep" : k === "wishMode" ? R.wishMode || "real" : k === "payMode" ? R.payMode || "verzehr" : R[k] ?? ""); $$("button", g).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === cur ? "true" : "false")); });
     $("#rpView") && $$("#rpView button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === (R.view || "real") ? "true" : "false"));
   }
+  const RP_OPT = ["betrieb", "privat", "schutz"];
+  // Feste Ergebniszeile am Handy, sobald die Ergebnis-Karte aus dem Bild ist
+  if ("IntersectionObserver" in window) new IntersectionObserver((es) => es.forEach((e) => { $("#rpLine").hidden = e.isIntersecting || !$("#rpLine").innerHTML || e.boundingClientRect.top > 0; }), { rootMargin: "-60px 0px 0px 0px" }).observe($("#rpSum"));
   function rpSync(now) {
     const R = rpR();
     RP_STEPS.forEach(([, , fs]) => fs.forEach((f) => { if (!f.k) return; const el = $(`#rpPanes [data-f="${f.k}"]`); if (el) el.hidden = f.show ? !f.show(R) : false; }));
     $$("#rpPanes .rpitem").forEach((row) => {
       const L = RP_LISTS[row.dataset.l], it = (R[row.dataset.l] || [])[+row.dataset.i]; if (!it) return;
       L.fields.forEach((f) => { if (!f.k) return; const el = row.querySelector(`[data-f="${f.k}"]`); if (!el) return; el.hidden = f.show ? !f.show(it) : false; if (f.lf) { const lab = el.querySelector("label"); if (lab && lab.tagName === "LABEL" && !el.classList.contains("rpchk")) lab.textContent = f.lf(it) || f.l; } });
+      if (row.dataset.l === "jobs") { const fi = row.querySelector('input[data-lk="from"]'); if (fi) { const e0 = {}, f0 = jobFrom(e0, { jobs: R.jobs.slice(0, +row.dataset.i).concat([e0]) }); fi.placeholder = f0 > rpAge(R) ? String(f0) : "heute"; } }
       row.querySelector(".rpit-t").textContent = L.title(it, +row.dataset.i);
     });
     const si = RP_STEPS.findIndex((x) => x[0] === rpStep);
     $$("#rpSteps button").forEach((b, i) => { b.setAttribute("aria-selected", b.dataset.st === rpStep ? "true" : "false"); b.classList.toggle("done", i < si); });
     $$("#rpPanes .rppane").forEach((p) => (p.hidden = p.dataset.pane !== rpStep));
-    $("#rpSteps button[data-st=staat]").lastChild.textContent = rpHas(R, "beamt") && rpMain(R) === "beamt" ? "Pension" : "Gesetzliche Rente";
+    $$("#rpSteps button").forEach((b) => { const k = b.dataset.st; b.classList.toggle("filled", k === "betrieb" ? (R.bavs || []).length > 0 : k === "privat" ? (R.contracts || []).length > 0 || !!R.avd : k === "schutz" ? (R.ins || []).length > 0 : false); });
+    $("#rpSteps button[data-st=staat] em").textContent = rpHas(R, "beamt") && rpMain(R) === "beamt" ? "Pension" : "Gesetzliche Rente";
     clearTimeout(rpRenderT); if (now) rpRender(); else rpRenderT = setTimeout(rpRender, 60);
   }
   // Betrag in der gewählten Sicht: heutige Kaufkraft oder echte Euro im Alter a
@@ -3969,10 +4237,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     let delta = "";
     if (rpUser && rpLast) { const dn = X.net - rpLast.net, dg = X.gap - rpLast.gap; if (Math.abs(dn) >= 1) delta = `<span class="rpdelta ${dn > 0 ? "gain" : "loss"}">${dn > 0 ? "+" : "−"}${eur0.format(Math.abs(rpV(X, dn)))} Rente im Monat${X.need > 0 && Math.abs(dg) >= 1 ? `, Lücke ${dg > 0 ? "+" : "−"}${eur0.format(Math.abs(rpV(X, dg)))}` : ""}</span>`; }
     rpLast = { net: X.net, gap: X.gap }; rpUser = false;
+    $$('#rpPanes [data-f="wish"]').forEach((el) => {
+      let n = el.querySelector(".rpwishn"); if (!n) { n = document.createElement("span"); n.className = "note rpwishn"; el.appendChild(n); }
+      const w = num(R.wish, 0), f = Math.pow(1 + X.inf, Math.max(0, X.yrs)), tip = " Faustregel: rund 80 % deines heutigen Nettos.", ph = Math.round((N.net * 0.8) / 50) * 50;
+      const inp = el.querySelector("input"); if (inp) inp.placeholder = ph >= 50 ? nf(0).format(ph) : "3.000";
+      n.textContent = X.yrs <= 0 ? tip.trim() : !(w > 0) ? `Trag einen Betrag ein, dann steht hier, wie viel das ${X.ry} auf dem Konto ist.${tip}` : R.wishMode === "nom" ? `${eur0.format(w)} im Jahr ${X.ry} kaufen so viel wie heute ${eur0.format(w / f)}.${tip}` : `So viel wie ${eur0.format(w)} heute. Auf dem Konto stehen ${X.ry} dafür rund ${eur0.format(w * f)}.${tip}`;
+    });
     const bar = `<div class="rpbar">${X.src.map((s) => `<i style="width:${(s.m / max) * 100}%;background:var(${s.c})" title="${esc(s.l)}"></i>`).join("")}</div>${X.need > 0 ? `<div class="rpneed" style="left:${Math.min(100, (X.need / max) * 100)}%"></div>` : ""}`;
+    $("#rpLine").innerHTML = `<span class="note">Netto-Rente ab ${X.ra}</span><b class="num">${sEur(rpV(X, X.net))}</b>${X.need > 0 ? (ok ? '<span class="pill gain">Ziel erreicht</span>' : `<span class="pill warn">Lücke ${eur0.format(rpV(X, X.gap))}</span>`) : ""}`;
     $("#rpSum").innerHTML = `<span class="eyebrow">Netto-Rente ab ${X.ra}, ${unit}</span><b class="num rpbig">${sEur(rpV(X, X.net))}</b>${delta}<span class="note">Schon abgezogen: ${eur0.format(rpV(X, X.kvpv))} Kranken- und Pflegeversicherung und ${eur0.format(rpV(X, X.taxM + X.abg))} Steuern. Brutto wären es ${eur0.format(rpV(X, X.gross))}.</span>
       <div class="rpbarw">${bar}</div>
-      ${X.need > 0 ? `<p class="ctext" style="margin:0">${ok ? `<span class="pill gain">Gedeckt</span> Dein Ziel von ${eur0.format(rpV(X, X.need))} ist erreicht, ${eur0.format(rpV(X, X.net - X.need))} Puffer.` : `<span class="pill warn">Lücke ${eur0.format(rpV(X, X.gap))}</span> ${X.retired ? "Du bist schon im Rentenalter." : `Dafür zusätzlich rund <b>${eur0.format(extra)}</b> im Monat ins Depot.`}`}</p>` : '<p class="note" style="margin:0">Trag im letzten Schritt ein, wie viel du im Alter brauchst.</p>'}
+      ${X.need > 0 ? `<p class="ctext" style="margin:0">${ok ? `<span class="pill gain">Gedeckt</span> Dein Ziel von ${eur0.format(rpV(X, X.need))} ist erreicht, ${eur0.format(rpV(X, X.net - X.need))} Puffer.` : `<span class="pill warn">Lücke ${eur0.format(rpV(X, X.gap))}</span> ${X.retired ? "Du bist schon im Rentenalter." : `Für dein Ziel von ${eur0.format(rpV(X, X.need))} spar zusätzlich rund <b>${eur0.format(extra)}</b> im Monat ins Depot.`}`}</p>` : '<p class="note" style="margin:0">Trag im letzten Schritt ein, wie viel du im Alter brauchst.</p>'}
       ${X.yrs > 0 ? `<span class="note">${R.view === "nom" ? `${eur0.format(rpV(X, X.net))} im Jahr ${X.ry} sind heute etwa ${eur0.format(X.net)} wert.` : `In Euro von ${X.ry} wären das ${eur0.format(X.net * Math.pow(1 + X.inf, X.yrs))}.`}</span>` : ""}`;
     if (delta) setTimeout(() => { const d = $("#rpSum .rpdelta"); if (d) d.classList.add("out"); }, 3000);
     if (rpStep === "ng" && $("#rp_ngBox")) $("#rp_ngBox").innerHTML = rpNgBox(R);
@@ -3990,7 +4265,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (af) { let w = af.querySelector(".rpavdw"); const over = R.avd && num(R.avdRate, 0) > 150; if (over && !w) { w = document.createElement("p"); w.className = "hint warn-t rpavdw"; w.style.margin = "0"; af.appendChild(w); } if (w) { w.hidden = !over; if (over) w.textContent = `Über 150 € im Monat gibt es keine Zulagen mehr und keinen weiteren Steuervorteil. Die ${eur0.format(num(R.avdRate, 0) - 150)} darüber werden im Alter trotzdem voll versteuert. Leg sie besser in einen normalen ETF-Sparplan.`; } }
       if (R.avd && +R.avdRate > 0 && X.avdInfo) {
         const I = X.avdInfo; rpChart($("#rpChartAvd"), rpPts(X, ["avd"]), [["avd", "Altersvorsorgedepot", "--c2"]], X.ra, unit);
-        $("#rpAvdTxt").textContent = `${eur0.format(I.own)} im Jahr von dir, dazu ${eur0.format(I.zul + I.kidZ)} Zulagen${I.z0 > I.start ? " ab " + (X.age + I.z0 - new Date().getFullYear()) : ""}. Mit ${I.payAge}: ${shortEur(I.capT)} in heutiger Kaufkraft (${shortEur(I.capNom)} in Geld von damals), davon ${shortEur(I.zSum)} Zulagen. Ausgezahlt bis ${X.endAge} sind das rund ${eur0.format((X.src.find((s) => s.k === "avd") || { m: 0 }).m)} im Monat (heutige Kaufkraft).`;
+        $("#rpAvdTxt").textContent = `${eur0.format(I.own)} im Jahr von dir, ${I.none ? "keine Zulagen, weil du nicht pflichtversichert bist" : `dazu ${eur0.format(I.zul + I.kidZ)} Zulagen`}${I.none ? "" : I.z0 > I.start ? " ab " + (X.age + I.z0 - new Date().getFullYear()) : ""}. Mit ${I.payAge}: ${shortEur(I.capT)} in heutiger Kaufkraft (${shortEur(I.capNom)} in Geld von damals), davon ${shortEur(I.zSum)} Zulagen. Ausgezahlt bis ${X.endAge} sind das rund ${eur0.format((X.src.find((s) => s.k === "avd") || { m: 0 }).m)} im Monat (heutige Kaufkraft).`;
       }
       $$('#rpPanes .rpitem[data-l="contracts"]').forEach((row) => {
         const c = R.contracts[+row.dataset.i], box = row.querySelector(".rprie"); if (!c || !box) return;
@@ -4003,7 +4278,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (rpStep === "betrieb") rpCmpOpen.forEach((i) => rpCompare(R, i, $("#rpCmp" + i)));
     const res = $("#rpResult"); if (!res || rpStep !== "ziel") return;
     const now = [].concat(N.bav.map((v, i) => (num(R.bavs[i].own, 0) > 0 ? `<li>${esc(X.bavInfo[i].name)}: Deine ${eur0.format(+R.bavs[i].own)} kosten dich netto nur rund <b>${eur0.format(v)}</b> im Monat, dazu kommen ${eur0.format(num(R.bavs[i].ag, 0))} vom Arbeitgeber.</li>` : "")),
-      [N.avdLater ? "<li>Altersvorsorgedepot: Ohne rentenversicherten Job gibt es noch keine Zulagen. Sie starten mit Ausbildung, Job oder Nebenjob.</li>" : N.avdZul != null ? `<li>Altersvorsorgedepot: <b>${eur0.format(N.avdZul)}</b> Zulagen im Jahr${N.avdTax > 0 ? ` und rund ${eur0.format(N.avdTax)} Steuererstattung` : ""}.</li>` : "",
+      [N.avdNone ? "<li>Altersvorsorgedepot: Keine Zulagen und keine Steuererstattung, weil du nicht in der Rentenversicherung pflichtversichert bist.</li>" : N.avdLater ? "<li>Altersvorsorgedepot: Ohne pflichtversicherten Job gibt es noch keine Zulagen. Sie starten mit Ausbildung, Job oder Nebenjob.</li>" : N.avdZul != null ? `<li>Altersvorsorgedepot: <b>${eur0.format(N.avdZul)}</b> Zulagen im Jahr${N.avdTax > 0 ? ` und rund ${eur0.format(N.avdTax)} Steuererstattung` : ""}.</li>` : "",
         N.riester.filter((z) => z.ok && z.zul > 0).map((z) => `<li>Riester: <b>${eur0.format(z.zul)}</b> Zulagen im Jahr.</li>`).join(""),
         N.rue > 0 ? `<li>Rürup: rund <b>${eur0.format(N.rue)}</b> Steuererstattung im Jahr.</li>` : ""]).join("");
     const E = rpEffects(R, X);
@@ -4017,7 +4292,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       else if (s.k === "pen") pn = "zahlt der Dienstherr";
       else if (bi >= 0) { const b = R.bavs[bi] || {}; pay = num(b.own, 0); pn = num(b.ag, 0) > 0 ? `plus ${eur0.format(num(b.ag, 0))} vom Arbeitgeber` : "aus dem Brutto"; cap = X.bavInfo[bi] ? X.bavInfo[bi].capR : null; }
       else if (ci >= 0) { const c = R.contracts[ci] || {}; pay = num(c.rate, 0) || null; cap = num(c.rente, 0) > 0 ? null : X.cCap[ci] || null; if (c.type === "riester") { const z = rpRiester(R, c); if (z.ok && z.zul > 0) pn = `plus ${eur0.format(z.zul / 12)} Zulagen`; } }
-      else if (s.k === "avd") { pay = num(R.avdRate, 0); pn = X.avdInfo && X.avdInfo.zul > 0 ? `plus ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen${X.avdInfo.z0 > X.avdInfo.start ? " ab " + (X.age + X.avdInfo.z0 - new Date().getFullYear()) : ""}` : ""; cap = X.avdInfo ? X.avdInfo.capT : null; }
+      else if (s.k === "avd") { pay = num(R.avdRate, 0); pn = X.avdInfo && X.avdInfo.none ? "ohne Zulagen" : X.avdInfo && X.avdInfo.zul > 0 ? `plus ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen${X.avdInfo.z0 > X.avdInfo.start ? " ab " + (X.age + X.avdInfo.z0 - new Date().getFullYear()) : ""}` : ""; cap = X.avdInfo ? X.avdInfo.capT : null; }
       else if (s.k === "dep") { pay = X.rate; pn = X.depNow > 0 ? `heute schon ${eur0.format(X.depNow)} da` : ""; cap = (X.paths.dep || [])[X.yrs] || 0; }
       return { s, pay, pn, cap };
     });
@@ -4033,7 +4308,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       return `<div class="rpw"><div class="rpw-h"><b>${esc(e.l)}</b>${v[1] ? `<span class="pill ${v[0]}">${v[1]}</span>` : ""}</div>
         <p class="ctext" style="margin:0">Kostet dich heute <b>${eur0.format(e.aufwand)}</b> im Monat${e.l === "Depot-Sparrate" ? "" : " nach Steuer- und Abgabenersparnis"}. Bringt dir ab ${grv ? X.sa : e.l === "Altersvorsorgedepot" && X.avdInfo ? X.avdInfo.payAge : X.ra} netto <b>${eur0.format(rpV(X, e.D))}</b> im Monat.</p>
         ${etf ? `<div class="rpw-b"><span>${esc(e.l)}</span><i><b style="width:${(Math.max(0, e.D) / mx) * 100}%;background:var(--accent)"></b></i><span class="num">${eur0.format(rpV(X, e.D))}</span><span>Gleicher Betrag im ETF</span><i><b style="width:${(Math.max(0, e.etf) / mx) * 100}%;background:var(--div)"></b></i><span class="num">${eur0.format(rpV(X, e.etf))}</span></div>` : ""}
-        ${e.l === "Altersvorsorgedepot" && X.avdInfo ? `<span class="note">Dazu zahlt der Staat ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen im Monat ins Depot${X.avdInfo.z0 > X.avdInfo.start ? `, aber erst ab ${X.age + X.avdInfo.z0 - new Date().getFullYear()}, wenn du in die Rentenversicherung einzahlst` : ""}${X.avdInfo.refund > 0 ? `, und du zahlst die Steuererstattung von ${eur0.format(X.avdInfo.refund / 12)} im Monat zusätzlich ein` : N.avdTax > 0 ? `. Die Steuererstattung von rund ${eur0.format(N.avdTax / 12)} im Monat behältst du, sie ist oben schon abgezogen` : ""}. Im Alter ist die Auszahlung voll steuerpflichtig, beim ETF nur der Gewinn.</span>` : ""}
+        ${e.l === "Altersvorsorgedepot" && X.avdInfo ? `<span class="note">${X.avdInfo.none ? "Zulagen und Steuererstattung gibt es für dich nicht, weil du nicht in der Rentenversicherung pflichtversichert bist" : `Dazu zahlt der Staat ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen im Monat ins Depot`}${X.avdInfo.none ? "" : X.avdInfo.z0 > X.avdInfo.start ? `, aber erst ab ${X.age + X.avdInfo.z0 - new Date().getFullYear()}, wenn du in die Rentenversicherung einzahlst` : ""}${X.avdInfo.refund > 0 ? `, und du zahlst die Steuererstattung von ${eur0.format(X.avdInfo.refund / 12)} im Monat zusätzlich ein` : N.avdTax > 0 ? `. Die Steuererstattung von rund ${eur0.format(N.avdTax / 12)} im Monat behältst du, sie ist oben schon abgezogen` : ""}. Im Alter ist die Auszahlung voll steuerpflichtig, beim ETF nur der Gewinn.</span>` : ""}
         ${grv ? '<span class="note">Gezählt werden nur deine Beiträge ab heute, die Hälfte, die der Arbeitgeber dazu zahlt, kostet dich nichts. Dazu sichert die Rentenversicherung Reha und Erwerbsminderung ab, das kann ein ETF nicht.</span>' : ""}</div>`;
     }).join("");
     const nom = X.net * Math.pow(1 + X.inf, X.yrs), heroCls = X.need > 0 ? (ok ? "ok" : "gap") : "";
@@ -4046,6 +4321,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <div class="rphero ${heroCls}">
         <span class="eyebrow">Dein Ergebnis</span>
         <p class="rphero-t">Ab ${X.ra} hast du rund <b class="num">${sEur(rpV(X, X.net))}</b> im Monat zum Leben${X.need > 0 ? `, du brauchst <b class="num">${eur0.format(rpV(X, X.need))}</b>` : ""}.</p>
+        ${X.div ? (() => { const V = rpCalc(Object.assign({}, R, { payMode: "verzehr" })), Xn = extra > 0 ? rpCalc(R, extra) : null; return `<p class="ctext rpdiv" style="margin:0">Mit Dividenden-ETFs schüttet dein Depot von <b class="num">${shortEur(rpV(X, X.cap))}</b> bei ${numStr(X.dy * 100)} % rund <b class="num">${eur0.format(rpV(X, X.wd))}</b> im Monat aus (vor Steuern). Das Depot selbst bleibt erhalten.${Xn ? ` Für dein Ziel bräuchtest du mit ${X.ra} rund <b class="num">${shortEur(rpV(X, Xn.cap))}</b> im Depot.` : ""} Zum Vergleich: Würdest du es bis ${X.endAge} aufbrauchen, wären es ${eur0.format(rpV(X, V.wd))} im Monat.</p>`; })() : ""}
         ${X.need > 0 ? `<p class="ctext" style="margin:0">${ok ? `<span class="pill gain">Passt</span> Es bleiben ${eur0.format(rpV(X, X.net - X.need))} im Monat übrig.` : X.retired ? `<span class="pill warn">Es fehlen ${eur0.format(rpV(X, X.gap))}</span> Die Lücke müsstest du aus Erspartem decken oder die Ausgaben anpassen.` : `<span class="pill warn">Es fehlen ${eur0.format(rpV(X, X.gap))}</span> Spar zusätzlich rund <b>${eur0.format(extra)} im Monat</b> ins Depot${X.rate > 0 ? ` (dann ${eur0.format(X.rate + extra)} statt ${eur0.format(X.rate)})` : ""}, dann passt es.`}</p>` : '<p class="note" style="margin:0">Trag oben ein, wie viel du im Alter im Monat brauchst.</p>'}
         ${X.yrs > 0 ? `<p class="note" style="margin:0">${R.view === "nom" ? `Das sind Euro von ${X.ry}. In heutigem Geld ist das so viel wert wie ${eur0.format(X.net)}.` : `Das ist in heutigem Geld gerechnet. Auf dem Konto stehen ${X.ry} rund ${eur0.format(nom)}, weil bis dahin alles teurer wird.`}<button type="button" class="info" data-info="Kaufkraft" aria-label="Erklärung: Kaufkraft">i</button></p>` : ""}
       </div>
@@ -4061,7 +4337,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         <tr class="sel"><td><b>= Netto, was bei dir ankommt</b></td><td class="r num"><b>${sEur(rpV(X, X.net))}</b></td></tr>
         ${X.need > 0 ? `<tr><td>Dein Bedarf${R.immo && +R.immoSave ? ` (nach ${eur0.format(+R.immoSave)} gesparter Miete)` : ""}</td><td class="r num">${eur0.format(rpV(X, X.need))}</td></tr><tr class="sel"><td><b>${X.gap > 0 ? "Fehlt" : "Bleibt übrig"}</b></td><td class="r num"><b class="${X.gap > 0 ? "loss" : "gain"}">${eur0.format(rpV(X, X.gap > 0 ? X.gap : X.net - X.need))}</b></td></tr>` : ""}
       </tbody></table>
-      <h4>2. So wächst dein Geld bis ${X.ra} und wird dann verbraucht</h4><div class="chart rpchart" id="rpChartAll"></div>
+      <h4>2. So wächst dein Geld bis ${X.ra}${X.div ? ", danach lebst du von den Ausschüttungen" : " und wird dann verbraucht"}</h4><div class="chart rpchart" id="rpChartAll"></div>
       ${X.avdInfo ? (() => { const I = X.avdInfo, cn = I.capNom, gain = Math.max(0, cn - I.ownSum - I.zSum); return `<div class="rpavd"><span class="eyebrow">Altersvorsorgedepot mit ${I.payAge}, heutige Kaufkraft</span><b class="num">${shortEur(I.capT)}</b><span class="note">In Geld von ${X.ry - X.ra + I.payAge} sind das ${shortEur(cn)}: ${shortEur(I.ownSum)} selbst eingezahlt, ${shortEur(I.zSum)} Zulagen vom Staat und ${shortEur(gain)} Erträge.</span><div class="rpbar">${[[I.ownSum, "--c8"], [I.zSum, "--c3"], [gain, "--c2"]].map(([v, c]) => `<i style="width:${(v / Math.max(1, cn)) * 100}%;background:var(${c})"></i>`).join("")}</div><div class="rpleg"><span><i style="background:var(--c8)"></i>Eigenbeiträge</span><span><i style="background:var(--c3)"></i>Zulagen</span><span><i style="background:var(--c2)"></i>Erträge</span></div></div>`; })() : ""}
       ${worth ? `<h4>3. Lohnt sich das?<button type="button" class="info" data-info="Wirkung" aria-label="Erklärung: Wirkung">i</button></h4>
         <p class="note" style="margin:0">Für jeden Baustein: Was kostet er dich heute wirklich, und was bringt er dir später? Daneben, was derselbe Betrag in einem ETF-Sparplan bringen würde.</p>
@@ -4396,9 +4672,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (cr.mode === "once") return cr.at <= 100 ? [cr.at] : [];
     const out = []; for (let y = cr.at; y <= 100; y += cr.every) out.push(y); return out;
   }
+  // Sparerpauschbetrag aus den Depots (Freistellungsaufträge), höchstens 1.000 € bzw. 2.000 € verheiratet
+  const hcFsa = () => Math.min(S.data.tax && S.data.tax.married ? 2000 : 1000, S.data.depots.reduce((x, d) => x + fsaOf(d), 0));
+  const hcBz = () => { const B = Object.assign({}, BASISZINS, (S.data.tax && S.data.tax.basiszins) || {}), y = Object.keys(B).map(Number).sort((a, b) => b - a)[0]; return Math.max(0, +B[y] || 0); };
   function fcOpts(B) {
     const f = S.fc;
-    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0 };
+    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
   }
   function simulate(o, ret, ys, sc, months) {
     // Monatlich. In einer Krise ersetzt der Krisenverlauf (abwärts, dann zurück aufs alte Hoch) die normale Rendite
@@ -4408,14 +4687,24 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const fD = Math.pow(1 - sc.dd, 1 / Math.max(1, sc.down)), fU = sc.up > 0 ? Math.pow(1 / (1 - sc.dd), 1 / sc.up) : g;
       ys.forEach((y) => { const c = Math.round(y * 12); for (let k = 0; k < sc.down + sc.up && c + k < n; k++) f[c + k] = k < sc.down ? fD : fU; });
     }
-    let A = o.start, Bv = 0, A0 = o.start, B0 = 0, paid = o.start, rc = o.rate;
-    const pts = [{ m: 0, y: 0, v: A, g: A, paid }];
+    let A = o.start, Bv = 0, A0 = o.start, B0 = 0, paid = o.start, rc = o.rate, zul = 0, own = 0, vYS = o.start, inY = 0, vpSum = 0, taxP = 0;
+    // Altersvorsorgedepot: Zulagen einmal im Jahr auf die Eigenbeiträge ab 2027 (bis 1.800 € im Jahr gefördert)
+    const now = new Date(), m27 = Math.max(0, (2027 - now.getFullYear()) * 12 - now.getMonth());
+    const pts = [{ m: 0, y: 0, v: A, g: A, paid, zul }];
     for (let m = 0; m < n; m++) {
       if (m > 0 && m % 12 === 0) rc = rc * (1 + o.dyn) + (o.dynY || 0);
       if (m > 0 && o.dynM) rc += o.dynM;
-      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; }
+      if (o.phases && o.phases.length) { const ph = o.phases.find((x) => x.m === m); if (ph) rc = ph.rate; }
+      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; if (m >= m27) own += rc; }
       A *= f[m] * kA; Bv *= f[m] * kB; A0 *= f[m]; B0 *= f[m];
-      pts.push({ m: m + 1, y: (m + 1) / 12, v: A + Bv, g: A0 + B0, paid });
+      if (o.avd && (m + 1 - m27) % 12 === 0 && m >= m27) { const y = Math.min(1800, own), z = y > 0 ? avdZulage(y) + o.avdKids * 300 * Math.min(1, y / 300) : 0; Bv += z; B0 += z; zul += z; own = 0; }
+      if (!(o.stopM > 0 && m >= o.stopM)) inY += rc;
+      // Vorabpauschale am Jahresende, Steuer wird aus dem Depot bezahlt
+      if (o.tax && (m + 1) % 12 === 0) {
+        const v = A + Bv, vp = Math.max(0, Math.min(v - vYS - inY, vYS * o.bz * 0.7)), t = Math.max(0, vp * 0.7 - o.fsa) * o.tr;
+        if (t > 0 && v > 0) { A -= (t * A) / v; Bv -= (t * Bv) / v; } vpSum += vp; taxP += t; vYS = A + Bv; inY = 0;
+      }
+      pts.push({ m: m + 1, y: (m + 1) / 12, v: A + Bv, g: A0 + B0, paid, zul, vpSum, taxP });
     }
     return pts;
   }
@@ -4423,7 +4712,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const ys = crashYears(), sc = ys.length ? scenOf(S.fc.crash.scen, B) : null, crash = !!sc;
     const yr = (a) => a.filter((p) => p.m % 12 === 0);
     const mid = yr(simulate(o, o.ret, ys, sc)), lo = yr(simulate(o, o.retMin, ys, sc)), hi = yr(simulate(o, o.retMax, ys, sc)), nc = crash ? yr(simulate(o, o.ret, [], null)) : mid;
-    const pts = mid.map((p, i) => ({ y: p.y, v: p.v, g: p.g, paid: p.paid, lo: lo[i].v, hi: hi[i].v, nc: nc[i].v, real: p.v / Math.pow(1 + o.inf, p.y), loR: lo[i].v / Math.pow(1 + o.inf, p.y), hiR: hi[i].v / Math.pow(1 + o.inf, p.y) }));
+    const pts = mid.map((p, i) => ({ y: p.y, v: p.v, g: p.g, paid: p.paid, zul: p.zul || 0, vpSum: p.vpSum || 0, taxP: p.taxP || 0, lo: lo[i].v, hi: hi[i].v, nc: nc[i].v, real: p.v / Math.pow(1 + o.inf, p.y), loR: lo[i].v / Math.pow(1 + o.inf, p.y), hiR: hi[i].v / Math.pow(1 + o.inf, p.y) }));
     return { crash, ys, sc, pts };
   }
 
@@ -4461,7 +4750,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const foot = p.status === "fällig" ? `<span class="pill warn">${esc(miss.length ? miss[miss.length - 1].label.split(" ")[0] + ". fehlt" : "fällig")}</span><button type="button" class="btn ghost sm" data-plan-add="${esc(p.id)}" style="padding:4px 10px;font-size:.78rem">Nachtragen</button>`
         : p.status === "aktiv" ? `<span class="pill gain">aktiv</span><span class="note">nächste ca. ${fmtDate(p.next)}</span>`
         : `<span class="pill neu">${p.status}</span><span class="note">zuletzt ${fmtDate(p.last)}</span>`;
-      const act2 = p.manual ? `<button type="button" class="link" data-plan-edit="${esc(p.id)}">Bearbeiten</button>` : `<span class="row" style="gap:10px"><span class="pill neu" title="Automatisch erkannt, nicht von dir festgelegt">erkannt</span><button type="button" class="link" data-plan-take="${esc(p.id)}">Übernehmen</button></span>`;
+      const act2 = p.manual ? `<button type="button" class="link" data-plan-edit="${esc(p.id)}">Bearbeiten</button>` : `<span class="row" style="gap:10px"><span class="pill neu" title="Automatisch erkannt, nicht von dir festgelegt">erkannt</span></span>`;
       return `<div class="card plan${p.manual ? "" : " auto"}" data-pos="${esc(p.asset)}">
         <div class="top"><div style="display:grid;gap:2px;min-width:0"><span class="nm">${esc(a.name || a.symbol)}</span><span class="note">${esc(planWhen(p))} · ${p.count}× seit ${fmtDate(p.first).slice(3)}</span>${p.changes.length ? `<span class="note">Rate ${p.changes.slice(-2).map((c, i) => (i ? "" : eur0.format(c.from) + " → ") + eur0.format(c.to) + " ab " + fmtDate(c.date).slice(3)).join(" → ")}</span>` : ""}${p.bonus > 0 ? `<span class="note bonusc">+ ${eur.format(p.bonus)} Saveback geschenkt</span>` : ""}${p.extra > 0 ? `<span class="note">+ ${eur.format(p.extra)} Aufrunden und Extras (${p.extraN}×)</span>` : ""}</div>
         <div class="amt">${eur0.format(p.rate)}<small>${p.rhythm.key === "m" ? "pro Monat" : "≈ " + eur0.format(perM) + " / Monat"}</small></div></div>
@@ -4471,17 +4760,29 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     }).join("");
     bindPlans(host, P);
     const nAuto = P.plans.filter((p) => p.auto).length;
-    $("#spAutoNote").textContent = nAuto ? "„Erkannt“ heißt geraten. Übernimm die Pläne oder leg sie so an, wie sie bei deinem Broker stehen." : "";
+    $("#spAutoNote").textContent = nAuto ? "„Erkannt“ heißt geraten. Prüf die Pläne und übernimm sie so, wie sie bei deinem Broker stehen." : "";
+    const firstAuto = P.plans.find((p) => p.auto), ta = $("#spTakeAll"); ta.hidden = !nAuto;
+    ta.textContent = nAuto === 1 ? "1 erkannten Plan übernehmen" : nAuto + " erkannte Pläne übernehmen";
+    ta.onclick = () => { if (firstAuto) openPlan(firstAuto); };
     $$("[data-plan-edit],[data-plan-take]", host).forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); const pl = C.plans.plans.find((x) => x.id === (b.dataset.planEdit || b.dataset.planTake)); if (pl) openPlan(pl); }));
   }
 
   // ---------- Unterreiter ----------
+  // Drei Bereiche plus Hauskauf: Zukunft (Endwert oder Ziel), Krisen-Test, Haus, Meine Sparpläne (Statistik, Zielaufteilung, Verlauf, Details)
+  const SP_MY = ["st", "rb", "lg", "dt"];
   function setTab(t) {
+    if (t === "fc0") t = S.fc.fcMode === "zl" ? "zl" : "fc";
+    if (t === "my") t = "st";
+    if (t === "fc" || t === "zl") S.fc.fcMode = t;
     S.fc.tab = t; savePrefs();
-    $$(".sp .subtabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === t));
-    $$(".sp [data-pane]").forEach((p) => (p.hidden = p.dataset.pane !== t));
-    if (t === "fc") renderFc(); else if (t === "zl") renderZl(); else if (t === "cr") renderCr(); else if (t === "st") renderSt(); else if (t === "rb") renderRb(); else if (t === "lg") renderLog(); else renderDt();
+    const g = t === "zl" ? "fc" : SP_MY.includes(t) ? "my" : t, show = g === "my" ? SP_MY : [t];
+    $$(".sp .subtabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === g));
+    $$(".sp [data-pane]").forEach((p) => (p.hidden = !show.includes(p.dataset.pane)));
+    $("#spMode").hidden = g !== "fc";
+    if (g === "fc") sseg("#spMode", [["fc", "Endwert ausrechnen"], ["zl", "Ziel erreichen"]], t, (v) => setTab(v));
+    if (t === "fc") renderFc(); else if (t === "zl") renderZl(); else if (t === "cr") renderCr(); else if (t === "hk") renderHk(); else if (t === "dv") renderDv(); else { renderSt(); renderRb(); renderLog(); renderDt(); }
   }
+
   PAGE_RENDER.sparplaene = (d) => {
     renderPlans(d || view());
     syncInputs();
@@ -4491,6 +4792,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   $("#spOld").addEventListener("click", () => { S.fc.showOld = !S.fc.showOld; savePrefs(); PAGE_RENDER.sparplaene(); });
 
   // ---------- Eingaben ----------
+  function renderPhases() {
+    const f = S.fc, P = f.phases || [], el = $("#spPh"), y0 = new Date().getFullYear();
+    if (el.querySelector("input:focus") && el.children.length === P.length) return;
+    el.innerHTML = P.map((x, i) => `<div class="phr"><span class="note">ab Jahr</span><span class="unit2" style="width:4.6rem"><input data-pi="${i}" data-pk="from" inputmode="numeric" value="${x.from}" aria-label="Ab Jahr"></span><span class="note">dann</span><span class="unit2" style="flex:1 1 6rem;min-width:0"><input data-pi="${i}" data-pk="rate" inputmode="decimal" value="${x.rate != null ? nf(0).format(x.rate) : ""}" placeholder="Rate" aria-label="Neue Sparrate pro Monat"><span>€</span></span><button type="button" class="icon-btn" data-pdel="${i}" aria-label="Änderung löschen">✕</button><span class="note phy">das ist ${y0 + x.from}</span></div>`).join("");
+  }
   function syncInputs() {
     const B = fcBase(), f = S.fc, o = fcOpts(B), cr = f.crash;
     const setIn = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
@@ -4499,7 +4805,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spRateReset").hidden = f.rate == null; $("#spRateReset").textContent = eur0.format(B.rate) + " aus Sparplänen";
     $("#spStartReset").hidden = f.start == null; $("#spStartReset").textContent = eur0.format(B.value) + " aus Depot"; $("#spStartNote").hidden = f.start != null;
     sseg("#spYears", FC_YEARS.map((y) => [String(y), y + " J."]), String(f.years), (v) => { f.years = +v; fcChanged(); });
-    setIn("#spYearsIn", f.years); setIn("#spStop", f.stop > 0 ? f.stop : "");
+    setIn("#spYearsIn", f.years); setIn("#spStop", f.stop > 0 ? f.stop : ""); $("#spAvd").checked = !!f.avd; $("#spTax").checked = f.tax !== false; $("#spTax").disabled = !!f.avd; renderPhases(); setIn("#spAvdKids", f.avdKids > 0 ? f.avdKids : "");
     const key = [f.retMin, f.ret, f.retMax].join(",");
     $("#spRet").innerHTML = RET_PRESETS.map(([v, l, s]) => `<button type="button" data-v="${v}" aria-pressed="${v === key}">${l}<small>${s}</small></button>`).join("");
     $$("#spRet button").forEach((b) => b.addEventListener("click", () => { [f.retMin, f.ret, f.retMax] = b.dataset.v.split(",").map(Number); fcChanged(); }));
@@ -4536,6 +4842,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     onNum("#spExp", (v) => { f.ret = v; f.retMin = Math.min(f.retMin, v); f.retMax = Math.max(f.retMax, v); }, -20, 30);
     onNum("#spInf", (v) => (f.inf = v), -5, 20);
     onNum("#spYearsIn", (v) => (f.years = Math.round(v)), 1, 100);
+    $("#spPhAdd").addEventListener("click", () => { f.phases = f.phases || []; const last = f.phases[f.phases.length - 1]; f.phases.push({ from: last ? Math.min(99, last.from + 10) : Math.max(1, Math.round(f.years / 2)), rate: null }); fcChanged(); const ins = $$("#spPh input[data-pk=rate]"); if (ins.length) ins[ins.length - 1].focus(); });
+    $("#spPh").addEventListener("input", (e) => { const el = e.target.closest("input[data-pi]"); if (!el) return; const ph = f.phases[+el.dataset.pi]; if (!ph) return; const t = el.value.trim(), v = t === "" ? null : el.dataset.pk === "rate" ? eurIn(t) : parseNum(t); if (v != null && (!isFinite(v) || v < 0 || (el.dataset.pk === "from" && (v < 1 || v > 99)))) return; ph[el.dataset.pk] = el.dataset.pk === "from" ? (v == null ? ph.from : Math.round(v)) : v; savePrefs(); setTab(S.fc.tab); });
+    $("#spPh").addEventListener("click", (e) => { const d = e.target.closest("[data-pdel]"); if (!d) return; f.phases.splice(+d.dataset.pdel, 1); fcChanged(); });
+    $("#spTax").addEventListener("change", (e) => { f.tax = e.target.checked; fcChanged(); });
+    $("#spAvd").addEventListener("change", (e) => { f.avd = e.target.checked; fcChanged(); });
+    $("#spAvdKids").addEventListener("input", (e) => { const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 10) return; f.avdKids = Math.round(v); fcChanged(); });
     $("#spStop").addEventListener("input", (e) => { const s0 = e.target.value.trim(), v = s0 === "" ? 0 : parseNum(s0); if (!isFinite(v) || v < 0 || v > 100) return; f.stop = Math.round(v); fcChanged(); });
     $("#spDyn").addEventListener("input", (e) => {
       const s0 = e.target.value.trim(), v = s0 === "" ? 0 : f.dynMode === "pct" ? parseNum(s0) : eurIn(s0);
@@ -4565,7 +4877,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const unuse = () => { f.crash.on = false; fcChanged(); toast("Krise ist nicht mehr eingerechnet"); };
     $("#spUnuse").addEventListener("click", unuse);
     $("#spCrashTxt").addEventListener("click", (e) => { if (e.target.closest("[data-crash-off]")) unuse(); });
-    $$(".sp .subtabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+    $$(".sp .subtabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab === "fc" ? "fc0" : b.dataset.tab)));
   }
 
   // Erhöhung der Sparrate in Worten, z. B. „steigt jedes Jahr um 25 €“
@@ -4590,6 +4902,140 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   const pctTxt = (v) => (v >= 0 ? "+" : "−") + nf(Math.abs(v) < 10 ? 1 : 0).format(Math.abs(v)) + " %";
 
+  // ---------- Haus kaufen: kaufen oder mieten, selbst wohnen oder vermieten ----------
+  const HK_DEF = { mode: "selbst", price: 400000, ek: 80000, nk: 10.5, zins: 3.6, tilg: 2, inst: 1, wert: 2, years: 30, miete: 1300, mietSt: 2, etf: null, rent: 1300, leer: 3, nonUml: 80, geb: 75, afa: 2, steuer: 35 };
+  const HK_F = [
+    ["price", "Kaufpreis", "€", "", "beide"], ["ek", "Eigenkapital", "€", "Was du selbst mitbringst.", "beide"],
+    ["nk", "Kaufnebenkosten", "%", "Grunderwerbsteuer 3,5 bis 6,5 %, Notar und Grundbuch etwa 2 %, Makler bis 3,57 %.", "beide"],
+    ["zins", "Kreditzins", "%", "", "beide"], ["tilg", "Tilgung am Anfang", "%", "Üblich sind 2 bis 3 %.", "beide"],
+    ["inst", "Instandhaltung pro Jahr", "%", "Vom Kaufpreis. Faustregel 1 %, bei Altbau mehr.", "beide"],
+    ["wert", "Wertsteigerung pro Jahr", "%", "Langfristig etwa wie die Inflation.", "beide"],
+    ["miete", "Miete für eine gleiche Wohnung", "€", "Kaltmiete im Monat, die du sonst zahlen würdest.", "selbst"],
+    ["rent", "Kaltmiete, die du bekommst", "€", "Im Monat.", "miete"],
+    ["leer", "Mietausfall und Leerstand", "%", "", "miete"], ["nonUml", "Nicht umlegbare Kosten", "€", "Im Monat, z. B. Verwaltung, Teil vom Hausgeld.", "miete"],
+    ["geb", "Anteil Gebäude am Kaufpreis", "%", "Nur das Gebäude wird abgeschrieben, nicht der Boden.", "miete"],
+    ["afa", "Abschreibung pro Jahr", "%", "2 % bei Baujahr 1925 bis 2022, 3 % ab 2023.", "miete"],
+    ["steuer", "Dein Steuersatz", "%", "Grenzsteuersatz mit Soli, meist 30 bis 42 %.", "miete"],
+    ["mietSt", "Miete steigt pro Jahr", "%", "", "beide"],
+    ["etf", "ETF-Rendite zum Vergleich", "%", "Was das Geld sonst im Depot bringen würde.", "beide"], ["years", "Zeitraum", "J.", "1 bis 50 Jahre.", "beide"],
+  ];
+  const hkS = () => (S.fc.house = Object.assign({}, HK_DEF, S.fc.house || {}));
+  function hkCalc(H, etfRet) {
+    const n = Math.max(1, Math.min(50, Math.round(H.years))) * 12, z = H.zins / 1200, nkE = H.price * (H.nk / 100), loan = Math.max(0, H.price + nkE - H.ek), rate = (loan * (H.zins + H.tilg)) / 1200;
+    const rE = Math.pow(1 + etfRet / 100, 1 / 12) - 1, tr = taxRate(), self = H.mode === "selbst";
+    const afaM = self ? 0 : ((H.price + nkE) * (H.geb / 100) * (H.afa / 100)) / 12, afaEnd = Math.round(100 / Math.max(0.5, H.afa)) * 12;
+    // A = kaufen (Haus plus ETF mit dem, was übrig bleibt), B = nicht kaufen (Eigenkapital und Differenz ins ETF)
+    let debt = loan, eA = Math.max(0, H.ek - H.price - nkE), eAin = eA, eB = H.ek, eBin = eB, afaSum = 0, intSum = 0, paidOff = null, first = null; const pts = [];
+    const val = (m) => H.price * Math.pow(1 + H.wert / 100, m / 12);
+    const netEtf = (v, inn) => v - Math.max(0, v - inn) * 0.7 * tr;
+    const push = (m) => { const hv = val(m), spek = !self && m < 120 ? Math.max(0, hv - (H.price + nkE - afaSum)) * (H.steuer / 100) : 0; pts.push({ y: m / 12, buy: hv - debt - spek + netEtf(eA, eAin), rent: netEtf(eB, eBin), debt, hv }); };
+    push(0);
+    for (let m = 0; m < n; m++) {
+      const y = Math.floor(m / 12), it = debt * z, pr = Math.min(debt, Math.max(0, rate - it)), pay = it + pr; debt -= pr; intSum += it;
+      if (debt <= 0.5 && paidOff == null && loan > 0) paidOff = (m + 1) / 12;
+      const inst = ((H.price * H.inst) / 1200) * Math.pow(1 + H.wert / 100, y);
+      let outBuy, outAlt;
+      if (self) { outBuy = pay + inst; outAlt = H.miete * Math.pow(1 + H.mietSt / 100, y); if (first == null) first = { buy: outBuy, alt: outAlt }; }
+      else {
+        const rin = H.rent * Math.pow(1 + H.mietSt / 100, y) * (1 - H.leer / 100), costs = H.nonUml * Math.pow(1.02, y) + inst, a = m < afaEnd ? afaM : 0; afaSum += a;
+        const tax = (rin - costs - it - a) * (H.steuer / 100), cash = rin - costs - pay - tax;
+        if (first == null) first = { cash, pre: rin - costs - pay };
+        outBuy = -cash; outAlt = 0;
+      }
+      const d = outBuy - outAlt;
+      eA *= 1 + rE; eB *= 1 + rE;
+      if (d > 0) { eB += d; eBin += d; } else { eA += -d; eAin += -d; }
+      if ((m + 1) % 12 === 0) push(m + 1);
+    }
+    const last = pts[pts.length - 1]; let be = null; for (let i = pts.length - 1; i >= 0; i--) { if (pts[i].buy >= pts[i].rent) be = pts[i].y; else break; }
+    return { loan, rate, nkE, pts, last, be, paidOff, first, intSum, factor: self ? H.price / Math.max(1, H.miete * 12) : H.price / Math.max(1, H.rent * 12), gross: self ? 0 : (H.rent * 12) / Math.max(1, H.price) };
+  }
+  let hkBuilt = false;
+  function renderHk() {
+    const H = hkS(), etf = H.etf != null ? H.etf : S.fc.ret, self = H.mode === "selbst";
+    sseg("#hkMode", [["selbst", "Selbst wohnen"], ["miete", "Vermieten"]], H.mode, (v) => { hkS().mode = v; savePrefs(); renderHk(); });
+    if (!hkBuilt) {
+      $("#hkCtl").innerHTML = HK_F.map(([k, l, u, h]) => `<div class="field" data-hk="${k}"><label for="hk_${k}">${l}</label><div class="unit"><input id="hk_${k}" data-k="${k}" inputmode="decimal" autocomplete="off"><span>${u}</span></div>${h ? `<span class="note">${h}</span>` : ""}</div>`).join("");
+      $$("#hkCtl input").forEach((el) => el.addEventListener("input", () => {
+        const k = el.dataset.k, t = el.value.trim(), u = HK_F.find((f) => f[0] === k)[2], v = t === "" ? null : u === "€" ? eurIn(t) : parseNum(t);
+        if (v != null && (!isFinite(v) || v < 0 || (k === "years" && (v < 1 || v > 50)))) return;
+        hkS()[k] = v == null ? (k === "etf" ? null : HK_DEF[k]) : v; savePrefs(); renderHk();
+      }));
+      hkBuilt = true;
+    }
+    HK_F.forEach(([k, , u, , m]) => { const w = $(`#hkCtl [data-hk="${k}"]`); w.hidden = !(m === "beide" || m === H.mode); const el = $("#hk_" + k); if (k === "etf") el.placeholder = numStr(S.fc.ret); if (document.activeElement !== el) el.value = k === "etf" && H.etf == null ? "" : u === "€" ? nf(0).format(H[k]) : numStr(H[k]); });
+    const X = hkCalc(H, etf), L = X.last, Y = Math.round(L.y), win = L.buy - L.rent, f = X.first, y0 = new Date().getFullYear();
+    const tile = (l, v, s2) => `<div><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s2}</span></div>`;
+    const verdict = self
+      ? (win >= 0 ? `Nach ${Y} Jahren liegt <b>Kaufen</b> rund <b>${shortEur(win)}</b> vorn${X.be != null && X.be > 0 ? `, ab etwa ${y0 + Math.ceil(X.be)} (nach ${Math.ceil(X.be)} Jahren)` : ""}.` : `Nach ${Y} Jahren liegt <b>Mieten und das Geld im ETF anlegen</b> rund <b>${shortEur(-win)}</b> vorn.`)
+      : (win >= 0 ? `Nach ${Y} Jahren bringt die <b>vermietete Wohnung</b> rund <b>${shortEur(win)}</b> mehr als das gleiche Geld im ETF${X.be != null && X.be > 0 ? `, ab etwa ${y0 + Math.ceil(X.be)}` : ""}.` : `Nach ${Y} Jahren bringt das <b>gleiche Geld im ETF</b> rund <b>${shortEur(-win)}</b> mehr als die vermietete Wohnung.`);
+    const tiles = self
+      ? [tile("Kreditrate", eur0.format(X.rate), `für ${shortEur(X.loan)} Kredit`), tile("Kaufen kostet", eur0.format(f.buy), "im Monat, Rate plus Instandhaltung"), tile("Mieten kostet", eur0.format(f.alt), "im Monat, am Anfang"), tile("Kaufpreisfaktor", nf(1).format(X.factor), X.factor > 25 ? "teuer, über 25 Jahresmieten" : X.factor < 20 ? "günstig, unter 20 Jahresmieten" : "mittel, 20 bis 25 Jahresmieten")]
+      : [tile("Bruttomietrendite", nf(1).format(X.gross * 100) + " %", X.gross < 0.04 ? "eher niedrig, unter 4 %" : X.gross >= 0.05 ? "gut, ab 5 %" : "mittel, 4 bis 5 %"), tile("Kreditrate", eur0.format(X.rate), `für ${shortEur(X.loan)} Kredit`), tile("Überschuss vor Steuer", sEur(f.pre), "im Monat, am Anfang"), tile("Nach Steuer", sEur(f.cash), f.cash < 0 ? "zahlst du jeden Monat zu" : "bleibt dir im Monat")];
+    const rows = [5, 10, 15, 20, 25, 30, 40].filter((y) => y < Y).concat([Y]).map((y) => X.pts[y]).filter(Boolean);
+    const nm = self ? ["Kaufen", "Mieten und ETF"] : ["Wohnung", "Stattdessen ETF"];
+    $("#hkRes").innerHTML = `<div class="card" style="display:grid;gap:14px"><p class="ctext" style="margin:0">${verdict}</p><div class="terg">${tiles.join("")}</div>
+      <div class="chart" id="hkChart"></div><div class="legend"><span><i style="background:var(--accent)"></i>${nm[0]}</span><span><i style="background:var(--c2)"></i>${nm[1]}</span></div>
+      <p class="note" style="margin:0">${self ? "Vermögen nach Abzug der Restschuld. Wer mietet, legt das Eigenkapital und jeden Monat die Differenz zum Kaufen im ETF an. Wird Mieten später teurer als Kaufen, legt der Käufer die Differenz an." : "Vermögen nach Restschuld und Steuern. Beim ETF-Vergleich legst du das Eigenkapital an und jeden Monat das, was du bei der Wohnung zuzahlen müsstest. Ein Verkauf nach 10 Jahren ist steuerfrei, davor zählt der Gewinn mit deinem Steuersatz."}${X.paidOff ? ` Mit dieser Tilgung ist der Kredit nach rund ${nf(0).format(X.paidOff)} Jahren abbezahlt.` : ` Nach ${Y} Jahren sind noch ${shortEur(L.debt)} Kredit offen.`}</p></div>
+      <div class="card"><h3 style="margin-bottom:8px">Vermögen im Vergleich</h3><div class="tablewrap"><table class="rptbl"><thead><tr><th>Nach</th><th class="r">${nm[0]}</th><th class="r">${self ? "Mieten + ETF" : "ETF"}</th><th class="r hkdebt">Restschuld</th></tr></thead><tbody>${rows.map((p) => `<tr><td>${p.y} J.</td><td class="r num">${shortEur(p.buy)}</td><td class="r num">${shortEur(p.rent)}</td><td class="r num hkdebt">${shortEur(p.debt)}</td></tr>`).join("")}</tbody></table></div>
+      <p class="note" style="margin:8px 0 0">Grobe Rechnung in Euro von damals. Der Zins bleibt über die ganze Zeit gleich, auch nach der Zinsbindung. Beim ETF ist die Abgeltungsteuer beim Verkauf abgezogen. Für eine echte Entscheidung Angebote der Bank und Unterlagen prüfen.</p></div>`;
+    drawSp($("#hkChart"), { pts: X.pts, label: "Vermögen: kaufen gegen nicht kaufen", lines: [["rent", "--c2", 2.2], ["buy", "--accent", 2.4]], xl: (i) => String(y0 + i), xTicks: Y,
+      tip: (q) => `<div>${y0 + q.y} · nach ${q.y} Jahren</div><div>${nm[0]} <span class="num">${eur0.format(q.buy)}</span></div><div>${nm[1]} <span class="num">${eur0.format(q.rent)}</span></div><div>Restschuld <span class="num">${eur0.format(q.debt)}</span></div>` });
+  }
+
+  // ---------- Dividendensparen: wie viel Ausschüttung im Monat kommt mit der Zeit zusammen ----------
+  const DV_F = [
+    ["rate", "Sparrate pro Monat", "€", ""], ["start", "Startkapital", "€", "Leer heißt: dein Depot heute."],
+    ["years", "Zeitraum", "J.", "1 bis 60 Jahre."], ["yield", "Ausschüttung pro Jahr", "%", "Dividendenrendite, bei Dividenden-ETFs meist 3 bis 4 %."],
+    ["growth", "Kursanstieg pro Jahr", "%", "Die Ausschüttung wächst mit dem Kurs. Bei Dividenden-ETFs meist 2 bis 4 %."],
+    ["goal", "Ziel netto im Monat", "€", "Optional. Wie viel Dividende du dir wünschst."],
+  ];
+  const dvS = () => (S.fc.dv = Object.assign({ rate: null, start: null, years: 30, yield: 3.5, growth: 3, reinvest: true, tax: true, goal: null }, S.fc.dv || {}));
+  function dvCalc(D, base) {
+    const n = Math.max(1, Math.min(60, Math.round(D.years))), fsa = hcFsa(), tr = taxRate(), dy = D.yield / 100, g = D.growth / 100;
+    let v = base.start, paid = base.start; const pts = [{ y: 0, v, net: 0, gross: 0, paid }]; let hit = null, sumNet = 0, sumTax = 0;
+    for (let y = 1; y <= n; y++) {
+      const rate = base.rate * 12, mid = v + rate / 2, gross = mid * dy, tax = D.tax ? Math.max(0, gross * 0.7 - fsa) * tr : 0, net = gross - tax;
+      v = v * (1 + g) + rate * (1 + g / 2) + (D.reinvest ? net : 0); paid += rate; sumNet += net; sumTax += tax;
+      pts.push({ y, v, net: net / 12, gross, tax, paid });
+      if (hit == null && D.goal > 0 && net / 12 >= D.goal) hit = y;
+    }
+    return { pts, last: pts[n], hit, sumNet, sumTax, fsa };
+  }
+  let dvBuilt = false;
+  function renderDv() {
+    const D = dvS(), B = fcBase(), base = { rate: D.rate != null ? D.rate : S.fc.rate != null ? S.fc.rate : B.rate, start: D.start != null ? D.start : B.value };
+    if (!dvBuilt) {
+      $("#dvCtl").innerHTML = DV_F.map(([k, l, u, h]) => `<div class="field"><label for="dv_${k}">${l}</label><div class="unit"><input id="dv_${k}" data-k="${k}" inputmode="decimal" autocomplete="off"><span>${u}</span></div>${h ? `<span class="note">${h}</span>` : ""}</div>`).join("")
+        + '<label class="toggle"><input type="checkbox" id="dvRe"> Dividenden wieder anlegen</label><label class="toggle"><input type="checkbox" id="dvTax"> Steuern einrechnen<button type="button" class="info" data-info="Steuern auf Dividenden" aria-label="Erklärung: Steuern auf Dividenden">i</button></label>';
+      $$("#dvCtl input[data-k]").forEach((el) => el.addEventListener("input", () => {
+        const k = el.dataset.k, t = el.value.trim(), u = DV_F.find((f) => f[0] === k)[2], v = t === "" ? null : u === "€" ? eurIn(t) : parseNum(t);
+        if (v != null && (!isFinite(v) || v < 0 || (k === "years" && (v < 1 || v > 60)) || (k === "yield" && v > 20) || (k === "growth" && v > 20))) return;
+        const d = dvS(); d[k] = v == null ? (k === "years" ? 30 : k === "yield" ? 3.5 : k === "growth" ? 3 : null) : v; savePrefs(); renderDv();
+      }));
+      $("#dvRe").addEventListener("change", (e) => { dvS().reinvest = e.target.checked; savePrefs(); renderDv(); });
+      $("#dvTax").addEventListener("change", (e) => { dvS().tax = e.target.checked; savePrefs(); renderDv(); });
+      dvBuilt = true;
+    }
+    DV_F.forEach(([k, , u]) => { const el = $("#dv_" + k); if (document.activeElement === el) return; const v = D[k]; el.value = v == null ? "" : u === "€" ? nf(0).format(v) : numStr(v); });
+    $("#dv_rate").placeholder = nf(0).format(base.rate); $("#dv_start").placeholder = nf(0).format(B.value); $("#dv_goal").placeholder = "z. B. 500";
+    $("#dvRe").checked = D.reinvest; $("#dvTax").checked = D.tax;
+    const X = dvCalc(D, base), L = X.last, y0 = new Date().getFullYear(), Y = L.y;
+    const tile = (l, v, s2) => `<div><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s2}</span></div>`;
+    const rows = [5, 10, 15, 20, 25, 30, 40, 50].filter((y) => y < Y).concat([Y]).map((y) => X.pts[y]).filter(Boolean);
+    $("#dvRes").innerHTML = `<div class="card" style="display:grid;gap:14px">
+      <div class="hero"><div><span class="eyebrow">In ${Y} Jahren, ${y0 + Y}</span><div class="big num">${eur0.format(L.net)}</div><div class="sub">Dividende im Monat${D.tax ? ", nach Steuern" : ", vor Steuern"}</div></div>
+        <div class="side2"><span class="eyebrow">In heutiger Kaufkraft</span><span class="v">${eur0.format(L.net / Math.pow(1 + S.fc.inf / 100, Y))}</span><span class="note">bei ${numStr(S.fc.inf)} % Inflation</span></div></div>
+      ${D.goal > 0 ? `<p class="ctext" style="margin:0">${X.hit != null ? `<span class="pill gain">Ziel erreicht</span> Ab ${y0 + X.hit} (nach ${X.hit} Jahren) bekommst du ${eur0.format(D.goal)} im Monat.` : `<span class="pill warn">Noch nicht</span> In ${Y} Jahren sind es ${eur0.format(L.net)} von ${eur0.format(D.goal)} im Monat. Mehr sparen oder länger warten.`}</p>` : ""}
+      <div class="terg">${tile("Depotwert", shortEur(L.v), `${shortEur(L.paid)} eingezahlt`)}${tile("Dividende im Jahr", shortEur(L.gross), "vor Steuern")}${tile("Steuern im Jahr", eur0.format(L.tax || 0), D.tax ? `Freistellungsauftrag ${eur0.format(X.fsa)} abgezogen` : "nicht eingerechnet")}${tile("Bis dahin ausgeschüttet", shortEur(X.sumNet), D.reinvest ? "alles wieder angelegt" : "ausgezahlt, nicht angelegt")}</div>
+      <div class="chart" id="dvChart"></div><div class="legend"><span><i style="background:var(--accent)"></i>Dividende im Monat${D.tax ? " netto" : ""}</span>${D.goal > 0 ? '<span><i class="dash"></i>Ziel</span>' : ""}</div>
+      <p class="note" style="margin:0">Grobe Rechnung pro Jahr: Die Ausschüttung bleibt ${numStr(D.yield)} % vom Depotwert und wächst so mit dem Kurs. ${D.tax ? `Steuer: 30 % Teilfreistellung wie bei Aktien-ETFs, ${eur0.format(X.fsa)} Freistellungsauftrag pro Jahr, Rest mit ${nf(2).format(taxRate() * 100)} %.` : ""} Ausschüttende ETFs zahlen die Steuer jedes Jahr, thesaurierende erst beim Verkauf, darum wächst ein thesaurierender ETF meist etwas schneller.</p></div>
+      <div class="card"><h3 style="margin-bottom:8px">Jahr für Jahr</h3><div class="tablewrap"><table class="rptbl"><thead><tr><th>Nach</th><th class="r">Depot</th><th class="r">Im Monat</th><th class="r hkdebt">Steuer im Jahr</th></tr></thead><tbody>${rows.map((p) => `<tr><td>${p.y} J.</td><td class="r num">${shortEur(p.v)}</td><td class="r num">${eur0.format(p.net)}</td><td class="r num hkdebt">${eur0.format(p.tax || 0)}</td></tr>`).join("")}</tbody></table></div></div>`;
+    const pts = X.pts.map((p) => Object.assign({}, p, { goal: D.goal || 0 }));
+    drawSp($("#dvChart"), { pts, label: "Dividende im Monat über die Jahre", lines: D.goal > 0 ? [["goal", "--muted", 1.4, "4 4"], ["net", "--accent", 2.4]] : [["net", "--accent", 2.4]], xl: (i) => String(y0 + i), xTicks: Y,
+      tip: (q) => `<div>${y0 + q.y} · nach ${q.y} Jahren</div><div>Im Monat <span class="num">${eur0.format(q.net)}</span></div><div>Depot <span class="num">${eur0.format(q.v)}</span></div>` });
+  }
+
   // ---------- Hochrechnung ----------
   function renderFc() {
     const B = fcBase(), o = fcOpts(B), R = fcRun(o, B), f = S.fc, Y = f.years, p = R.pts[Y], y0 = new Date().getFullYear();
@@ -4597,7 +5043,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spHVal").textContent = eur0.format(p.v);
     $("#spHRange").textContent = `zwischen ${shortEur(p.lo)} und ${shortEur(p.hi)} bei ${numStr(f.retMin)}–${numStr(f.retMax)} % Rendite`;
     $("#spHReal").textContent = eur0.format(p.real); $("#spHInf").textContent = `bei ${numStr(f.inf)} % Inflation`;
-    $("#spCtrlSum").textContent = `${eur0.format(o.rate)} pro Monat${o.stopM > 0 && f.stop < Y ? " für " + f.stop + " J." : ""} · ${Y} Jahre · ${numStr(f.retMin)}–${numStr(f.retMax)} %`;
+    { const gain = Math.max(0, p.v - p.paid - (p.zul || 0) - p.vpSum), tS = Math.max(0, gain * 0.7 - o.fsa) * o.tr, el = $("#spTaxNote");
+      $("#spHTax").hidden = !o.tax;
+      if (o.tax) $("#spHTax").innerHTML = `Nach Verkauf und Steuern rund <b class="num">${eur0.format(p.v - tS)}</b>. Schon bezahlt: ${eur0.format(p.taxP)} Vorabpauschale-Steuer, beim Verkauf noch ${eur0.format(tS)}.`;
+      el.textContent = f.avd ? "Beim Altersvorsorgedepot zahlst du erst bei der Auszahlung Steuern, mit deinem persönlichen Satz." : o.tax ? `Freistellungsauftrag ${eur0.format(o.fsa)} im Jahr, Basiszins ${numStr(o.bz * 100)} %.` : "Ohne Steuern gerechnet."; }
+    const phT = o.phases.map((x) => `ab Jahr ${x.m / 12} ${eur0.format(x.rate)}`).join(", ");
+    $("#spCtrlSum").textContent = `${eur0.format(o.rate)} pro Monat${phT ? ", " + phT : ""}${o.stopM > 0 && f.stop < Y ? " für " + f.stop + " J." : ""} · ${Y} Jahre · ${numStr(f.retMin)}–${numStr(f.retMax)} %`;
     pctSeg("#fcPct", renderFc);
     $("#fcPctNote").textContent = S.pct ? "Gewinn in % auf das Eingezahlte" : o.stopM > 0 && f.stop < Y ? `Sparen bis ${y0 + f.stop}, danach wächst das Depot ohne neue Raten weiter` : dynText(o) ? "Sparrate " + dynText(o) : "";
     const cy = R.ys.filter((y) => y <= Y);
@@ -4611,8 +5062,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#fcLegend").innerHTML = `<span><i style="background:${R.crash ? "var(--loss)" : "var(--accent)"}"></i>${R.crash ? "mit Krise" : "erwartet (" + numStr(f.ret) + " %)"}</span><span><i class="band"></i>Spanne ${numStr(f.retMin)}–${numStr(f.retMax)} %</span>${R.crash ? '<span><i class="faint"></i>ohne Krise</span>' : ""}<span><i class="dash"></i>eingezahlt</span>`;
     const cr = f.crash, sc = scenOf(cr.scen, B);
     $("#spCrashTxt").innerHTML = `${esc(sc.name)} ${cr.mode === "once" ? "nach " + cr.at + " Jahren" : "nach " + cr.at + " Jahren, dann alle " + cr.every + " Jahre"}${R.crash ? (p.nc > p.v ? " · " + eur0.format(p.nc - p.v) + " weniger" : p.v > p.nc ? " · " + eur0.format(p.v - p.nc) + " mehr, weil die Raten im Tief günstig kaufen" : "") : ""} · <button type="button" class="link" data-go-cr style="font-size:inherit">im Krisen-Test ändern</button>${R.crash ? ` · <button type="button" class="link" data-crash-off style="font-size:inherit;color:var(--loss)">entfernen</button>` : ""}`;
-    const rates = p.paid - o.start, grow = p.v - p.paid;
-    $("#spBStart").style.flex = Math.max(o.start, 0); $("#spBPaid").style.flex = Math.max(rates, 0); $("#spBGrow").style.flex = Math.max(grow, 0);
+    const rates = p.paid - o.start, zulS = p.zul || 0, grow = p.v - p.paid - zulS;
+    $("#spBStart").style.flex = Math.max(o.start, 0); $("#spBPaid").style.flex = Math.max(rates, 0); $("#spBGrow").style.flex = Math.max(grow, 0); $("#spBZul").style.flex = Math.max(zulS, 0);
+    $("#spLZul").hidden = !o.avd; $("#spVZul").textContent = shortEur(zulS);
+    $("#spAvdF").hidden = $("#spAvdNote").hidden = !o.avd;
+    if (o.avd) { const y1 = Math.min(1800, o.rate * 12), z1 = y1 > 0 ? avdZulage(y1) + o.avdKids * 300 * Math.min(1, y1 / 300) : 0; $("#spAvdNote").textContent = `Rund ${eur0.format(z1)} Zulagen im Jahr${o.rate > 150 ? ". Gefördert werden nur 150 € im Monat, der Rest läuft ohne Zulage" : ""}. Ab 2027, nur mit Pflicht in der Rentenversicherung. Auszahlung frühestens mit 65, dann voll steuerpflichtig.`; }
     $("#spVStart").textContent = shortEur(o.start); $("#spVPaid").textContent = shortEur(rates); $("#spVGrow").textContent = shortEur(Math.max(grow, 0));
     $("#spCost").textContent = `ETF-Kosten über ${Y} Jahre: ${shortEur(p.g - p.v)}`;
     // ETF-Kosten verständlich: Durchschnitt, Rendite nach Kosten, Euro im ersten Jahr und gesamt
@@ -4642,7 +5096,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   function renderZl() {
     const B = fcBase(), f = S.fc, G = f.goal, o0 = fcOpts(B), Y = G.years, SV = G.save > 0 && G.save < Y ? G.save : 0;
-    const o = Object.assign({}, o0, { start: G.start != null ? G.start : B.value, stopM: SV * 12 });
+    const o = Object.assign({}, o0, { start: G.start != null ? G.start : B.value, stopM: SV * 12, phases: [], tax: false });
     const target = G.real ? G.sum * Math.pow(1 + o.inf, Y) : G.sum, y0 = new Date().getFullYear();
     const setIn = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
     setIn("#zlGoal", nf(0).format(G.sum)); setIn("#zlYears", Y); setIn("#zlSave", G.save > 0 ? G.save : ""); setIn("#zlStart", nf(0).format(o.start));
@@ -4689,13 +5143,13 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#zlReal").addEventListener("change", (e) => { G().real = e.target.checked; redo(); });
     $("#zlUse").addEventListener("click", () => {
       const sv = G().save > 0 && G().save < G().years ? G().save : 0;
-      const B = fcBase(), o = Object.assign({}, fcOpts(B), { start: G().start != null ? G().start : B.value, stopM: sv * 12 }), t = G().real ? G().sum * Math.pow(1 + o.inf, G().years) : G().sum;
+      const B = fcBase(), o = Object.assign({}, fcOpts(B), { start: G().start != null ? G().start : B.value, stopM: sv * 12, phases: [], tax: false }), t = G().real ? G().sum * Math.pow(1 + o.inf, G().years) : G().sum;
       const r = needRate(o, t, G().years, o.ret); if (r.reached || !isFinite(r.rate)) return;
       S.fc.rate = Math.min(RATE_MAX, Math.ceil(r.rate)); if (G().start != null) S.fc.start = G().start;
       S.fc.years = G().years; S.fc.stop = sv;
       savePrefs(); syncInputs(); setTab("fc"); toast(eur0.format(S.fc.rate) + " pro Monat als Sparrate eingetragen");
     });
-    $("#spTerGo").addEventListener("click", () => { setTab("dt"); $("#fcPos").scrollIntoView({ behavior: "smooth", block: "center" }); });
+    $("#spTerGo").addEventListener("click", () => { setTab("my"); $("#fcPos").scrollIntoView({ behavior: "smooth", block: "center" }); });
   }
 
   // ---------- Zielaufteilung und Rebalancing ----------
@@ -5051,13 +5505,13 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const sel = K.list.filter((p) => p.shares > 0), single = sel.length === 1 ? sel[0] : null;
     const opts = [["__all", "Ganzes Depot"]].concat(open.map((p) => [p.id, p.asset.name || p.asset.symbol]));
     const cur = S.excl.size === 0 ? "__all" : single ? single.id : "";
-    $("#statPick").innerHTML = opts.map(([v, l]) => `<button type="button" class="chip" data-v="${esc(v)}" aria-pressed="${v === cur}">${esc(l)}</button>`).join("");
-    $$("#statPick button").forEach((b) => b.addEventListener("click", () => {
-      const v = b.dataset.v;
+    $("#statPick").innerHTML = (cur === "" ? '<option value="" selected>Eigene Auswahl</option>' : "") + opts.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
+    $("#statPick").onchange = ((b) => () => {
+      const v = b.value; if (!v) return;
       S.excl = new Set(v === "__all" ? [] : Object.keys(d.assets).filter((id) => id !== v));
       if (v !== "__all") S.selView = "price";
       afterSel();
-    }));
+    })($("#statPick"));
     const viewOpts = single ? [["value", "Wert"], ["price", "Kurs"]] : [["value", "Wert"]];
     const mode = single && S.selView === "price" ? "price" : "value";
     seg("#selChartSeg", viewOpts, mode, (v) => { S.selView = v; renderSelChart(d, K); });
@@ -5259,7 +5713,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const inc = ps.filter((p) => !S.excl.has(p.id) && p.shares > 0);
     $("#selSum").textContent = inc.length + " ausgewählt · " + eur0.format(inc.reduce((x, p) => x + p.value, 0));
   }
-  function afterSel() { savePrefs(); renderSel(); renderAnalysen(); }
+  function afterSel() { savePrefs(); renderSel(); renderAnalysen(); stSync(); }
   $("#btnSel").addEventListener("click", () => { renderSel(); $("#dlgSel").showModal(); });
   $("#selClosed").addEventListener("change", (e) => { selClosed = e.target.checked; renderSel(); });
   $$("#selQuick button").forEach((b) => b.addEventListener("click", () => {
@@ -6364,19 +6818,25 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   // Farbmodus
   function applyTheme() { if (S.theme) document.documentElement.setAttribute("data-theme", S.theme); else document.documentElement.removeAttribute("data-theme"); }
   $$("#themeSeg button").forEach((b) => b.addEventListener("click", () => { S.theme = b.dataset.t; savePrefs(); applyTheme(); render(); }));
-  applyTheme();
+  applyTheme(); applyInfoMode(); termify();
   // Ansichten über den Hash
-  const VIEWS = ["uebersicht", "positionen", "position", "dividenden", "transaktionen", "statistiken", "sparplaene", "budget", "import", "einstellungen", "mehr", "vermoegen", "steuern", "watchlist", "rueckblick", "rente"];
+  const VIEWS = ["planen", "uebersicht", "positionen", "position", "dividenden", "transaktionen", "statistiken", "sparplaene", "budget", "import", "einstellungen", "mehr", "vermoegen", "steuern", "watchlist", "rueckblick", "rente"];
   const ALIAS = { rentenplaner: "rente", analysen: "statistiken", buchungen: "transaktionen", prognose: "sparplaene", sparrechner: "sparplaene", hochrechnung: "sparplaene" };
-  const TITLES = { rente: "Rentenplaner", uebersicht: "Depotblick", positionen: "Positionen", position: "Position", dividenden: "Dividenden", transaktionen: "Transaktionen", statistiken: "Statistiken", sparplaene: "Sparpläne", budget: "Budget", import: "Import", einstellungen: "Einstellungen", mehr: "Mehr", vermoegen: "Vermögen", steuern: "Steuern", watchlist: "Watchlist", rueckblick: "Jahresrückblick" };
+  const TITLES = { planen: "Planen", rente: "Rentenplaner", uebersicht: "Depotblick", positionen: "Positionen", position: "Position", dividenden: "Dividenden", transaktionen: "Transaktionen", statistiken: "Statistiken", sparplaene: "Sparpläne", budget: "Budget", import: "Import", einstellungen: "Einstellungen", mehr: "Mehr", vermoegen: "Vermögen", steuern: "Steuern", watchlist: "Watchlist", rueckblick: "Jahresrückblick" };
+  // Gruppen für Menü, Handy-Leiste und Umschalter oben
+  const GROUPS = { depot: [["positionen", "Positionen"], ["transaktionen", "Transaktionen"], ["dividenden", "Dividenden"], ["watchlist", "Watchlist"]], auswerten: [["statistiken", "Statistiken"], ["rueckblick", "Jahresrückblick"], ["steuern", "Steuern"]], planen: [["planen", "Start"], ["sparplaene", "Sparpläne"], ["budget", "Budget"], ["vermoegen", "Vermögen"], ["rente", "Rentenplaner"]], mehr: [["import", "Import"], ["einstellungen", "Einstellungen"]] };
+  const groupOf = (v) => (v === "position" ? "depot" : v === "mehr" ? "mehr" : Object.keys(GROUPS).find((g) => GROUPS[g].some(([k]) => k === v)) || "uebersicht");
   function showView() {
     let v = location.hash.slice(1);
     if (ALIAS[v]) { location.hash = "#" + ALIAS[v]; return; }
     if (!VIEWS.includes(v)) v = "uebersicht";
     S.view = v;
     $$("[data-page]").forEach((el) => { el.hidden = el.dataset.page !== v; });
-    const navKey = v === "position" ? "positionen" : v === "rueckblick" && !matchMedia("(max-width: 820px)").matches ? "statistiken" : ["dividenden", "transaktionen", "import", "einstellungen", "vermoegen", "steuern", "watchlist", "rueckblick", "rente"].includes(v) && matchMedia("(max-width: 820px)").matches ? "mehr" : v;
-    $$("[data-r]").forEach((a) => { const on = a.dataset.r === navKey || a.dataset.r === v; a.classList.toggle("on", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    const navKey = v === "position" ? "positionen" : v, grp = groupOf(v);
+    $$(".side [data-r]").forEach((a) => { const on = a.dataset.r === navKey; a.classList.toggle("on", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    $$(".tabbar [data-g]").forEach((a) => { const on = a.dataset.g === grp; a.classList.toggle("on", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    const gs = $("#gsw"), G = grp !== "uebersicht" && grp !== "mehr" ? GROUPS[grp] : null; gs.hidden = !G;
+    if (G) gs.innerHTML = G.map(([k, l]) => `<a href="#${k}"${k === navKey ? ' class="on" aria-current="page"' : ""}>${l}</a>`).join("");
     $("#mTitle").textContent = TITLES[v];
   }
   window.addEventListener("hashchange", () => { showView(); render(); window.scrollTo(0, 0); });
