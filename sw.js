@@ -1,5 +1,5 @@
 // Depotblick Service Worker: hält die App offline verfügbar. Kursabrufe (andere Adressen) gehen immer direkt ins Netz.
-const CACHE = "depotblick-20261102105839";
+st CACHE = "depotblick-20261102153945";
 // Texterkennung (Tesseract.js und deutsches Sprachpaket von jsDelivr): einmal laden, dann offline aus dem Speicher
 const OCR = "depotblick-ocr-5.1.1";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png", "icon-180.png", "icon-32.png"];
