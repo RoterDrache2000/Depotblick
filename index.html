@@ -333,7 +333,16 @@ html[data-area="budget"] .nd, html:not([data-area="budget"]) .nb { display: none
 .btmv { margin-left: auto; display: flex; }
 .btrule { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.86rem; } .btrule:last-child { border-bottom: 0; }
 .btrule span:first-child { overflow-wrap: anywhere; }
-.bwst { display: grid; grid-template-columns: minmax(0, 8rem) minmax(40px, 1fr) auto 2.2rem; gap: 10px; align-items: center; padding: 6px 0; font-size: 0.86rem; }
+.updbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 80; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; background: var(--ink); color: var(--bg); border-radius: 99px; box-shadow: 0 8px 30px rgb(0 0 0 / 0.25); font-size: 0.88rem; white-space: nowrap; }
+@media (min-width: 821px) { .updbar { bottom: 24px; } }
+.bwitq { gap: 8px; margin-bottom: 8px; flex-wrap: wrap; } .bwitq input { flex: 1 1 200px; min-width: 0; }
+#dlgItem .body { display: grid; gap: 12px; min-width: 0; } #dlgItem .body > * { min-width: 0; } .itren input { width: 0; } .itsum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } .itsum .v { font-size: 1.1rem; }
+.itlist { display: grid; max-height: 46vh; overflow-y: auto; border-top: 1px solid var(--line); }
+.ithit { display: grid; grid-template-columns: 5.6rem minmax(0, 1fr) 2.6rem 5rem; gap: 8px; align-items: center; padding: 8px 2px; border: 0; border-bottom: 1px solid var(--line); background: none; font: inherit; font-size: 0.86rem; color: inherit; text-align: left; cursor: pointer; }
+.ithit:hover { background: var(--sunk); } .ithit .n { min-width: 0; overflow: hidden; text-overflow: ellipsis; } .ithit small { display: block; color: var(--muted); font-size: 0.72rem; } .ithit .r { text-align: right; }
+.itren { display: grid; gap: 6px; } .itren label { display: grid; gap: 2px; } .itren small { color: var(--muted); font-size: 0.78rem; } .itren input { flex: 1; min-width: 0; }
+@media (max-width: 520px) { .itsum { grid-template-columns: 1fr 1fr; } .itsum .kpi:last-child { grid-column: 1 / -1; } .ithit { grid-template-columns: 4.6rem minmax(0, 1fr) 2rem 4rem; gap: 6px; font-size: 0.82rem; } }
+.bwst { display: grid; grid-template-columns: minmax(0, 11rem) minmax(40px, 1fr) auto 2.6rem; gap: 10px; align-items: center; padding: 6px 0; font-size: 0.86rem; }
 .bwst .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .bwst .tr { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; } .bwst .tr b { display: block; height: 100%; background: var(--c1); border-radius: 4px; }
 .bpg.over, #dlgScan.over { outline: 2px dashed var(--accent); outline-offset: 4px; }
 #dlgSpend.wide { width: min(980px, calc(100vw - 32px)); }
@@ -387,7 +396,7 @@ html[data-theme="dark"] input.unsure { background: #3A3210; }
   #dlgSpend, #dlgScan { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); }
   #dlgSpend form, #dlgScan .body { padding: 16px; }
   .spitem { grid-template-columns: 2.8rem minmax(0, 1fr) auto; padding-bottom: 8px; border-bottom: 1px solid var(--line); } .spitem .unit2 { grid-column: 1 / 3; grid-row: 2; width: 7rem; } .spitem select { grid-column: 2 / 4; grid-row: 2; justify-self: end; width: auto; max-width: 100%; } .spitem .spunit { grid-column: 1 / -1; grid-row: 3; } .spith { display: none; }
-  .bwst { grid-template-columns: minmax(0, 6rem) minmax(30px, 1fr) auto 2rem; }
+  .bwst { grid-template-columns: minmax(0, 1fr) auto 2.6rem; gap: 4px 10px; } .bwst .tr { grid-column: 1 / -1; grid-row: 2; }
 }
 @media (max-width: 400px) { .mtop #mTitle { display: none; } }
 @media (max-width: 360px) { .bmk { grid-template-columns: 1fr 1fr; } .bmk .kpi:first-child { grid-column: 1 / -1; } }
@@ -676,7 +685,7 @@ dialog form, dialog .body { padding: 20px; display: flex; flex-direction: column
 .bud .flow .lnk { transition: opacity 0.15s; }
 .bud .flow.hl .lnk { opacity: 0.12; } .bud .flow.hl .lnk.on { opacity: 0.75; }
 .bud .flow.hl .fnd { opacity: 0.35; } .bud .flow.hl .fnd.on { opacity: 1; }
-.bud .flow .fnd { cursor: pointer; }
+.bud .flow .fnd { cursor: pointer; } .bud .flow text.muted { fill: var(--muted); font-style: italic; }
 .bud .flow .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
 .ftip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 0.76rem; padding: 6px 9px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -120%); line-height: 1.45; z-index: 3; }
 .ftip b { font-weight: 600; }
@@ -1022,7 +1031,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   .monly { display: block; }
   .bud .brow { grid-template-columns: auto minmax(0, 1fr) 6rem auto; gap: 8px; padding: 8px; }
   .bud .brow .bmore { padding: 6px 9px; font-size: 1rem; line-height: 1; }
-  .bud .bml { display: none; } .bud .bms { display: inline; }
+  .bud .bml { display: none; } .bud .bms { display: inline; } .bud .bnm small { white-space: normal; }
   #dlgBud .bdsub { grid-template-columns: minmax(0, 1fr) 6.5rem auto; }
   .bud .grip { display: none; }
   .planbar { padding: 12px 14px; }
@@ -1575,10 +1584,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         </div>
         <div class="g2b" id="budMid">
           <div class="card"><div class="card-h"><h3>Bereiche und Posten</h3><span class="note">Antippen zum Aufklappen</span></div><div class="where" id="budWhere"></div></div>
-          <div class="card rule"><div class="card-h" style="margin:0"><h3>Faustregel 50 / 30 / 20<button type="button" class="info" data-info="Faustregel 50 / 30 / 20" aria-label="Erklärung: Faustregel">i</button></h3></div>
-            <p class="note">Etwa die Hälfte für Nötiges, ein knappes Drittel für Wünsche, ein Fünftel zum Sparen. Der Strich zeigt den Richtwert.</p>
-            <div id="budRule" style="display:grid;gap:12px"></div>
-            <div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:12px"><span class="note" id="budToFcTxt"></span><button type="button" class="btn ghost sm" id="budUse">In Hochrechnung übernehmen</button></div>
+          <div class="card"><div class="card-h"><h3>Zum Anlegen</h3></div>
+            <p class="note" style="margin:0 0 10px">Was nach allen Ausgaben frei übrig bleibt, plus deine Sparposten.</p>
+            <div class="row" style="justify-content:space-between;gap:10px;flex-wrap:wrap"><span id="budToFcTxt"></span><button type="button" class="btn ghost sm" id="budUse">In Hochrechnung übernehmen</button></div>
           </div>
         </div>
         <div class="budedit" id="budEdit">
@@ -1730,8 +1738,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <div class="card kpis bmk" id="bwKpis"></div>
           <div class="g2"><div class="card"><div class="card-h"><h3>Je Pocket</h3><span class="note">▲▼ zum Zeitraum davor</span></div><div id="bwCats"></div></div>
           <div class="card"><div class="card-h"><h3>Größte Geschäfte</h3></div><div id="bwStores"></div></div></div>
-          <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3 id="bwItH">Was du gekauft hast</h3><span class="note">Antippen, um Artikel umzubenennen oder zusammenzufassen, z. B. alle Spaghetti als „Nudeln“.</span></div></div>
-            <input id="bwItQ" type="search" placeholder="Artikel suchen" aria-label="Artikel suchen" style="margin-bottom:8px;width:100%"><div id="bwItems"></div></div>
+          <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3 id="bwItH">Was du gekauft hast</h3><span class="note">Antippen zeigt alle Kassenzettel mit dem Artikel. Dort kannst du ihn auch umbenennen oder zusammenfassen, z. B. alle Spaghetti als „Nudeln“.</span></div></div>
+            <div class="row bwitq"><input id="bwItQ" type="search" placeholder="Artikel suchen" aria-label="Artikel suchen"><div class="seg" id="bwItScope" role="group" aria-label="Wo suchen"><button type="button" data-v="r">Zeitraum</button><button type="button" data-v="a">Alle Zettel</button></div></div><div id="bwItems"></div></div>
           <div class="card"><div class="card-h"><h3>Ausgaben pro Monat</h3></div><div class="chart" id="bwChart"></div></div>
         </div>
       </section>
@@ -1850,6 +1858,16 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 </dialog>
 
 <!-- Budget: Ausgabe prüfen und buchen -->
+<dialog id="dlgItem" class="wide">
+  <div class="body">
+    <div class="dhead"><h2 id="itTitle">Artikel</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
+    <div class="kpis bmk itsum" id="itSum"></div>
+    <div class="itlist" id="itList"></div>
+    <div class="itren"><label for="itName"><b>Umbenennen oder zusammenfassen</b><small>Gibst du mehreren Artikeln denselben Namen, z. B. „Nudeln“, werden sie zusammengezählt.</small></label>
+      <div class="row" style="gap:8px;flex-wrap:nowrap"><input id="itName" autocomplete="off"><button type="button" class="btn" id="itRename">Umbenennen</button></div>
+      <button type="button" class="link" id="itReset" hidden>Eigenen Namen entfernen</button></div>
+  </div>
+</dialog>
 <dialog id="dlgBud">
   <form method="dialog" novalidate>
     <div class="dhead"><h2 id="bdTitle">Posten</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
@@ -1874,7 +1892,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         <p class="hint spnote" id="spScanNote" hidden></p>
         <div class="fields">
           <div class="field full"><label for="spStore">Geschäft</label><input id="spStore" list="storeList" autocomplete="off" placeholder="z. B. Edeka"><datalist id="storeList"></datalist></div>
-          <div class="field"><label for="spDate">Datum</label><input id="spDate" type="date" required></div>
+          <div class="field"><label for="spDate">Datum</label><input id="spDate" type="date" required><span class="note" id="spDateNote" hidden></span></div>
           <div class="field"><label for="spTotal">Summe (€)</label><input id="spTotal" inputmode="decimal" placeholder="0,00" required></div>
         </div>
         <div class="spsec"><div class="row" style="justify-content:space-between"><b>Von welchem Pocket?</b><button type="button" class="link" id="spSplit">+ Aufteilen</button></div>
@@ -3972,7 +3990,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     let avdInfo = null;
     if (R.avd && +R.avdRate > 0) {
       const own = +R.avdRate * 12, zul = avdZulage(own), kidZ = (+R.kids || 0) * 300 * Math.min(1, own / 300), start = Math.max(y0, 2027), payAge = Math.min(70, Math.max(65, ra));
-      const r = Math.pow(1 + (ret - Math.max(0, num(R.avdCost, 0.4) - RP.ter)) / 100, 1 / 12) - 1, reOn = R.avdRefund === "avd", refAt = (a) => (reOn ? rpNow(Object.assign({}, R, { age: a })).avdTax || 0 : 0); let refund = 0, v = 0, zSum = 0, rSum = 0; const path = [];
+      const r = Math.pow(1 + (ret - Math.max(0, num(R.avdCost, 0.4) - RP.ter)) / 100, 1 / 12) - 1, reOn = R.avdRefund === "avd", refAt = (a) => (reOn ? rpNow(Object.assign({}, R, { age: a })).avdTax || 0 : 0); let refund = 0, refAge = null, v = 0, zSum = 0, rSum = 0; const path = [];
       const eligFrom = (() => { for (let a = age; a < payAge; a++) if (jobsAt(R, a).some(rpZulJob)) return a; return payAge; })();
       const z0 = Math.max(start, y0 + (eligFrom - age));
       for (let a = age; a < payAge; a++) {
@@ -3981,14 +3999,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         const el = y >= z0, k = el && y - start < num(R.avdKidYears, 18) ? kidZ : 0, bonus = y === z0 && a < 25 ? 200 : 0, zz = el ? zul + k + bonus : 0;
         for (let m = 0; m < 12; m++) v = v * (1 + r) + own / 12;
         v += zz; zSum += zz;
-        if (el && reOn) { const rf = refAt(a); if (rf > 0) { v += rf; rSum += rf; if (!refund) refund = rf; } }
+        if (el && reOn) { const rf = refAt(a); if (rf > 0) { v += rf; rSum += rf; if (!refund) { refund = rf; refAge = y > start ? a : null; } } }
       }
       if (eligFrom >= payAge) A.push("Altersvorsorgedepot: keine Zulagen, weil du nicht in der Rentenversicherung pflichtversichert bist. Freiwillig Versicherte bekommen keine.");
       else if (eligFrom > age) A.push(`Altersvorsorgedepot: Zulagen gibt es erst, wenn du pflichtversichert in die Rentenversicherung einzahlst, hier ab ${eligFrom}.`);
       const capT = v / Math.pow(1 + inf, payAge - age), m = annuityM(capT, rPay, (endAge - payAge) * 12);
       let vr = capT; for (let a = payAge; a <= endAge; a++) { path.push(Math.max(0, vr)); for (let mm = 0; mm < 12; mm++) vr = vr * (1 + rPay) - m; }
       paths.avd = path;
-      avdInfo = { none: eligFrom >= payAge, own, zul, kidZ, zSum, rSum, refund, payAge, start, z0, capNom: v, capT, ownSum: own * Math.max(0, y0 + (payAge - age) - start) };
+      avdInfo = { none: eligFrom >= payAge, own, zul, kidZ, zSum, rSum, refund, refAge, payAge, start, z0, capNom: v, capT, ownSum: own * Math.max(0, y0 + (payAge - age) - start) };
       push({ k: "avd", l: "Altersvorsorgedepot", m, tax: "full", kv: "priv", c: "--c2", start: payAge });
       if (payAge !== ra) A.push(`Altersvorsorgedepot zahlt erst ab ${payAge} aus`);
     }
@@ -4604,7 +4622,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       else if (s.k === "pen") pn = "zahlt der Dienstherr";
       else if (bi >= 0) { const b = R.bavs[bi] || {}; pay = num(b.own, 0); pn = num(b.ag, 0) > 0 ? `plus ${eur0.format(num(b.ag, 0))} vom Arbeitgeber` : "aus dem Brutto"; cap = X.bavInfo[bi] ? X.bavInfo[bi].capR : null; }
       else if (ci >= 0) { const c = R.contracts[ci] || {}; pay = num(c.rate, 0) || null; cap = num(c.rente, 0) > 0 ? null : X.cCap[ci] || null; if (c.type === "riester") { const z = rpRiester(R, c); if (z.ok && z.zul > 0) pn = `plus ${eur0.format(z.zul / 12)} Zulagen`; } }
-      else if (s.k === "avd") { pay = num(R.avdRate, 0); pn = X.avdInfo && X.avdInfo.none ? "ohne Zulagen" : X.avdInfo && X.avdInfo.zul > 0 ? `plus ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen${X.avdInfo.z0 > X.avdInfo.start ? " ab " + (X.age + X.avdInfo.z0 - new Date().getFullYear()) : ""}${X.avdInfo.refund > 0 ? ` und ${eur0.format(X.avdInfo.refund / 12)} Steuererstattung` : ""}` : ""; cap = X.avdInfo ? X.avdInfo.capT : null; }
+      else if (s.k === "avd") { pay = num(R.avdRate, 0); pn = X.avdInfo && X.avdInfo.none ? "ohne Zulagen" : X.avdInfo && X.avdInfo.zul > 0 ? `plus ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen${X.avdInfo.z0 > X.avdInfo.start ? " ab " + (X.age + X.avdInfo.z0 - new Date().getFullYear()) : ""}${X.avdInfo.refund > 0 ? ` und ${eur0.format(X.avdInfo.refund / 12)} Steuererstattung${X.avdInfo.refAge != null && X.avdInfo.refAge > X.age ? " ab " + X.avdInfo.refAge : ""}` : ""}` : ""; cap = X.avdInfo ? X.avdInfo.capT : null; }
       else if (s.k === "dep") { pay = X.rate; pn = X.depNow > 0 ? `heute schon ${eur0.format(X.depNow)} da` : ""; cap = (X.paths.dep || [])[X.yrs] || 0; }
       return { s, pay, pn, cap };
     });
@@ -4620,7 +4638,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       return `<div class="rpw"><div class="rpw-h"><b>${esc(e.l)}</b>${v[1] ? `<span class="pill ${v[0]}">${v[1]}</span>` : ""}</div>
         <p class="ctext" style="margin:0">Kostet dich heute <b>${eur0.format(e.aufwand)}</b> im Monat${e.l === "Depot-Sparrate" ? "" : " nach Steuer- und Abgabenersparnis"}. Bringt dir ab ${grv ? X.sa : e.l === "Altersvorsorgedepot" && X.avdInfo ? X.avdInfo.payAge : X.ra} netto <b>${eur0.format(rpV(X, e.D))}</b> im Monat.</p>
         ${etf ? `<div class="rpw-b"><span>${esc(e.l)}</span><i><b style="width:${(Math.max(0, e.D) / mx) * 100}%;background:var(--accent)"></b></i><span class="num">${eur0.format(rpV(X, e.D))}</span><span>Gleicher Betrag im ETF</span><i><b style="width:${(Math.max(0, e.etf) / mx) * 100}%;background:var(--div)"></b></i><span class="num">${eur0.format(rpV(X, e.etf))}</span></div>` : ""}
-        ${e.l === "Altersvorsorgedepot" && X.avdInfo ? `<span class="note">${X.avdInfo.none ? "Zulagen und Steuererstattung gibt es für dich nicht, weil du nicht in der Rentenversicherung pflichtversichert bist" : `Dazu zahlt der Staat ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen im Monat ins Depot`}${X.avdInfo.none ? "" : X.avdInfo.z0 > X.avdInfo.start ? `, aber erst ab ${X.age + X.avdInfo.z0 - new Date().getFullYear()}, wenn du in die Rentenversicherung einzahlst` : ""}${X.avdInfo.refund > 0 ? `, und du zahlst die Steuererstattung von ${eur0.format(X.avdInfo.refund / 12)} im Monat zusätzlich ein` : N.avdTax > 0 ? `. Die Steuererstattung von rund ${eur0.format(N.avdTax / 12)} im Monat behältst du, sie ist oben schon abgezogen` : ""}. Im Alter ist die Auszahlung voll steuerpflichtig, beim ETF nur der Gewinn.</span>` : ""}
+        ${e.l === "Altersvorsorgedepot" && X.avdInfo ? `<span class="note">${X.avdInfo.none ? "Zulagen und Steuererstattung gibt es für dich nicht, weil du nicht in der Rentenversicherung pflichtversichert bist" : `Dazu zahlt der Staat ${eur0.format((X.avdInfo.zul + X.avdInfo.kidZ) / 12)} Zulagen im Monat ins Depot`}${X.avdInfo.none ? "" : X.avdInfo.z0 > X.avdInfo.start ? `, aber erst ab ${X.age + X.avdInfo.z0 - new Date().getFullYear()}, wenn du in die Rentenversicherung einzahlst` : ""}${X.avdInfo.refund > 0 ? `, und du zahlst die Steuererstattung von ${eur0.format(X.avdInfo.refund / 12)} im Monat${X.avdInfo.refAge != null && X.avdInfo.refAge > X.age ? " ab " + X.avdInfo.refAge : ""} zusätzlich ein` : N.avdTax > 0 ? `. Die Steuererstattung von rund ${eur0.format(N.avdTax / 12)} im Monat behältst du, sie ist oben schon abgezogen` : ""}. Im Alter ist die Auszahlung voll steuerpflichtig, beim ETF nur der Gewinn.</span>` : ""}
         ${grv ? '<span class="note">Gezählt werden nur deine Beiträge ab heute, die Hälfte, die der Arbeitgeber dazu zahlt, kostet dich nichts. Dazu sichert die Rentenversicherung Reha und Erwerbsminderung ab, das kann ein ETF nicht.</span>' : ""}</div>`;
     }).join("");
     const nom = X.net * Math.pow(1 + X.inf, X.yrs), heroCls = X.need > 0 ? (ok ? "ok" : "gap") : "";
@@ -6698,7 +6716,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (subs.length) bits.push(subs.map((s) => esc(s.name || "Ohne Namen")).join(", "));
     if (kind === "inc") bits.push(tgt ? `nur für ${esc(tgt.name || "Ohne Namen")}` : "frei verfügbar");
     const dot = kind === "exp" ? KCOL(it.kind || "var") : tgt ? KCOL(tgt.kind || "var") : "var(--muted)";
-    const ro = subs.length > 0 && bAmtSub(it) > (+it.amt || 0);
+    const ro = false;
     return `<div class="brow ${kind}" data-i="${i}" draggable="true">
       <i class="bdot" style="background:${dot}"></i>
       <span class="bnm"><input class="bname" data-f="name" value="${esc(it.name || "")}" placeholder="${kind === "inc" ? "z. B. Gehalt" : "z. B. Lebensmittel"}" aria-label="Name">${bits.length ? `<small>${bits.join(" · ")}</small>` : ""}</span>
@@ -6763,15 +6781,15 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   function budEdFill(all) {
     if (!bedCur) return; const { kind, it } = bedCur, B = budget(), a = bAmt(it), subs = it.subs || [], ss = bAmtSub(it);
     const amt = $("#bdAmt"); if (all || document.activeElement !== amt) amt.value = a ? numStr(a) : "";
-    amt.readOnly = subs.length > 0 && ss > (+it.amt || 0);
+    amt.readOnly = false;
     const rg = $("#bdRange"), inc = budCalc().inc, mx = Math.max(100, Math.ceil((Math.max(a * 2, kind === "exp" ? inc * 0.5 : a * 1.5)) / 50) * 50);
-    rg.max = mx; rg.step = mx > 2000 ? 10 : 5; rg.value = a; rg.disabled = amt.readOnly;
-    $("#bdRangeL").textContent = `0 bis ${eur0.format(mx)}`;
+    rg.min = Math.floor(ss); rg.max = Math.max(mx, Math.ceil(ss)); rg.step = mx > 2000 ? 10 : 5; rg.value = a; rg.disabled = false;
+    $("#bdRangeL").textContent = ss > 0 ? `${eur0.format(ss)} (Summe der Unterposten) bis ${eur0.format(+rg.max)}` : `0 bis ${eur0.format(+rg.max)}`;
     if (kind === "exp") {
       $$("#bdKind button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.k === (it.kind || "var") ? "true" : "false"));
       if (all) $("#bdSubs").innerHTML = subs.map((s, j) => `<div class="bdsub" data-j="${j}"><input data-sf="name" value="${esc(s.name || "")}" placeholder="z. B. Miete" aria-label="Name"><span class="amt"><input data-sf="amt" inputmode="decimal" value="${+s.amt ? numStr(+s.amt) : ""}" placeholder="0" aria-label="Betrag"><span>€</span></span><button type="button" class="del" data-sdel aria-label="Unterposten entfernen">✕</button></div>`).join("");
       const free = (+it.amt || 0) - ss;
-      $("#bdSubSum").innerHTML = !subs.length ? "Teil den Betrag auf, z. B. Fixkosten in Miete, Strom und Wasser." : free > 0.005 ? `Aufgeteilt ${eur0.format(ss)} von ${eur0.format(+it.amt || 0)}, <b>${eur0.format(free)} noch frei</b>.` : free < -0.005 ? `Die Unterposten ergeben ${eur0.format(ss)}. Das ist jetzt der Betrag.` : `Genau aufgeteilt.`;
+      $("#bdSubSum").innerHTML = !subs.length ? "Teil den Betrag auf, z. B. Fixkosten in Miete, Strom und Wasser." : free > 0.005 ? `Aufgeteilt ${eur0.format(ss)} von ${eur0.format(+it.amt || 0)}, <b>${eur0.format(free)} noch frei</b>.` : free < -0.005 ? `Die Unterposten ergeben ${eur0.format(ss)}, mehr als der Betrag. Gerechnet wird mit ${eur0.format(ss)}; erhöhe den Betrag, wenn noch etwas frei bleiben soll.` : `Genau aufgeteilt.`;
     } else {
       const sel = $("#bdFor"), cur = it.for || "";
       sel.innerHTML = '<option value="">Frei verfügbar</option>' + B.exp.map((e) => `<option value="${e.id}"${e.id === cur ? " selected" : ""}>nur für ${esc(e.name || "Ohne Namen")}</option>`).join("");
@@ -6789,7 +6807,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#bdName").addEventListener("input", (e) => { if (!bedCur) return; bedCur.it.name = e.target.value; $("#bdTitle").textContent = e.target.value || "Posten"; budSave(); });
     $("#bdPer").addEventListener("change", (e) => { if (!bedCur) return; bedCur.it.per = e.target.value; budEdChanged(); });
     $("#bdAmt").addEventListener("input", (e) => { if (!bedCur || e.target.readOnly) return; const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value); if (!isFinite(v) || v < 0) return; bedCur.it.amt = v; budEdChanged(); });
-    $("#bdRange").addEventListener("input", (e) => { if (!bedCur) return; bedCur.it.amt = +e.target.value; $("#bdAmt").value = numStr(+e.target.value); budEdChanged(); });
+    $("#bdRange").addEventListener("input", (e) => { if (!bedCur) return; bedCur.it.amt = Math.max(+e.target.value, bAmtSub(bedCur.it)); $("#bdAmt").value = numStr(+e.target.value); budEdChanged(); });
     $$("#bdKind button").forEach((b) => b.addEventListener("click", () => { if (!bedCur) return; bedCur.it.kind = b.dataset.k; budEdChanged(); }));
     $("#bdFor").addEventListener("change", (e) => { if (!bedCur) return; if (e.target.value) bedCur.it.for = e.target.value; else delete bedCur.it.for; budEdChanged(); });
     $("#bdSubAdd").addEventListener("click", () => { if (!bedCur) return; const it = bedCur.it; it.subs = it.subs || []; it.subs.push({ id: bid(), name: "", amt: 0 }); budSave(); budEdFill(true); const r = $$("#bdSubs .bdsub"); if (r.length) $('[data-sf="name"]', r[r.length - 1]).focus(); });
@@ -6836,10 +6854,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (T <= 0) { box.innerHTML = '<p class="empty">Trag Beträge ein, dann erscheint hier dein Geldfluss.</p>'; return; }
     const W = Math.max(300, box.clientWidth), narrow = W < 640;
     const nInc = R.inc.length, nCat = R.cats.length, nIt = R.cats.reduce((x, c) => x + c.items.length, 0);
+    // Unterposten als fünfte Spalte (nur breit genug), Rest ohne Unterposten als „nicht aufgeteilt“
+    const subL = [];
+    if (!narrow) R.cats.forEach((c) => c.items.forEach((it) => { if (!it.subs.length) return; const k = (PER[it.ref.per] || PER.m)[1]; let su = 0; it.subs.forEach((q) => { const v = +q.amt * k; su += v; subL.push({ n: q.name || "Ohne Namen", v, par: it }); }); if (it.v - su > 0.5) subL.push({ n: "nicht aufgeteilt", v: it.v - su, par: it, rest: true }); }));
+    const five = subL.length > 0;
     const gap = narrow ? 8 : 7, nw = narrow ? 10 : 12;
-    const H = narrow ? Math.max(300, nInc * 44, nCat * 48) : Math.max(420, nIt * 26 + 20);
-    const L = narrow ? 92 : 150, Rp = narrow ? 104 : 170;
-    const cols = narrow ? [L, (W - Rp + L) / 2 - nw / 2, W - Rp - nw] : [L, L + (W - L - Rp - nw) * 0.3, L + (W - L - Rp - nw) * 0.62, W - Rp - nw];
+    const H = narrow ? Math.max(300, nInc * 44, nCat * 48) : Math.max(420, Math.max(nIt, subL.length) * 26 + 20);
+    const L = narrow ? 92 : 150, Rp = narrow ? 104 : five ? 150 : 170, span = W - L - Rp - nw;
+    const cols = narrow ? [L, (W - Rp + L) / 2 - nw / 2, W - Rp - nw] : five ? [L, L + span * 0.2, L + span * 0.42, L + span * 0.68, W - Rp - nw] : [L, L + span * 0.3, L + span * 0.62, W - Rp - nw];
     const top = 34;
     const svg = svgEl("svg", { viewBox: `0 ${-top} ${W} ${H + top}`, height: H + top, role: "img", "aria-label": "Geldfluss von den Einnahmen zu den Ausgaben" }, box);
     const gL = svgEl("g", {}, svg), gN = svgEl("g", {}, svg), gT = svgEl("g", {}, svg);
@@ -6851,6 +6873,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     stack(R.cats, cols[2]);
     const items = [];
     if (!narrow) { R.cats.forEach((c) => c.items.forEach((it) => { it.cat = c; items.push(it); })); stack(items, cols[3]); }
+    if (five) { let yEnd = -Infinity; const g2 = 3; let cur = null; subL.forEach((o) => { if (o.par !== cur) { cur = o.par; o.y = Math.max(cur.y, yEnd + gap); } else o.y = yEnd + g2; o.x = cols[4]; o.h = Math.max(1.5, o.v * sc); o.in = o.y; o.out = o.y; yEnd = o.y + o.h; }); const over = yEnd - H; if (over > 0) subL.forEach((o) => { o.y -= over; o.in = o.out = o.y; }); }
     const tip = document.createElement("div"); tip.className = "ftip"; tip.hidden = true; box.appendChild(tip);
     const share = (v) => (R.I > 0 ? nf(1).format((v / R.I) * 100).replace(",0", "") + " %" : "–");
     function show(e, keys, label) {
@@ -6888,7 +6911,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             svgEl("text", { x: l.x, y: l.y, "text-anchor": l.anchor, class: "halo " + (l.cls || "") }, gT).textContent = l.name;
             svgEl("text", { x: l.x, y: l.y + 14, "text-anchor": l.anchor, class: "v halo" }, gT).textContent = eurK(l.v);
           } else {
-            const t = svgEl("text", { x: l.x, y: l.y, class: "halo" }, gT); t.textContent = l.name;
+            const t = svgEl("text", { x: l.x, y: l.y, class: "halo " + (l.cls || "") }, gT); t.textContent = l.name;
             svgEl("tspan", { class: "v", dx: 6 }, t).textContent = eurK(l.v);
           }
         });
@@ -6913,7 +6936,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const k = ["c:" + it.cat.k, "it:" + i];
       link(it.cat, it, it.v, it.cat.c, k, `<b>${esc(it.n)}</b> · ${it.cat.n}<br>${eurK(it.v)} · ${share(it.v)} der Einnahmen${it.subs.length ? "<br>" + it.subs.map((q) => `${esc(q.name || "Ohne Namen")} ${eurK(+q.amt * (PER[it.ref.per] || PER.m)[1])}`).join("<br>") : ""}<br><small>Antippen zum Ändern</small>`);
       node(it, it.cat.c, k, `<b>${esc(it.n)}</b><br>${eurK(it.v)}`);
-      lab("it", { x: it.x + nw + 8, y: it.y + it.h / 2 + 4, name: cut(it.n, 22), v: it.v, two: false });
+      lab("it", { x: it.x + nw + 8, y: it.y + it.h / 2 + 4, name: cut(it.n, five ? 16 : 22), v: it.v, two: false });
+    });
+    subL.forEach((o, i) => {
+      const it = o.par, k = ["c:" + it.cat.k, "it:" + items.indexOf(it), "s:" + i], c = o.rest ? "var(--faint)" : it.cat.c;
+      link(it, o, o.v, c, k, `<b>${esc(o.n)}</b> · ${esc(it.n)}<br>${eurK(o.v)}${o.rest ? " noch nicht auf Unterposten verteilt" : ""}`);
+      const r = svgEl("rect", { x: o.x, y: o.y, width: nw, height: o.h, rx: 2, fill: c, class: "fnd", "data-k": k.join(" ") }, gN);
+      hover(r, k, `<b>${esc(o.n)}</b><br>${eurK(o.v)}`); r.style.cursor = "pointer"; r.addEventListener("click", () => budEdit("exp", it.ref));
+      lab("sub", { x: o.x + nw + 8, y: o.y + o.h / 2 + 4, name: cut(o.n, 16), v: o.v, two: false, cls: o.rest ? "muted" : "" });
     });
     flush();
     svgEl("text", { x: mid.x + nw / 2, y: mid.y - 24, "text-anchor": "middle", class: "big" }, gT).textContent = eurK(T);
@@ -6929,7 +6959,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   function budRule(R) {
     const need = (R.byKind.fix || 0) + (R.byKind.var || 0), want = R.byKind.fun || 0, sav = R.save + Math.max(0, R.free);
     const rows = [["Nötiges", "Fixkosten und Lebenshaltung", need, 50, KCOL("fix"), true], ["Wünsche", "Freizeit", want, 30, KCOL("fun"), true], ["Sparen", "Sparen und Übriges", sav, 20, KCOL("save"), false]];
-    $("#budRule").innerHTML = rows.map(([n, sub, v, t, c, upper]) => {
+    if ($("#budRule")) $("#budRule").innerHTML = rows.map(([n, sub, v, t, c, upper]) => {
       const p = R.inc > 0 ? (v / R.inc) * 100 : 0, ok = upper ? p <= t + 2 : p >= t - 2;
       return `<div class="rl"><div class="top"><span><b>${n}</b> <span class="note">${sub}</span></span><span class="num ${ok ? "gain" : "loss"}">${nf(0).format(p)} % <span class="note">von ${t} %</span></span></div>
         <div class="track"><b style="width:${Math.min(100, p)}%;background:${c}"></b><u style="left:${t}%"></u></div></div>`;
@@ -7110,7 +7140,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (!installEv) return appSteps();
     installEv.prompt(); try { await installEv.userChoice; } catch (e) {} installEv = null; appUi();
   });
-  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && document.querySelector('link[rel="manifest"]')) navigator.serviceWorker.register("sw.js").catch(() => {});
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && document.querySelector('link[rel="manifest"]')) {
+    // Neue Version: wird im Hintergrund geladen, dann ein Hinweis zum Neuladen
+    const had = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register("sw.js").then((reg) => { document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); }); }).catch(() => {});
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (!had || document.getElementById("updBar")) return; const b = document.createElement("div"); b.id = "updBar"; b.className = "updbar"; b.innerHTML = '<span>Neue Version da</span><button type="button" class="btn sm">Jetzt neu laden</button>'; b.querySelector("button").addEventListener("click", () => location.reload()); document.body.appendChild(b); });
+  }
   appUi();
 
   // ---------- Depots, Datenschutz, Sicherung: Verdrahtung ----------
@@ -7346,13 +7381,22 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const B_VIEWS = ["bmonat", "bausgaben", "btoepfe", "budget", "bauswertung"];
   const B_COLS = ["--c1", "--c2", "--c3", "--c4", "--c5", "--c6", "--c7"];
   const B_ICONS = ["🛒", "🧴", "⛽", "🎉", "👕", "📦", "🏠", "🍽️", "☕", "🚌", "💊", "🎁", "🐾", "📚", "🔧", "💡"];
-  const B_SUGG = [["Lebensmittel", "🛒", 250, "food"], ["Drogerie", "🧴", 40, "drug"], ["Tanken", "⛽", 120, "fuel"], ["Freizeit", "🎉", 100, "fun"], ["Kleidung", "👕", 50, "cloth"], ["Sonstiges", "📦", 50, "other"]];
+  const B_SUGG = [["Lebensmittel", "🛒", 250, "food"], ["Drogerie", "🧴", 40, "drug"], ["Tanken", "⛽", 120, "fuel"], ["Freizeit", "🎉", 100, "fun"], ["Kleidung", "👕", 50, "cloth"]];
   const ym = (d) => d.slice(0, 7);
   const ymNow = () => ym(today());
   const ymAdd = (k, n) => { const [y, m] = k.split("-").map(Number), d = new Date(y, m - 1 + n, 1); return isoDate(d).slice(0, 7); };
   const MONTHS_L = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   const ymLabel = (k) => { const [y, m] = k.split("-").map(Number); return MONTHS_L[m - 1] + " " + y; };
-  const bData = () => { const B = budget(); B.cats = B.cats || []; B.spends = B.spends || []; B.rules = B.rules || []; B.alias = B.alias || {}; if (B.keepPhotos == null) B.keepPhotos = true; return B; };
+  const bData = () => { const B = budget(); B.cats = B.cats || []; B.spends = B.spends || []; B.rules = B.rules || []; B.alias = B.alias || {}; if (B.keepPhotos == null) B.keepPhotos = true; bFreeEnsure(B); return B; };
+  // „Sonstiges“ ist immer da und hat keine Obergrenze: für alles, was in kein anderes Pocket passt
+  function bFreeEnsure(B) {
+    if (B.cats.some((c) => c.free)) return;
+    const old = B.cats.find((c) => (c.name || "").trim().toLowerCase() === "sonstiges");
+    if (old) { old.free = true; return; }
+    B.cats.push({ id: "sonstiges", name: "Sonstiges", icon: "📦", color: "--c8", amount: 0, period: "month", rollover: false, warnAt: 80, kind: "other", since: today(), free: true });
+  }
+  const bFree = () => bData().cats.find((c) => c.free);
+  const bReal = (B) => B.cats.filter((c) => !c.free);
   const bSave = () => Store.save(S.data);
   const bCat = (id) => bData().cats.find((c) => c.id === id);
   const bCatName = (id) => { const c = bCat(id); return c ? c.icon + " " + c.name : "Ohne Pocket"; };
@@ -7377,19 +7421,20 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   // Stand eines Pockets im Zeitraum, der das Datum enthält; Übertrag: Rest (oder Minus) der früheren Zeiträume
   function bState(c, iso, skip) {
+    if (c.free) { const st = perStart("month", iso), en = perNext("month", st), spent = bSpentIn(c.id, st, en, skip); return { free: true, st, en, label: perLabel("month", st), amt: 0, carry: 0, avail: spent, spent, left: 0, pct: 0, daysLeft: 0, perDay: null }; }
     const p = c.period || "month", st = perStart(p, iso), en = perNext(p, st), amt = +c.amount || 0;
     let carry = 0;
     if (c.rollover) {
       const first = bData().spends.filter((sp) => sp.parts.some((x) => x.cat === c.id)).map((sp) => sp.date).sort()[0];
       const since = c.since ? (c.since.length === 7 ? c.since + "-01" : c.since) : null;
-      let k = perStart(p, [since, first].filter(Boolean).sort()[0] || st), n = 0;
+      let k = perStart(p, since || first || st), n = 0; // Übertrag erst ab dem Anlegen des Pockets
       while (k < st && n++ < 600) { const nx = perNext(p, k); carry += amt - bSpentIn(c.id, k, nx, skip); k = nx; }
     }
     const avail = amt + carry, spent = bSpentIn(c.id, st, en, skip), left = avail - spent, t = today();
     const daysLeft = t >= st && t < en ? Math.round(days(t, en)) : 0;
     return { st, en, label: perLabel(p, st), amt, carry, avail, spent, left, pct: avail > 0 ? spent / avail : spent > 0 ? 9 : 0, daysLeft, perDay: daysLeft > 0 ? left / daysLeft : null };
   }
-  const bLevel = (c, st) => (st.spent > st.avail + 0.005 ? "over" : st.pct * 100 >= (c.warnAt || 80) ? "warn" : "ok");
+  const bLevel = (c, st) => (st.free ? "ok" : st.spent > st.avail + 0.005 ? "over" : st.pct * 100 >= (c.warnAt || 80) ? "warn" : "ok");
   // Vorschlag für ein Geschäft: gelernte Regel, sonst Art der Kette, sonst erstes Budget
   const bNorm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9äöüß&]+/g, " ").trim();
   function bSuggest(store, kind) {
@@ -7398,7 +7443,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (r) return { cat: r.cat, why: "gelernt" };
     const k = kind && B.cats.find((c) => c.kind === kind);
     if (k) return { cat: k.id, why: "kette" };
-    return { cat: (B.cats[0] || {}).id || "", why: "" };
+    return { cat: (B.cats.find((c) => c.free) || B.cats[0] || {}).id || "", why: "" };
   }
   const bItemCat = (text) => { const n = bNorm(text), r = n && bData().rules.find((x) => x.type === "item" && x.match === n && bCat(x.cat)); return r ? r.cat : ""; };
   function bLearn(sp) {
@@ -7432,16 +7477,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   PAGE_RENDER.bmonat = () => {
     const B = bData(), t = today(), k = ymNow();
     $("#bmLabel").textContent = "Heute, " + fmtDate(t);
-    $("#bmEmpty").hidden = B.cats.length > 0 || B.spends.length > 0; $("#bmBody").hidden = !$("#bmEmpty").hidden;
+    $("#bmEmpty").hidden = bReal(B).length > 0 || B.spends.length > 0; $("#bmBody").hidden = !$("#bmEmpty").hidden;
     if (!$("#bmEmpty").hidden) return;
-    const sts = B.cats.map((c) => ({ c, st: bState(c, t) })), left = sts.reduce((x, { st }) => x + st.left, 0), avail = sts.reduce((x, { st }) => x + st.avail, 0);
+    const sts = B.cats.map((c) => ({ c, st: bState(c, t) })), lim = sts.filter(({ c }) => !c.free), left = lim.reduce((x, { st }) => x + st.left, 0), avail = lim.reduce((x, { st }) => x + st.avail, 0);
     const inM = (m) => B.spends.filter((s) => ym(s.date) === m), mSum = (m) => inM(m).reduce((x, s) => x + s.total, 0), cur = mSum(k), prev = mSum(ymAdd(k, -1));
     const dayN = new Date().getDate(), prevSame = B.spends.filter((s) => ym(s.date) === ymAdd(k, -1) && +s.date.slice(8) <= dayN).reduce((x, s) => x + s.total, 0);
-    $("#bmKpis").innerHTML = `<div class="kpi"><span class="eyebrow">Übrig in deinen Pockets</span><span class="v big ${left < 0 ? "loss" : ""}">${B.cats.length ? eur0.format(left) : "–"}</span><span class="s">${B.cats.length ? "von " + eur0.format(avail) : "Noch keine Pockets"}</span></div>
+    $("#bmKpis").innerHTML = `<div class="kpi"><span class="eyebrow">Übrig in deinen Pockets</span><span class="v big ${left < 0 ? "loss" : ""}">${lim.length ? eur0.format(left) : "–"}</span><span class="s">${lim.length ? "von " + eur0.format(avail) + (new Set(lim.map(({ c }) => c.period || "month")).size > 1 ? ", jedes Pocket in seinem Zeitraum (Woche, Monat …)" : "") : "Noch keine Pockets"}</span></div>
       <div class="kpi"><span class="eyebrow">Ausgegeben im ${MONTHS_L[+k.slice(5) - 1]}</span><span class="v">${eur0.format(cur)}</span><span class="s">${prevSame > 0 ? (cur > prevSame ? "▲ " : "▼ ") + eur0.format(Math.abs(cur - prevSame)) + " zum Vormonat bis heute" : inM(k).length + " Einkäufe"}</span></div>
       <div class="kpi"><span class="eyebrow">Letzter Monat</span><span class="v">${eur0.format(prev)}</span><span class="s">${inM(ymAdd(k, -1)).length} Einkäufe</span></div>`;
     $("#bmCatsCard").hidden = !B.cats.length;
     $("#bmCats").innerHTML = sts.map(({ c, st }) => {
+      if (c.free) return `<button type="button" class="bcat bfree" data-cat="${esc(c.id)}"><span class="i" style="background:color-mix(in srgb, var(${c.color || "--c8"}) 16%, transparent)">${esc(c.icon)}</span><span class="t"><span class="row1"><b>${esc(c.name)}</b><span class="num">${eur0.format(st.spent)}</span></span><span class="row2"><span class="muted">ohne Obergrenze · für alles, was in kein Pocket passt · ${esc(st.label)}</span></span></span></button>`;
       const lv = bLevel(c, st);
       const sub = st.left >= 0 ? `noch <b class="num">${eur.format(st.left)}</b>${st.perDay != null && st.left > 0 && st.daysLeft > 1 ? ` · ${st.daysLeft} Tage, etwa ${eur.format(st.perDay)} pro Tag` : ""}` : `<b class="num loss">${eur.format(-st.left)} drüber</b>`;
       return `<button type="button" class="bcat" data-cat="${esc(c.id)}"><span class="i" style="background:color-mix(in srgb, var(${c.color || "--c1"}) 16%, transparent)">${esc(c.icon)}</span><span class="t"><span class="row1"><b>${esc(c.name)}</b><span class="num">${eur0.format(st.spent)} <span class="muted">von ${eur0.format(st.avail)}</span></span></span>${bBar(c, st)}<span class="row2">${sub}<span class="muted"> · ${esc(st.label)}</span>${st.carry ? `<span class="muted"> · ${st.carry > 0 ? "+" : "−"}${eur0.format(Math.abs(st.carry))} übertragen</span>` : ""}${lv === "warn" ? ' <span class="pill warn">' + nf(0).format(st.pct * 100) + " %</span>" : ""}</span></span></button>`;
@@ -7464,7 +7510,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   let btBuilt = false;
   PAGE_RENDER.btoepfe = () => {
     const B = bData();
-    $("#btList").innerHTML = B.cats.length ? B.cats.map((c, i) => `<div class="card btc" data-id="${esc(c.id)}">
+    $("#btList").innerHTML = (bReal(B).length ? "" : '<div class="card"><p class="hint">Noch keine eigenen Pockets. Ein Pocket ist ein Topf, z. B. 250 € im Monat für Lebensmittel. Übernimm unten Vorschläge oder Posten aus deinem Budget, oder leg ein eigenes an.</p></div>') + B.cats.map((c, i) => c.free ? `<div class="card btc btfree" data-id="${esc(c.id)}"><div class="btr1"><select class="bticon" data-f="icon" aria-label="Symbol">${B_ICONS.concat(B_ICONS.includes(c.icon) ? [] : [c.icon]).map((x) => `<option${x === c.icon ? " selected" : ""}>${x}</option>`).join("")}</select><input data-f="name" value="${esc(c.name)}" aria-label="Name"><span class="pill">ohne Obergrenze</span></div><p class="note" style="margin:0">Immer da, für alles, was in kein anderes Pocket passt. Du siehst nur, wie viel du im Monat ausgibst, es gibt kein Limit und keine Warnung.</p></div>` : `<div class="card btc" data-id="${esc(c.id)}">
       <div class="btr1"><select class="bticon" data-f="icon" aria-label="Symbol">${B_ICONS.concat(B_ICONS.includes(c.icon) ? [] : [c.icon]).map((x) => `<option${x === c.icon ? " selected" : ""}>${x}</option>`).join("")}</select>
         <input data-f="name" value="${esc(c.name)}" placeholder="Name, z. B. Essen" aria-label="Name">
         <span class="unit2"><input data-f="amount" inputmode="decimal" value="${c.amount ? nf(2).format(c.amount).replace(/,00$/, "") : ""}" placeholder="0" aria-label="Betrag"><span>€</span></span>
@@ -7472,8 +7518,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <div class="btr2"><label class="btwarn">Am Ende <select data-f="rollover" aria-label="Was mit dem Rest passiert"><option value=""${c.rollover ? "" : " selected"}>neu starten</option><option value="1"${c.rollover ? " selected" : ""}>Rest übertragen</option></select></label>
         <label class="btwarn">Warnung ab <span class="unit2"><input data-f="warnAt" inputmode="numeric" value="${c.warnAt || 80}" aria-label="Warnung ab Prozent"><span>%</span></span></label>
         <span class="btcol" role="group" aria-label="Farbe">${B_COLS.map((x) => `<button type="button" data-col="${x}" aria-pressed="${x === (c.color || "--c1")}" style="background:var(${x})" aria-label="Farbe"></button>`).join("")}</span>
-        <span class="btmv"><button type="button" class="icon-btn" data-mv="-1" aria-label="Nach oben"${i === 0 ? " disabled" : ""}>↑</button><button type="button" class="icon-btn" data-mv="1" aria-label="Nach unten"${i === B.cats.length - 1 ? " disabled" : ""}>↓</button><button type="button" class="icon-btn" data-del aria-label="Budget löschen">✕</button></span></div></div>`).join("")
-      : '<div class="card"><p class="hint">Noch keine Pockets. Ein Pocket ist ein Topf, z. B. 250 € im Monat für Lebensmittel. Übernimm unten Vorschläge oder Posten aus deinem Budget, oder leg ein eigenes an.</p></div>';
+        <span class="btmv"><button type="button" class="icon-btn" data-mv="-1" aria-label="Nach oben"${i === 0 ? " disabled" : ""}>↑</button><button type="button" class="icon-btn" data-mv="1" aria-label="Nach unten"${i === B.cats.length - 1 ? " disabled" : ""}>↓</button><button type="button" class="icon-btn" data-del aria-label="Budget löschen">✕</button></span></div></div>`).join("");
     const miss = B_SUGG.filter(([n]) => !B.cats.some((c) => c.name.toLowerCase() === n.toLowerCase()));
     $("#btSugg").innerHTML = miss.length ? `<span class="note">Vorschläge:</span>${miss.map(([n, ic, a]) => `<button type="button" class="chip" data-sg="${esc(n)}">${ic} ${esc(n)} ${a} €</button>`).join("")}` : "";
     $$("#btSugg [data-sg]").forEach((b) => b.addEventListener("click", () => { const s = B_SUGG.find((x) => x[0] === b.dataset.sg); bAddCat(s); PAGE_RENDER.btoepfe(); }));
@@ -7493,6 +7538,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       }));
       $$("[data-col]", card).forEach((b) => b.addEventListener("click", () => { c.color = b.dataset.col; bSave(); PAGE_RENDER.btoepfe(); }));
       $$("[data-mv]", card).forEach((b) => b.addEventListener("click", () => { const a = B.cats, i = a.indexOf(c), j = i + +b.dataset.mv; if (j < 0 || j >= a.length) return; a.splice(i, 1); a.splice(j, 0, c); bSave(); PAGE_RENDER.btoepfe(); }));
+      if (c.free) return;
       $("[data-del]", card).addEventListener("click", () => {
         const n = B.spends.filter((s) => s.parts.some((p) => p.cat === c.id)).length;
         if (n && !confirm(`„${c.name}“ löschen? ${n} Ausgaben bleiben erhalten und stehen dann ohne Pocket da.`)) return;
@@ -7513,7 +7559,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   };
   function bAddCat([name, icon, amount, kind]) {
     const B = bData(), used = B.cats.map((c) => c.color);
-    B.cats.push({ id: uid(), name, icon, color: B_COLS.find((x) => !used.includes(x)) || B_COLS[B.cats.length % B_COLS.length], amount, period: "month", rollover: false, warnAt: 80, kind: kind || null, since: today() });
+    const fi = B.cats.findIndex((c) => c.free); B.cats.splice(fi < 0 ? B.cats.length : fi, 0, { id: uid(), name, icon, color: B_COLS.find((x) => !used.includes(x)) || B_COLS[B.cats.length % B_COLS.length], amount, period: "month", rollover: false, warnAt: 80, kind: kind || null, since: today() });
     bSave();
   }
   // Zeitraum der Auswertung: Monat, Quartal, 6 Monate, Jahr; Pfeile gehen zurück
@@ -7523,6 +7569,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (R === "m") { a = new Date(y, m + o, 1); b = new Date(y, m + o + 1, 1); label = MONTHS_L[a.getMonth()] + " " + a.getFullYear(); }
     else if (R === "q") { const q0 = m - (m % 3); a = new Date(y, q0 + o * 3, 1); b = new Date(y, q0 + o * 3 + 3, 1); label = "Q" + (a.getMonth() / 3 + 1) + " " + a.getFullYear(); }
     else if (R === "h") { a = new Date(y, m - 5 + o * 6, 1); b = new Date(y, m + 1 + o * 6, 1); const e = new Date(b); e.setDate(0); label = MONTHS[a.getMonth()] + " " + a.getFullYear() + " – " + MONTHS[e.getMonth()] + " " + e.getFullYear(); }
+    else if (R === "a") { const f = bData().spends.map((x) => x.date).sort()[0] || isoDate(n); return { a: f, b: isoDate(new Date(y, m, n.getDate() + 1)), pa: f, R, label: "Alle Zettel seit " + fmtDate(f) }; }
     else { a = new Date(y + o, 0, 1); b = new Date(y + o + 1, 0, 1); label = String(a.getFullYear()); }
     const len = b - a, pa = new Date(a.getTime() - len);
     return { a: isoDate(a), b: isoDate(b), pa: R === "y" ? isoDate(new Date(a.getFullYear() - 1, 0, 1)) : R === "m" ? isoDate(new Date(a.getFullYear(), a.getMonth() - 1, 1)) : R === "q" ? isoDate(new Date(a.getFullYear(), a.getMonth() - 3, 1)) : isoDate(new Date(a.getFullYear(), a.getMonth() - 6, 1)), label, R };
@@ -7534,19 +7581,19 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     list.forEach((s) => { const main = (s.parts.slice().sort((x, y) => y.amount - x.amount)[0] || {}).cat; (s.items || []).forEach((it) => {
       if (!it.text || !(it.price > 0)) return; const nk = itemKey(it.text); if (!nk) return; const name = B.alias[nk] || it.text, gk = B.alias[nk] ? "a:" + bNorm(B.alias[nk]) : "t:" + nk;
       const e = g[gk] || (g[gk] = { name, n: 0, v: 0, keys: new Set(), last: null, cat: it.cat || main, buys: 0 }); const q = it.qty > 0 ? it.qty : 1;
-      e.n += q; e.v += it.price; e.buys++; e.keys.add(nk); if (!e.last || s.date >= e.last.d) e.last = { d: s.date, p: it.price / q };
+      e.n += q; e.v += it.price; e.buys++; e.keys.add(nk); (e.hits || (e.hits = [])).push({ s, it }); if (!e.last || s.date >= e.last.d) e.last = { d: s.date, p: it.price / q };
     }); });
     return Object.values(g).sort((a, b) => b.n - a.n || b.v - a.v);
   }
   PAGE_RENDER.bauswertung = () => {
     const B = bData(), has = B.spends.length > 0; $("#bwEmpty").hidden = has; $("#bwBody").hidden = !has; if (!has) return;
-    seg("#bwRange", [["m", "Monat"], ["q", "Quartal"], ["h", "6 Monate"], ["y", "Jahr"]], S.bwR, (v) => { S.bwR = v; S.bwOff = 0; PAGE_RENDER.bauswertung(); });
-    const r = bwRange(); $("#bwLabel").textContent = r.label; $("#bwNext").disabled = S.bwOff >= 0;
+    seg("#bwRange", [["m", "Monat"], ["q", "Quartal"], ["h", "6 Monate"], ["y", "Jahr"], ["a", "Alles"]], S.bwR, (v) => { S.bwR = v; S.bwOff = 0; PAGE_RENDER.bauswertung(); });
+    const r = bwRange(); $("#bwLabel").textContent = r.label; $("#bwNext").disabled = S.bwOff >= 0; $("#bwPrev").hidden = $("#bwNext").hidden = r.R === "a";
     const list = B.spends.filter((s) => s.date >= r.a && s.date < r.b), prev = B.spends.filter((s) => s.date >= r.pa && s.date < r.a);
     const sum = list.reduce((x, s) => x + s.total, 0), psum = prev.reduce((x, s) => x + s.total, 0);
     $("#bwKpis").innerHTML = `<div class="kpi"><span class="eyebrow">Ausgegeben</span><span class="v big">${eur0.format(sum)}</span><span class="s">${psum > 0 ? (sum > psum ? "▲ " : "▼ ") + nf(0).format(Math.abs(sum / psum - 1) * 100) + " % zum Zeitraum davor" : "&nbsp;"}</span></div>
       <div class="kpi"><span class="eyebrow">Einkäufe</span><span class="v">${list.length}</span><span class="s">${list.length ? "Ø " + eur.format(sum / list.length) : ""}</span></div>
-      <div class="kpi"><span class="eyebrow">Pro Monat</span><span class="v">${eur0.format(sum / Math.max(1, { m: 1, q: 3, h: 6, y: 12 }[r.R]))}</span><span class="s">im Schnitt</span></div>`;
+      <div class="kpi"><span class="eyebrow">Pro Monat</span><span class="v">${eur0.format(sum / Math.max(1, r.R === "a" ? Math.max(1, Math.round(days(r.a, r.b) / 30.4)) : { m: 1, q: 3, h: 6, y: 12 }[r.R]))}</span><span class="s">im Schnitt</span></div>`;
     // Balken je Monat im Zeitraum (beim Monat: die letzten 6 Monate)
     const months = []; let k = r.R === "m" ? ymAdd(ym(r.a), -5) : ym(r.a); while (k < ym(r.b) && months.length < 12) { months.push(k); k = ymAdd(k, 1); }
     drawBars($("#bwChart"), months.map((x) => ({ label: MONTHS[+x.slice(5) - 1], full: ymLabel(x), v: B.spends.filter((s) => ym(s.date) === x).reduce((y, s) => y + s.total, 0), n: B.spends.filter((s) => ym(s.date) === x).length })), "--c1");
@@ -7559,12 +7606,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#bwStores").innerHTML = top.length ? top.map((e) => `<div class="bwst"><span class="n">${esc(e.n)}</span><span class="tr"><b style="width:${(e.v / mt) * 100}%"></b></span><span class="num">${eur0.format(e.v)}</span><span class="muted num">${e.c}×</span></div>`).join("") : '<p class="hint">Keine Ausgaben in diesem Zeitraum.</p>';
     // Artikel
     $("#bwItH").textContent = r.R === "y" ? "Dein Einkaufsjahr " + r.label : "Was du gekauft hast";
-    const q = S.bwItQ.trim().toLowerCase(), items = bItems(list).filter((e) => !q || e.name.toLowerCase().includes(q)), shown = S.bwItAll ? items : items.slice(0, 25);
+    $$("#bwItScope button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === (S.bwItScope || "r") ? "true" : "false"));
+    const q = S.bwItQ.trim().toLowerCase(), items = bItems(S.bwItScope === "a" ? B.spends : list).filter((e) => !q || e.name.toLowerCase().includes(q)), shown = S.bwItAll ? items : items.slice(0, 25);
     $("#bwItems").innerHTML = items.length ? `<div class="bwit bwith"><span>Artikel</span><span class="r">Menge</span><span class="r">Summe</span><span class="r desk">Zuletzt</span></div>` + shown.map((e, i) => `<button type="button" class="bwit" data-ik="${i}"><span class="n">${esc(e.name)}</span><span class="r num"><b>${nf(0).format(e.n)}×</b></span><span class="r num">${eur.format(e.v)}</span><span class="r num muted desk">${e.last ? eur.format(e.last.p) : ""}</span></button>`).join("") + (items.length > 25 ? `<button type="button" class="link" id="bwItMore" style="margin-top:8px">${S.bwItAll ? "Weniger zeigen" : "Alle " + items.length + " Artikel zeigen"}</button>` : "")
       : `<p class="hint">${list.some((s) => (s.items || []).length) ? "Nichts gefunden." : "Sobald du Kassenzettel mit Artikeln buchst, siehst du hier, was du wie oft gekauft hast."}</p>`;
     $$("#bwItems [data-ik]").forEach((b) => b.addEventListener("click", () => {
-      const e = shown[+b.dataset.ik], nn = prompt(`Eigener Name für „${e.name}“ (z. B. Nudeln). Gleiche Namen werden zusammengezählt. Leer lassen setzt zurück.`, e.name); if (nn == null) return;
-      e.keys.forEach((kk) => { if (nn.trim() && nn.trim() !== e.name) B.alias[kk] = nn.trim(); else delete B.alias[kk]; }); bSave(); PAGE_RENDER.bauswertung();
+      openItem(shown[+b.dataset.ik]);
     }));
     const mb = $("#bwItMore"); if (mb) mb.addEventListener("click", () => { S.bwItAll = !S.bwItAll; PAGE_RENDER.bauswertung(); });
   };
@@ -7576,11 +7623,38 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   $("#bwPrev").addEventListener("click", () => { S.bwOff--; PAGE_RENDER.bauswertung(); });
   $("#bwNext").addEventListener("click", () => { if (S.bwOff < 0) { S.bwOff++; PAGE_RENDER.bauswertung(); } });
+  // Ein Artikel über alle Zettel: wann, wo, wie viele, zu welchem Preis; Umbenennen als Knopf
+  let itCur = null;
+  function openItem(e0) {
+    const all = bItems(bData().spends), e = all.find((x) => [...e0.keys].some((k) => x.keys.has(k))) || e0; itCur = e;
+    const hits = (e.hits || []).slice().sort((a, b) => (a.s.date < b.s.date ? 1 : -1)), ps = hits.map((h) => h.it.price / (h.it.qty > 0 ? h.it.qty : 1));
+    $("#itTitle").textContent = e.name;
+    $("#itSum").innerHTML = `<div class="kpi"><span class="eyebrow">Gekauft</span><span class="v">${nf(0).format(e.n)}×</span><span class="s">auf ${e.buys} Zetteln</span></div><div class="kpi"><span class="eyebrow">Zusammen</span><span class="v">${eur.format(e.v)}</span></div><div class="kpi"><span class="eyebrow">Stückpreis</span><span class="v">${ps.length ? eur.format(Math.min(...ps)) + (Math.max(...ps) - Math.min(...ps) > 0.005 ? " – " + eur.format(Math.max(...ps)) : "") : "–"}</span><span class="s">${ps.length && Math.max(...ps) - Math.min(...ps) > 0.005 ? "günstigster bis teuerster" : "immer gleich"}</span></div>`;
+    $("#itList").innerHTML = hits.map((h, i) => `<button type="button" class="ithit" data-sp="${esc(h.s.id)}"><span>${fmtDate(h.s.date)}</span><span class="n">${esc(h.s.store || "Ohne Geschäft")}${h.it.text !== e.name ? `<small>${esc(h.it.text)}</small>` : ""}</span><span class="r num">${h.it.qty > 1 ? h.it.qty + "×" : "1×"}</span><span class="r num">${eur.format(h.it.price)}</span></button>`).join("");
+    $("#itName").value = e.name; $("#itReset").hidden = ![...e.keys].some((k) => bData().alias[k]);
+    if (!$("#dlgItem").open) $("#dlgItem").showModal();
+  }
+  {
+    const dlg = $("#dlgItem");
+    $$("[data-close]", dlg).forEach((b) => b.addEventListener("click", () => dlg.close()));
+    $("#itList").addEventListener("click", (ev) => { const b = ev.target.closest("[data-sp]"); if (!b) return; dlg.close(); openSpend(b.dataset.sp); });
+    const setAlias = (nn) => { const B = bData(); itCur.keys.forEach((kk) => { if (nn && bNorm(nn) !== kk) B.alias[kk] = nn; else delete B.alias[kk]; }); bSave(); PAGE_RENDER.bauswertung(); };
+    $("#itRename").addEventListener("click", () => { const nn = $("#itName").value.trim(); if (!itCur) return; setAlias(nn); toast(nn ? `Heißt jetzt „${nn}“. Gleiche Namen werden zusammengezählt.` : "Name zurückgesetzt"); openItem(Object.assign({}, itCur, { name: nn || itCur.name })); });
+    $("#itReset").addEventListener("click", () => { if (!itCur) return; setAlias(""); toast("Eigener Name entfernt"); dlg.close(); });
+    $("#itName").addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); $("#itRename").click(); } });
+  }
+  $$("#bwItScope button").forEach((b) => b.addEventListener("click", () => { S.bwItScope = b.dataset.v; S.bwItAll = false; PAGE_RENDER.bauswertung(); }));
   $("#bwItQ").addEventListener("input", (e) => { S.bwItQ = e.target.value; PAGE_RENDER.bauswertung(); });
-  $("#bmSugg").addEventListener("click", () => { B_SUGG.forEach((s) => bAddCat(s)); toast("6 Pockets angelegt, Beträge änderst du unter Pockets"); render(); });
+  $("#bmSugg").addEventListener("click", () => { B_SUGG.forEach((s) => bAddCat(s)); toast("5 Pockets angelegt, dazu „Sonstiges“ ohne Obergrenze. Beträge änderst du unter Pockets"); render(); });
   $("#baSearch").addEventListener("input", (e) => { S.bQuery = e.target.value; PAGE_RENDER.bausgaben(); });
   $("#baCsv").addEventListener("click", bCsv);
-  $("#bwCsv").addEventListener("click", bCsv);
+  $("#bwCsv").addEventListener("click", () => {
+    const B = bData(), r = bwRange(), list = B.spends.filter((x) => x.date >= r.a && x.date < r.b), de = (v) => nf(2).format(v).replace(/\./g, ""), q = (x) => '"' + String(x == null ? "" : x).replace(/"/g, '""') + '"';
+    if (!list.length) { toast("In diesem Zeitraum gibt es keine Ausgaben"); return; }
+    const byCat = {}; list.forEach((x) => x.parts.forEach((p) => (byCat[p.cat] = (byCat[p.cat] || 0) + p.amount)));
+    const rows = [q("Auswertung " + r.label), "", "Pocket;Betrag"].concat(Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]).map((id) => q(bCatName(id)) + ";" + de(byCat[id])), ["", "Artikel;Menge;Summe;Zuletzt je Stück"], bItems(list).map((e) => [q(e.name), e.n, de(e.v), e.last ? de(e.last.p) : ""].join(";")), ["", "Datum;Geschäft;Betrag"], list.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).map((x) => [fmtDate(x.date), q(x.store), de(x.total)].join(";")));
+    offerFile("depotblick-auswertung-" + r.label.replace(/[^\wäöüÄÖÜ-]+/g, "-") + ".csv", "\ufeff" + rows.join("\r\n"), "text/csv");
+  });
 
   // ---------- Ausgabe prüfen, aufteilen, buchen ----------
   let spEdit = null, spScan = null, spParts = [], spItems = [];
@@ -7609,7 +7683,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (ps && spParts.length > 1) { const sum = ps.reduce((x, p) => x + (p.amount || 0), 0), d = Math.round((T - sum) * 100) / 100; rest = Math.abs(d) >= 0.005 ? `<span class="${d < 0 ? "loss" : ""}">Noch zu verteilen: ${eur.format(d)}</span>` : '<span class="gain">Aufteilung passt.</span>'; }
     $("#spRest").innerHTML = rest; $("#spRest").hidden = !rest;
     const by = {}; (ps || []).forEach((p) => { if (p.cat && p.amount) by[p.cat] = (by[p.cat] || 0) + p.amount; });
-    $("#spPrev").innerHTML = Object.keys(by).map((cid) => { const c = bCat(cid); if (!c) return ""; const st = bState(c, k, spEdit && spEdit.id), left = st.left - by[cid]; return `<div>${esc(c.icon + " " + c.name)}: ${eur0.format(st.left)} → <b class="${left < 0 ? "loss" : ""}">${left < 0 ? eur.format(-left) + " drüber" : "noch " + eur.format(left) + " übrig"}</b> <span class="muted">(${esc(st.label)})</span></div>`; }).join("");
+    $("#spPrev").innerHTML = Object.keys(by).map((cid) => { const c = bCat(cid); if (!c) return ""; const st = bState(c, k, spEdit && spEdit.id), left = st.left - by[cid]; if (st.free) return `<div>${esc(c.icon + " " + c.name)}: <b>${eur.format(st.spent + by[cid])}</b> ${esc(st.label)}, ohne Obergrenze</div>`; return `<div>${esc(c.icon + " " + c.name)}: ${eur0.format(st.left)} → <b class="${left < 0 ? "loss" : ""}">${left < 0 ? eur.format(-left) + " drüber" : "noch " + eur.format(left) + " übrig"}</b> <span class="muted">(${esc(st.label)})</span></div>`; }).join("");
   }
   // „2x Käse“, „2 x Käse“, „Käse x2“: Menge aus dem Text holen
   function qtyFromText(it) {
@@ -7628,7 +7702,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (n && (spAutoT || !$("#spTotal").value.trim())) { $("#spTotal").value = spISum() ? nf(2).format(spISum()) : ""; spAutoT = true; $("#spTotal").classList.add("auto"); if (spParts.length === 1) spRenderParts(); else spPreview(); }
   }
   function spRenderItems() {
-    $("#spItems").innerHTML = spItems.map((it, i) => `<div class="spitem"><input class="spqi" data-it="${i}" data-k="qty" inputmode="numeric" value="${it.qty > 1 ? it.qty : ""}" placeholder="1" aria-label="Menge"><input class="spti" data-it="${i}" data-k="text" value="${esc(it.text)}" placeholder="z. B. 2x Käse" aria-label="Artikel"><span class="unit2"><input data-it="${i}" data-k="price" inputmode="decimal" value="${it.price != null ? nf(2).format(it.price) : ""}" placeholder="0,00" aria-label="Preis"><span>€</span></span><select data-it="${i}" data-k="cat" aria-label="Pocket für diesen Artikel">${catOpts(it.cat, "wie oben")}</select><button type="button" class="icon-btn" data-ix="${i}" aria-label="Artikel entfernen">✕</button><span class="spunit"${it.qty > 1 && it.price ? "" : " hidden"}>${it.qty > 1 && it.price ? "je " + eur.format(it.price / it.qty) : ""}</span></div>`).join("");
+    $("#spItems").innerHTML = spItems.map((it, i) => `<div class="spitem"><input class="spqi" data-it="${i}" data-k="qty" inputmode="numeric" value="${it.qty > 1 ? it.qty : ""}" placeholder="1" aria-label="Menge"><input class="spti" data-it="${i}" data-k="text" value="${esc(it.text)}" placeholder="z. B. 2x Käse" aria-label="Artikel"><span class="unit2"><input data-it="${i}" data-k="price" inputmode="decimal" value="${it.price != null ? nf(2).format(it.price) : ""}" placeholder="0,00" aria-label="Preis"${it.unsure ? ' class="unsure" title="Bitte prüfen, hier war die Schrift unsicher"' : ""}><span>€</span></span><select data-it="${i}" data-k="cat" aria-label="Pocket für diesen Artikel">${catOpts(it.cat, "wie oben")}</select><button type="button" class="icon-btn" data-ix="${i}" aria-label="Artikel entfernen">✕</button><span class="spunit"${it.qty > 1 && it.price ? "" : " hidden"}>${it.qty > 1 && it.price ? "je " + eur.format(it.price / it.qty) : ""}</span></div>`).join("");
     spItemsInfo();
     $$("#spItems [data-it]").forEach((el) => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
       const it = spItems[+el.dataset.it], k = el.dataset.k;
@@ -7679,7 +7753,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     spAutoT = false; $("#spTotal").classList.remove("auto");
     $("#spItemsD").hidden = false; $("#spItemsD").open = !!manual;
     if (manual) $("#spTitle").textContent = "Kassenzettel eintragen";
-    spRenderParts(); spRenderItems();
+    spRenderParts(); spRenderItems(); spDateHint();
     $("#spPhoto").hidden = true; $("#spImg").removeAttribute("src");
     const showImg = (blob) => { if (!blob) return; $("#spImg").src = URL.createObjectURL(blob); $("#spPhoto").hidden = false; };
     $("#dlgSpend").classList.toggle("wide", !!(scan || (s && s.photoId)));
@@ -7689,7 +7763,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   $("#spPhoto").addEventListener("click", () => $("#spPhoto").classList.toggle("big"));
   $("#spTotal").addEventListener("input", () => { spAutoT = false; $("#spTotal").classList.remove("auto"); if (spParts.length === 1) spRenderParts(); else spPreview(); });
-  $("#spDate").addEventListener("change", spPreview);
+  const spDateHint = () => { const d = $("#spDate").value, t = today(), n = $("#spDateNote"); const other = d && d.slice(0, 7) !== t.slice(0, 7); n.hidden = !other; if (other) n.textContent = `Landet im ${new Date(d + "T12:00").toLocaleDateString("de-DE", { month: "long", year: "numeric" })}, nicht im aktuellen Monat.`; };
+  $("#spDate").addEventListener("change", () => { spPreview(); spDateHint(); });
   $("#spSplit").addEventListener("click", () => {
     const B = bData(); if (!B.cats.length) return;
     if (spParts.length === 1) spParts[0].amount = null;
@@ -7725,7 +7800,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     bLearn(sp); bSave();
     $("#dlgSpend").close();
     const c = bCat(merged[0].cat), st = c && bState(c, date);
-    toast(c ? `${c.name}: ${st.left >= 0 ? "noch " + eur0.format(st.left) + " übrig" : eur0.format(-st.left) + " drüber"}` : "Ausgabe gespeichert");
+    const other = date.slice(0, 7) !== today().slice(0, 7), mon = new Date(date + "T12:00").toLocaleDateString("de-DE", { month: "long" });
+    toast((other ? `Gebucht am ${fmtDate(date).slice(0, 6)} (${mon}). ` : "") + (c && st.free ? `${c.name}: ${eur0.format(st.spent)} im ${mon}, ohne Obergrenze` : c ? `${c.name}: ${st.left >= 0 ? "noch " + eur0.format(st.left) + " übrig" : eur0.format(-st.left) + " drüber"}${other ? " im " + mon : ""}` : "Ausgabe gespeichert"));
     render();
   });
   $$("[data-close]", $("#dlgSpend")).forEach((b) => b.addEventListener("click", () => $("#dlgSpend").close()));
@@ -7817,7 +7893,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     // Geschäft: bekannte Kette oder Shop, Empfänger einer Überweisung, sonst erste Zeile mit Buchstaben
     let store = "", kind = null;
     const up = (s) => s.toUpperCase().replace(/[^A-ZÄÖÜ&]/g, "");
+    const chainName = (n) => (n === "DM" ? "dm" : n.length <= 4 && !["REWE", "ALDI", "LIDL", "OTTO", "EBAY", "TEMU"].includes(n) ? n : n.split(" ").map((w) => w.charAt(0) + w.slice(1).toLowerCase()).join(" "));
     outer: for (const l of lines.slice(0, 12)) { const t = up(l); for (const [n, k] of RC_CHAINS) { const nn = up(n); if (nn.length < 3 ? new RegExp("(^|[^A-ZÄÖÜ])" + nn + "([^A-ZÄÖÜ]|$)").test(l.toUpperCase()) && l.replace(/[^A-Za-z]/g, "").length <= 4 : t.includes(nn)) { store = n === "DM" ? "dm" : n.length <= 4 && !["REWE", "ALDI", "LIDL", "OTTO", "EBAY", "TEMU"].includes(n) ? n : n.split(" ").map((w) => w.charAt(0) + w.slice(1).toLowerCase()).join(" "); kind = k; break outer; } } }
+    // Logo nicht gelesen: Kette im ganzen Text oder in der Webadresse suchen (z. B. www.edeka-jensen.de)
+    if (!store) { const all = lines.join(" "), low = all.toLowerCase(); for (const [n, k] of RC_CHAINS) { const nn = n.toLowerCase(); if (n.length < 4 || ["NETTO", "TOTAL", "MÜLLER"].includes(n)) { if (new RegExp("(www\\.|@|//)[a-z0-9.-]*" + nn.replace(/[&]/g, "") + "[a-z0-9-]*\\.(de|com|eu)").test(low)) { store = chainName(n); kind = k; break; } continue; } if (new RegExp("(^|[^a-zäöü])" + nn.replace(/[&]/g, "\\$&") + "([^a-zäöü]|$)").test(low) || new RegExp("[./@-]" + nn + "[.-]").test(low)) { store = chainName(n); kind = k; break; } } }
     if (!store) { const i = lines.findIndex((l) => /(EMPF[AÄ]NGER|ZAHLUNGSEMPF|^AN[:\s]|VERK[AÄ]UFER|H[AÄ]NDLER)/i.test(l)); if (i >= 0) { const v = lines[i].split(/:\s*/).slice(1).join(":").trim() || lines[i + 1] || ""; store = v.replace(/[^\wÄÖÜäöüß&.\- ]/g, "").trim().slice(0, 40); } }
     if (!store) { const l = lines.slice(0, 6).find((x) => (x.match(/[A-Za-zÄÖÜäöüß]/g) || []).length >= 4); store = l ? l.replace(/[^\wÄÖÜäöüß&.\- ]/g, "").trim().slice(0, 40) : ""; unsure.store = true; }
     // Artikel: Text und Preis am Zeilenende, vor der Summe; „2,89 € x 2“ wird zur Menge
@@ -7834,16 +7913,29 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const pq = head.trim().match(/^(\d{1,2})\s*[xX×*]\s+(?=[A-Za-zÄÖÜäöü])/);
       let t = head.replace(/\s+\S*\d\S*\s*€?\s*[xX×]\s*\S{0,2}\s*$/, "").replace(/\s+\S*\d[,.]\d\S*\s*€\s*\S{0,3}\s*$/, "").replace(/[|“”"'‚]+/g, " ").trim();
       t = t.replace(/^(?:[^\sA-Za-zÄÖÜäöü]+|[A-Za-z0-9]{1,2})\s+(?=\S{3,})/, "").replace(/\s*€\s*$/, "").trim();
+      t = t.replace(/^[„“"'‚,.:;\s]+/, "").replace(/^\d{1,3}\s+(?=[A-ZÄÖÜa-zäöü])/, "").trim();
       if (t.length < 2) continue;
-      const price = rcNum(m[0]); let qty = qm ? +qm[2] : pq ? +pq[1] : 1;
+      let price = rcNum(m[0]); let qty = qm ? +qm[2] : pq ? +pq[1] : 1;
+      // Minus nur bei Leergut, Pfand, Rabatt & Co. glauben; „Zwiebeln —1,79“ ist ein Strich, kein Abzug
+      const negW = /(LEERGUT|PFAND|RABATT|STORNO|GUTSCHEIN|COUPON|NACHLASS|R[UÜ]CKGABE|ERSTATT|ABZUG|AKTION\s*-)/i.test(l);
+      if (negW && price > 0 && (/[-−–—~]\s*$/.test(head) || /^\s*-/.test(rest))) price = -price; else if (!negW && price < 0) price = -price;
+      // Stückpreis × Menge muss zum Zeilenpreis passen, sonst ist eine Ziffer falsch gelesen
+      let unsureP = false; { const um2 = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/); if (um2 && qty > 1) { const u = rcNum(um2[1]); if (Math.abs(u * qty - price) > 0.015) unsureP = true; } }
       // „1,35 € x  2,70“ (Menge unleserlich): aus Zeilenpreis ÷ Stückpreis
       const um = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/);
       if (!qm && um) { const r = price / rcNum(um[1]); if (rcNum(um[1]) > 0 && Math.round(r) >= 2 && Math.abs(r - Math.round(r)) < 0.03) qty = Math.round(r); }
       if (pendQ) { if (Math.abs(price - pendQ[0] * pendQ[1]) < 0.02) qty = pendQ[0]; pendQ = null; }
-      const it = { text: t, price, qty }; if (qty === 1) qtyFromText(it); else { const o = { text: t }; if (qtyFromText(o)) it.text = o.text; }
+      const it = { text: t, price, qty }; if (unsureP) it.unsure = true; if (qty === 1) qtyFromText(it); else { const o = { text: t }; if (qtyFromText(o)) it.text = o.text; }
       items.push(it);
     }
-    const isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100;
+    let isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100;
+    // Eine falsch gelesene Ziffer (5↔9, 4↔8, 3↔8 …) finden, wenn genau eine Korrektur die Summe trifft
+    if (total != null && items.length && Math.abs(isum - total) >= 0.005) {
+      const CF = { 0: "86", 1: "7", 2: "7", 3: "88", 4: "89", 5: "96", 6: "85", 7: "12", 8: "0369", 9: "54" }, diff = Math.round((total - isum) * 100), hits = [];
+      items.forEach((it, i) => { const c = String(Math.round(Math.abs(it.price) * 100)); for (let k = 0; k < c.length; k++) for (const d of CF[c[k]] || "") { const nv = +(c.slice(0, k) + d + c.slice(k + 1)) * Math.sign(it.price || 1); if (nv - Math.round(it.price * 100) === diff) hits.push([i, nv / 100]); } });
+      const pref = hits.filter(([i]) => items[i].unsure), use = pref.length === 1 ? pref : hits.length === 1 ? hits : null;
+      if (use) { const [i, v] = use[0]; items[i].price = v; items[i].unsure = true; items[i].fixed = true; isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100; }
+    }
     return { store, kind, date, total, items, isum, sumOk: total != null && Math.abs(isum - total) < 0.005, unsure, source: "scan" };
   }
   // QR-Code der Kasse (Kassenbeleg-V1): Beträge je Steuersatz und Zeitpunkt
@@ -7976,7 +8068,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (area === "budget") gs.hidden = true;
   }
   $$("[data-area-go]").forEach((b) => b.addEventListener("click", () => { const a = b.dataset.areaGo; location.hash = "#" + (a === "budget" ? S.ui.lastB || "bmonat" : S.ui.lastD || "uebersicht"); }));
-  window.addEventListener("hashchange", () => { showView(); render(); window.scrollTo(0, 0); });
+  window.addEventListener("hashchange", () => { showView(); render(); window.scrollTo(0, 0); if (S.view && S.view !== "position" && S.ui.lastView !== S.view) { S.ui.lastView = S.view; savePrefs(); } });
   const startSeg = () => $$("#startSeg [data-sa]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.sa === (S.ui.startArea || "budget") ? "true" : "false"));
   $$("#startSeg [data-sa]").forEach((b) => b.addEventListener("click", () => { S.ui.startArea = b.dataset.sa; savePrefs(); startSeg(); toast("Startbereich gespeichert"); }));
   startSeg();
@@ -7984,7 +8076,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   {
     let fresh = true; try { fresh = !sessionStorage.getItem("depotblick.started"); sessionStorage.setItem("depotblick.started", "1"); } catch (e) {}
     const st = S.ui.startArea || "budget", h = location.hash.slice(1);
-    if (fresh && st !== "last" && !["import", "einstellungen"].includes(h)) { const to = st === "budget" ? "bmonat" : "uebersicht"; if (h !== to) history.replaceState(null, "", "#" + to); }
+    if (fresh && !["import", "einstellungen"].includes(h)) { const to = st === "last" ? S.ui.lastView || "" : st === "budget" ? "bmonat" : "uebersicht"; if (to && VIEWS.includes(to) && h !== to) history.replaceState(null, "", "#" + to); }
   }
   showView();
   $("#txSearch").addEventListener("input", (e) => { S.txQuery = e.target.value; S.txLimit = 30; render(); });
