@@ -333,6 +333,7 @@ html[data-area="budget"] .nd, html:not([data-area="budget"]) .nb { display: none
 .btmv { margin-left: auto; display: flex; }
 .btrule { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.86rem; } .btrule:last-child { border-bottom: 0; }
 .btrule span:first-child { overflow-wrap: anywhere; }
+.appver { text-align: center; color: var(--faint); font-size: 0.76rem; font-family: var(--font-mono); margin: 22px 0 8px; }
 .updbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 80; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; background: var(--ink); color: var(--bg); border-radius: 99px; box-shadow: 0 8px 30px rgb(0 0 0 / 0.25); font-size: 0.88rem; white-space: nowrap; }
 @media (min-width: 821px) { .updbar { bottom: 24px; } }
 .bwitq { gap: 8px; margin-bottom: 8px; flex-wrap: wrap; } .bwitq input { flex: 1 1 200px; min-width: 0; }
@@ -1693,6 +1694,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
+        <p class="appver" id="appVer">Depotblick Version 56 · Stand 02.11.2026 16:50</p>
       </section>
 
       <!-- Mehr (Handy) -->
