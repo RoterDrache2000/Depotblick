@@ -1621,7 +1621,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       </section>
 
       <section class="page" data-page="import" hidden>
-        <div class="phead"><div class="t"><span class="eyebrow desk">Daten</span><h1>Depot importieren</h1></div></div>
+        <div class="phead"><div class="t"><span class="eyebrow desk">Daten</span><h1>Depot importieren</h1></div><button type="button" class="btn ghost sm" id="impBack">← Zurück</button></div>
         <div class="steps" id="impSteps"><div class="step now">Datei wählen</div><div class="step">Vorschau prüfen</div><div class="step">Fertig</div></div>
         <div class="drop" id="impDrop">
           <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="5" y="3" width="24" height="28" rx="4" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M11 13h12M11 18h12M11 23h7" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1716,7 +1716,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 63 · Stand 03.11.2026 17:33</p>
+        <p class="appver" id="appVer">Depotblick Version 64 · Stand 03.11.2026 22:10</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -1950,9 +1950,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     <div class="dhead"><h2>Kassenzettel scannen</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
     <div data-st="pick" class="scpick">
       <p class="scpart" id="scPartPick" hidden></p>
-      <button type="button" class="btn" id="scCamBtn">📷 Foto aufnehmen</button>
+      <button type="button" class="btn" id="scAppCam">📷 Foto aufnehmen</button>
       <button type="button" class="btn ghost" id="scPickBtn">Bild oder PDF auswählen</button>
-      <button type="button" class="link" id="scAppCam">Mit der Kamera-App des Handys fotografieren</button>
+      <button type="button" class="link" id="scCamBtn">Mit Rahmen und Auto-Auslöser fotografieren</button>
+      <p class="note" style="margin:0">„Foto aufnehmen“ öffnet die normale Kamera des Handys. Das gibt die schärfsten Fotos, mit Blitz und voller Auflösung, und wird am besten erkannt.</p>
       <p class="note desk" style="margin:0">Oder ein Foto oder einen digitalen Kassenbon (PDF) hierher ziehen.</p>
       <p class="note" style="margin:0">Tipp: Zettel glatt auf einen dunklen Untergrund legen, gerade von oben fotografieren, gutes Licht. Die Erkennung läuft nur auf deinem Gerät, das Foto wird nirgends hochgeladen.</p>
       <button type="button" class="btn ghost" id="scManual">✍️ Kassenzettel selbst eintragen</button>
@@ -7830,7 +7831,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const dep = spItems.filter((i) => isDep(i.text) && i.price < 0).reduce((x, i) => x + i.price, 0);
     $("#spItemsN").textContent = n ? `${n} Artikel${q > n ? `, ${q} Stück` : ""}, zusammen ${eur.format(spISum())}${dep < 0 ? `, davon Pfand zurück ${eur.format(-dep)}` : ""}` : "keine, hier kannst du den Zettel selbst eintragen";
     // Summe leer oder schon automatisch: aus den Artikeln übernehmen
-    if (n && (spAutoT || !$("#spTotal").value.trim())) { $("#spTotal").value = spISum() ? nf(2).format(spISum()) : ""; spAutoT = true; $("#spTotal").classList.add("auto"); if (spParts.length === 1) spRenderParts(); else spPreview(); }
+    if (n && (spAutoT || !$("#spTotal").value.trim())) { $("#spTotal").value = spISum() ? nf2.format(spISum()) : ""; spAutoT = true; $("#spTotal").classList.add("auto"); if (spParts.length === 1) spRenderParts(); else spPreview(); }
   }
   // Markierungen im Foto: schwer lesbare Stellen gelb, der gewählte Artikel blau
   let spWeak = null;
@@ -7876,7 +7877,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spStore").value = s ? s.store : r ? r.store : "";
     $("#spDate").value = s ? s.date : r && r.date ? r.date : today();
     const sDelta = s && s.save && s.save.delta ? s.save.delta : 0;
-    $("#spTotal").value = s ? nf(2).format(r2c(s.total - sDelta)) : r && r.total != null ? nf(2).format(r.total) : "";
+    $("#spTotal").value = s ? nf2.format(r2c(s.total - sDelta)) : r && r.total != null ? nf2.format(r.total) : "";
     $("#spNote").value = s ? s.note || "" : "";
     $("#storeList").innerHTML = [...new Set(B.spends.map((x) => x.store).filter(Boolean))].slice(0, 60).map((x) => `<option value="${esc(x)}">`).join("");
     const sug = r ? bSuggest(r.store, r.kind) : null;
@@ -7931,7 +7932,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const err = (m) => { $("#spErr").textContent = m; $("#spErr").hidden = false; };
     spItems.forEach(qtyFromText);
     let T = spTotal(); const date = $("#spDate").value;
-    if ((!isFinite(T) || T <= 0) && spISum() > 0) { T = spISum(); $("#spTotal").value = nf(2).format(T); if (spParts.length === 1) spRenderParts(); }
+    if ((!isFinite(T) || T <= 0) && spISum() > 0) { T = spISum(); $("#spTotal").value = nf2.format(T); if (spParts.length === 1) spRenderParts(); }
     if (!isFinite(T) || T <= 0) return err("Trag den Betrag ein oder die Artikel mit Preisen.");
     if (!date) return err("Wähle ein Datum.");
     if (!bData().cats.length) return err("Leg zuerst unter Pockets mindestens ein Pocket an.");
@@ -7999,20 +8000,24 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   // Ausschnitt auf ca. 1300 px Breite, Schwarz-Weiß mit Schwelle je Umgebung (gegen Schatten und Knicke)
   function rcPrep(img, box, T) {
-    const sx = box.x * img.width, sy = box.y * img.height, sw = box.w * img.width, sh = box.h * img.height, s = Math.min(3, 1300 / sw);
+    const sx = box.x * img.width, sy = box.y * img.height, sw = box.w * img.width, sh = box.h * img.height, s = Math.min(3, (window.__PW || 1300) / sw);
     const W = Math.max(1, Math.round(sw * s)), H = Math.max(1, Math.round(sh * s));
     const c = Object.assign(document.createElement("canvas"), { width: W, height: H }), g = c.getContext("2d", { willReadFrequently: true });
     g.imageSmoothingQuality = "high"; g.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
     const id = g.getImageData(0, 0, W, H), d = id.data, n = W * H, L = new Float32Array(n);
     let mean = 0; for (let i = 0; i < n; i++) { L[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; mean += L[i]; }
     // Dunkler Bildschirm (Screenshot im Dunkelmodus): umdrehen, damit die Schrift dunkel auf hell ist
-    if (mean / n < 110) for (let i = 0; i < n; i++) L[i] = 255 - L[i];
+    // Nicht nach Helligkeit allein entscheiden: ein Zettel bei wenig Licht ist auch dunkel. Schrift ist immer der kleinere Teil.
+    { const hs = new Array(256).fill(0); for (let i = 0; i < n; i++) hs[L[i] | 0]++; let sm = 0; for (let i = 0; i < 256; i++) sm += i * hs[i]; let sB = 0, wB = 0, bv = 0, th = 128;
+      for (let i = 0; i < 256; i++) { wB += hs[i]; if (!wB) continue; const wF = n - wB; if (!wF) break; sB += i * hs[i]; const v = wB * wF * (sB / wB - (sm - sB) / wF) ** 2; if (v > bv) { bv = v; th = i; } }
+      let hi = 0; for (let i = th + 1; i < 256; i++) hi += hs[i];
+      if (mean / n < 110 && hi / n < 0.4) for (let i = 0; i < n; i++) L[i] = 255 - L[i]; }
     const I = new Float64Array((W + 1) * (H + 1));
     for (let y = 0; y < H; y++) { let r = 0; for (let x = 0; x < W; x++) { r += L[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + r; } }
     const R = Math.max(8, Math.round(W / 32));
     for (let y = 0; y < H; y++) { const ya = Math.max(0, y - R), yb = Math.min(H, y + R + 1); for (let x = 0; x < W; x++) {
       const xa = Math.max(0, x - R), xb = Math.min(W, x + R + 1), cnt = (xb - xa) * (yb - ya), sm = I[yb * (W + 1) + xb] - I[ya * (W + 1) + xb] - I[yb * (W + 1) + xa] + I[ya * (W + 1) + xa];
-      const v = L[y * W + x] * cnt < sm * T ? 0 : 255, k = (y * W + x) * 4; d[k] = d[k + 1] = d[k + 2] = v; d[k + 3] = 255; } }
+      const v = T ? (L[y * W + x] * cnt < sm * T ? 0 : 255) : Math.max(0, Math.min(255, (L[y * W + x] * cnt / sm - 0.55) * 640)), k = (y * W + x) * 4; d[k] = d[k + 1] = d[k + 2] = v; d[k + 3] = 255; } }
     g.putImageData(id, 0, 0);
     return c;
   }
@@ -8031,9 +8036,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       lines.forEach((l, i) => { if (totalLine < 0 && re.test(l) && !/ZWISCHEN|TEILSUMME/i.test(l)) { const a = amts(l).length ? amts(l) : amts(lines[i + 1] || ""); if (a.length) { total = Math.abs(a[a.length - 1]); totalLine = i; } } });
       if (totalLine >= 0) break;
     }
+    // „SMME EUR 29,80“: Summenwort unleserlich, aber Wort + EUR + Betrag
+    if (totalLine < 0) lines.forEach((l, i) => { if (totalLine < 0 && /^\W{0,3}[A-ZÄÖÜ]{2,6}\s+EUR\s*-?\d/i.test(l) && !/(VISA|MASTERCARD|MAESTRO|GIROCARD|KARTE|BAR|GEGEBEN|PAYPAL|NETTO|MWST)/i.test(l)) { const a = amts(l); if (a.length) { total = Math.abs(a[a.length - 1]); totalLine = i; } } });
     const pay = lines.filter((l) => /(VISA|MASTERCARD|MAESTRO|GIROCARD|\bEC\b|\bBAR\b|KARTE|GEGEBEN|PAYPAL)/i.test(l)).flatMap(amts).filter((v) => v > 0);
-    if (total == null) { const all = lines.flatMap(amts).map(Math.abs).filter((v) => v > 0 && v < 10000); total = pay.length ? Math.max(...pay) : all.length ? Math.max(...all) : null; unsure.total = true; }
-    else if (pay.length && !pay.some((v) => Math.abs(v - total) < 0.005)) unsure.total = true;
+    // Gegenproben: MwSt-Zeile (Brutto = Netto + MwSt) und Zeilen wie „EUR 29,80“ vom Kartenbeleg
+    const strong = []; { let bs = 0, bn = 0; lines.forEach((l) => { if (!/%/.test(l)) return; const a = amts(l.replace(/\d{1,2}[,.]\d{1,2}\s*%/, " ")).map(Math.abs); if (a.length >= 3) { const [x, y, z] = a.slice(-3); if (Math.abs(y + z - x) < 0.015 && x > 0) { bs += x; bn++; } } }); if (bn) strong.push(Math.round(bs * 100) / 100); }
+    lines.forEach((l) => { if (/^\W{0,3}EUR\s*-?\d/i.test(l)) strong.push(...amts(l).map(Math.abs)); });
+    const votes = (v) => pay.concat(strong).filter((x) => Math.abs(x - v) < 0.005).length;
+    const cand = [...new Set(pay.concat(strong).map((v) => Math.round(v * 100) / 100))].filter((v) => v > 0).sort((a, b) => votes(b) - votes(a));
+    if (cand.length && votes(cand[0]) >= 2 && (total == null || votes(total) < votes(cand[0]))) { total = cand[0]; if (totalLine < 0) totalLine = lines.findIndex((l) => amts(l).some((v) => Math.abs(Math.abs(v) - total) < 0.005)); }
+    else if (total == null) { const all = lines.flatMap(amts).map(Math.abs).filter((v) => v > 0 && v < 10000); total = cand.length ? cand[0] : pay.length ? Math.max(...pay) : all.length ? Math.max(...all) : null; unsure.total = true; }
+    else if (pay.length && !pay.some((v) => Math.abs(v - total) < 0.005) && votes(total) < 1) unsure.total = true;
     // Datum: 30.10.26, 30.10.2026, 2026-10-30 oder 30. Okt. 2026
     let date = null;
     const ok = (y, mo, d) => { if (y < 100) y += 2000; if (d >= 1 && d <= 31 && mo >= 1 && mo <= 12 && y >= 2000 && y <= 2100) { const iso = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`; if (iso <= today()) return iso; } return null; };
@@ -8050,6 +8063,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const up = (s) => s.toUpperCase().replace(/[^A-ZÄÖÜ&]/g, "");
     const chainName = (n) => (n === "DM" ? "dm" : n.length <= 4 && !["REWE", "ALDI", "LIDL", "OTTO", "EBAY", "TEMU"].includes(n) ? n : n.split(" ").map((w) => w.charAt(0) + w.slice(1).toLowerCase()).join(" "));
     outer: for (const l of lines.slice(0, 12)) { const t = up(l); for (const [n, k] of RC_CHAINS) { const nn = up(n); if (nn.length < 3 ? new RegExp("(^|[^A-ZÄÖÜ])" + nn + "([^A-ZÄÖÜ]|$)").test(l.toUpperCase()) && l.replace(/[^A-Za-z]/g, "").length <= 4 : t.includes(nn)) { store = n === "DM" ? "dm" : n.length <= 4 && !["REWE", "ALDI", "LIDL", "OTTO", "EBAY", "TEMU"].includes(n) ? n : n.split(" ").map((w) => w.charAt(0) + w.slice(1).toLowerCase()).join(" "); kind = k; break outer; } } }
+    if (!store && /d\s?r[oa0]g[eaä]?r[il1t]e\s*-?\s*m[a]?rkt/i.test(lines.slice(0, 12).join(" "))) { store = "dm"; kind = "drug"; }
     // Logo nicht gelesen: Kette im ganzen Text oder in der Webadresse suchen (z. B. www.edeka-jensen.de)
     if (!store) { const all = lines.join(" "), low = all.toLowerCase(); for (const [n, k] of RC_CHAINS) { const nn = n.toLowerCase(); if (n.length < 4 || ["NETTO", "TOTAL", "MÜLLER"].includes(n)) { if (new RegExp("(www\\.|@|//)[a-z0-9.-]*" + nn.replace(/[&]/g, "") + "[a-z0-9-]*\\.(de|com|eu)").test(low)) { store = chainName(n); kind = k; break; } continue; } if (new RegExp("(^|[^a-zäöü])" + nn.replace(/[&]/g, "\\$&") + "([^a-zäöü]|$)").test(low) || new RegExp("[./@-]" + nn + "[.-]").test(low)) { store = chainName(n); kind = k; break; } } }
     // Webadresse unscharf lesen (www,edeke-jensen.de) und typisches Edeka-Muster (Posten: + PAYBACK)
@@ -8069,7 +8083,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       // Eigene Mengenzeile wie „2 x 1,29“ oder „2 Stk x 1,29“: gehört zum Artikel davor oder danach
       const qo = l.match(/^\s*(\d{1,2})\s*(?:stk\.?|st\.?)?\s*[xX×*]\s*(\d+[,.]\d{2})\s*€?\s*$/i);
       if (qo) { const q = +qo[1], u = rcNum(qo[2]), prev = items[items.length - 1]; if (prev && Math.abs(prev.price - q * u) < 0.02) prev.qty = q; else pendQ = [q, u]; continue; }
-      let ms = [...l.matchAll(RC_AMT)];
+      let ms = [...l.matchAll(RC_AMT)], miss = false;
+      // Preis nur halb gelesen („0,“ oder „5,5“ am Ende): Artikel trotzdem aufnehmen, Preis später schätzen oder offen lassen
+      if (!ms.length && /[A-Za-zÄÖÜäöü]{3,}/.test(l) && !/\d{5,}/.test(l)) { const pm = l.match(/^(.*[A-Za-zÄÖÜäöü]{3,}.*?)\s(\d{1,2}[,.]\d?)(?:\s+\S{1,2})?$/) || (i < end - 1 || totalLine >= 0 ? l.match(/^(.*[A-Za-zÄÖÜäöü]{3,}.*?)\s(\S{0,3}\d\S{0,3})\s+[1lI|\]}7]$/) : null); if (pm) { l = pm[1] + " 0,00"; ms = [...l.matchAll(RC_AMT)]; miss = true; } }
       // Name ohne Preis: merken, falls der Preis in die nächste Zeile gerutscht ist
       if (!ms.length) { pendT = (l.match(/[A-Za-zÄÖÜäöüß]/g) || []).length >= 4 && !/\d{5,}/.test(l) ? l : null; continue; }
       if (pendT && !/[A-Za-zÄÖÜäöüß]{2,}/.test(l.slice(0, ms[ms.length - 1].index)) && !/[A-Za-zÄÖÜäöü]{4,}/.test(l)) { l = pendT + " " + l; ms = [...l.matchAll(RC_AMT)]; }
@@ -8102,7 +8118,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const um = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/);
       if (!qm && um) { const r = price / rcNum(um[1]); if (rcNum(um[1]) > 0 && Math.round(r) >= 2 && Math.abs(r - Math.round(r)) < 0.03) qty = Math.round(r); }
       if (pendQ) { if (Math.abs(price - pendQ[0] * pendQ[1]) < 0.02) qty = pendQ[0]; pendQ = null; }
-      const it = { text: t, price, qty }; if (unsureP) it.unsure = true; if (dash && price > 0) it._dash = true; if (qty === 1) qtyFromText(it); else { const o = { text: t }; if (qtyFromText(o)) it.text = o.text; }
+      const it = { text: t, price, qty }; if (unsureP || miss) it.unsure = true; if (miss) it._miss = true; if (dash && price > 0) it._dash = true; if (qty === 1) qtyFromText(it); else { const o = { text: t }; if (qtyFromText(o)) it.text = o.text; }
       items.push(it);
     }
     let isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100;
@@ -8115,7 +8131,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const pref = hits.filter(([i]) => items[i].unsure), use = pref.length === 1 ? pref : hits.length === 1 ? hits : null;
       if (use) { const [i, v] = use[0]; items[i].price = v; items[i].unsure = true; items[i].fixed = true; isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100; }
     }
-    items.forEach((it) => delete it._dash);
+    // Genau ein Preis fehlt: der Rest bis zur Summe
+    { const mi = items.filter((it) => it._miss); if (total != null && mi.length === 1 && total - isum > 0.005) { mi[0].price = Math.round((total - isum) * 100) / 100; mi[0].fixed = true; isum = Math.round(items.reduce((x, it) => x + it.price, 0) * 100) / 100; } }
+    items.forEach((it) => { delete it._dash; delete it._miss; });
     return { store, kind, date, total, items, isum, sumOk: total != null && Math.abs(isum - total) < 0.005, unsure, source: "scan" };
   }
   // QR-Code der Kasse (Kassenbeleg-V1): Beträge je Steuersatz und Zeitpunkt
@@ -8265,6 +8283,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#camHint").textContent = dark ? "Zu dunkel, mehr Licht" : !still ? "Halte das Handy ruhig" : sharp < CAM_MIN ? "Noch unscharf, etwas näher oder weiter weg" : CAM.auto ? "Gut so, still halten …" : "Gut so, jetzt auslösen";
     if (CAM.auto && CAM.still >= 5) camShoot();
   }
+  function lumMean(img) { const c = Object.assign(document.createElement("canvas"), { width: 64, height: 64 }), g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(img, 0, 0, 64, 64); const d = g.getImageData(0, 0, 64, 64).data; let s = 0; for (let i = 0; i < d.length; i += 4) s += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; return s / 4096; }
   async function camShoot() {
     const v = $("#camVid"); if (!v || !v.videoWidth || CAM.busy) return; CAM.busy = true; const b = camFrameBox();
     const s = Math.min(1, 2400 / Math.max(v.videoWidth, v.videoHeight)); let c = Object.assign(document.createElement("canvas"), { width: Math.round(v.videoWidth * s), height: Math.round(v.videoHeight * s) });
@@ -8272,7 +8291,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     // Wo möglich (Chrome auf Android) ein echtes Foto in voller Auflösung statt eines Videobilds
     try {
       const tr = CAM.st && CAM.st.getVideoTracks()[0];
-      if (tr && "ImageCapture" in window) { $("#camHint").textContent = "Foto wird aufgenommen …"; const blob = await Promise.race([new ImageCapture(tr).takePhoto(), new Promise((r) => setTimeout(() => r(null), 4000))]); if (blob) { const im = await rcLoad(blob); if (im && Math.abs(im.width / im.height - c.width / c.height) < 0.02) c = im; } }
+      // Ein echtes Foto schaltet bei Chrome das Licht vorher aus. Ist das Licht an, nur mit Blitz-Modus, und nur wenn es nicht dunkler wird; sonst bleibt das helle Videobild
+      const torchOn = $("#camTorch").getAttribute("aria-pressed") === "true" && !$("#camTorch").hidden;
+      if (tr && "ImageCapture" in window) { const ic = new ImageCapture(tr); let opt = null, ok = true;
+        if (torchOn) { ok = false; try { const pc = await ic.getPhotoCapabilities(); if (pc && (pc.fillLightMode || []).includes("flash")) { opt = { fillLightMode: "flash" }; ok = true; } } catch (e) {} }
+        if (ok) { $("#camHint").textContent = "Foto wird aufgenommen …"; const blob = await Promise.race([opt ? ic.takePhoto(opt) : ic.takePhoto(), new Promise((r) => setTimeout(() => r(null), 4000))]); if (blob) { const im = await rcLoad(blob); if (im && Math.abs(im.width / im.height - c.width / c.height) < 0.02 && (!torchOn || lumMean(im) > lumMean(c) * 0.85)) c = im; } } }
     } catch (e) {}
     CAM.busy = false; camStop(); SC.img = c;
     // Den Rahmen etwas großzügiger nehmen, damit keine Zeile abgeschnitten ist
@@ -8349,7 +8372,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const pass = async (T) => { const out = []; let text = ""; for (let i = 0; i < pages.length; i++) { SC.pg = i; const cv = rcPrep(pages[i].img, pages[i].box, T), d = (await w.recognize(cv)).data; out.push({ d, W: cv.width, H: cv.height }); text = rcJoin(text, d.text); } SC.text = text; const x = rcParse(text); x._o = out; return x; };
       r = await pass(0.82);
       // Passen Artikel und Summe nicht, zweiter Versuch mit anderer Schwelle; das bessere Ergebnis zählt
-      if (!r.sumOk && r.total != null) { $("#scBusy").textContent = "Zweiter Durchgang für die Artikel …"; bar.value = 0; const r2 = await pass(0.88); const dif = (x) => (x.total == null ? 1e9 : Math.abs(x.isum - x.total)); if (r2.total != null && dif(r2) < dif(r)) r = r2; }
+      // Passt es nicht, weitere Durchgänge (andere Schwelle, Graustufen für unscharfe oder dunkle Fotos); das beste zählt
+      const dif = (x) => (x.total == null ? 1e9 : Math.abs(x.isum - x.total)), score = (x) => (x.sumOk ? 1e6 : 0) + (x.unsure.total ? 0 : 20) + x.items.length * 2 + x.items.filter((i) => i.price && !i.unsure).length * 3 - Math.min(30, (dif(x) / Math.max(1, x.total || 1)) * 30);
+      for (const [T, msg] of [[0.88, "Zweiter Durchgang für die Artikel …"], [0, "Dritter Durchgang (Graustufen) …"]]) { if (r.sumOk) break; $("#scBusy").textContent = msg; bar.value = 0; const r2 = await pass(T); if (score(r2) > score(r)) r = r2; }
       rcBoxes(r, th);
     } catch (e) {
       r = { store: "", kind: null, date: null, total: null, items: [], isum: 0, sumOk: false, unsure: { store: 1, date: 1, total: 1 }, source: "manual" };
@@ -8410,13 +8435,16 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#mTitle").textContent = TITLES[v];
     // Bereich Depot oder Budget; Import, Einstellungen und Mehr gehören zu beiden
     const area = B_VIEWS.includes(v) ? "budget" : ["import", "einstellungen", "mehr"].includes(v) ? S.ui.area || "depot" : "depot";
-    S.ui.area = area; if (area === "budget" && B_VIEWS.includes(v)) S.ui.lastB = v; else if (area === "depot" && v !== "mehr" && v !== "einstellungen") S.ui.lastD = v;
+    S.ui.area = area; if (area === "budget" && B_VIEWS.includes(v)) S.ui.lastB = v; else if (area === "depot" && !["mehr", "einstellungen", "import"].includes(v)) S.ui.lastD = v;
     document.documentElement.setAttribute("data-area", area); savePrefs();
     $$("[data-area-go]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.areaGo === area));
     $$(".tabbar [data-b]").forEach((a) => { const on = a.dataset.b === v || (a.dataset.b === "mehr" && (v === "budget" || v === "bauswertung" || v === "einstellungen")); a.classList.toggle("on", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
     if (area === "budget") gs.hidden = true;
   }
-  $$("[data-area-go]").forEach((b) => b.addEventListener("click", () => { const a = b.dataset.areaGo; location.hash = "#" + (a === "budget" ? S.ui.lastB || "bmonat" : S.ui.lastD || "uebersicht"); }));
+  // Bereich wechseln: zur zuletzt offenen Seite, aber nie zurück auf Import, Einstellungen oder Mehr (sonst hängt man dort fest)
+  const areaHome = (a) => { const NO = ["import", "einstellungen", "mehr"], l = a === "budget" ? S.ui.lastB : S.ui.lastD; return "#" + (l && VIEWS.includes(l) && !NO.includes(l) ? l : a === "budget" ? "bmonat" : "uebersicht"); };
+  $$("[data-area-go]").forEach((b) => b.addEventListener("click", () => { location.hash = areaHome(b.dataset.areaGo); }));
+  $("#impBack").addEventListener("click", () => { location.hash = areaHome(S.ui.area || "depot"); });
   window.addEventListener("hashchange", () => { showView(); try { render(); } catch (er) { setTimeout(() => { throw er; }); } window.scrollTo(0, 0); if (S.view && S.view !== "position" && S.ui.lastView !== S.view) { S.ui.lastView = S.view; savePrefs(); } });
   const startSeg = () => $$("#startSeg [data-sa]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.sa === (S.ui.startArea || "budget") ? "true" : "false"));
   $$("#startSeg [data-sa]").forEach((b) => b.addEventListener("click", () => { S.ui.startArea = b.dataset.sa; savePrefs(); startSeg(); toast("Startbereich gespeichert"); }));
