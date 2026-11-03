@@ -374,6 +374,20 @@ input.unsure { background: #FFF6CC; border-color: #E5B800; }
 html[data-theme="dark"] input.unsure { background: #3A3210; }
 @media (prefers-color-scheme: dark) { html:not([data-theme="light"]) input.unsure { background: #3A3210; } }
 .scpick { display: grid; gap: 10px; justify-items: start; }
+.sccam { display: grid; gap: 10px; }
+.camwrap { position: relative; height: min(64vh, 620px); background: #000; border-radius: 12px; overflow: hidden; }
+.camwrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.camframe { position: absolute; left: 9%; right: 9%; top: 4%; bottom: 4%; border: 2px dashed rgb(255 255 255 / 0.85); border-radius: 10px; box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.35); transition: border-color 0.2s; }
+.camframe.ok { border-style: solid; border-color: #3ccf7a; } .camframe.flash { background: rgb(255 255 255 / 0.6); }
+.camhint { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); background: rgb(0 0 0 / 0.65); color: #fff; padding: 6px 12px; border-radius: 99px; font-size: 0.86rem; white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; }
+.camctl { display: flex; gap: 8px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.camctl #camShot { flex: 1 1 auto; justify-content: center; }
+.scqual { background: var(--div-soft); border-radius: 8px; padding: 8px 10px; margin: 0; font-size: 0.88rem; }
+.scpart { margin: 0; font-weight: 500; }
+.spph { position: relative; } .spov { position: absolute; inset: 0; pointer-events: none; }
+.spov i { position: absolute; border: 1.5px solid #e2b100; background: rgb(255 205 0 / 0.14); border-radius: 2px; }
+.spov b { position: absolute; border: 2px solid var(--accent); background: rgb(60 100 240 / 0.16); border-radius: 3px; box-shadow: 0 0 0 3px rgb(60 100 240 / 0.25); transition: top 0.15s, left 0.15s, width 0.15s, height 0.15s; }
+.spitem.hi { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 .scpick .btn { width: 100%; justify-content: center; }
 .scwrap { position: relative; touch-action: none; user-select: none; max-height: 60vh; display: flex; justify-content: center; }
 .scwrap canvas { display: block; max-width: 100%; max-height: 60vh; width: auto; height: auto; }
@@ -394,6 +408,7 @@ html[data-theme="dark"] input.unsure { background: #3A3210; }
   .sppart { grid-template-columns: minmax(0, 1fr) 6.4rem auto; }
   #dlgSpend.wide .spgrid { grid-template-columns: minmax(0, 1fr); }
   .spphoto { position: static; max-height: 26vh; } .spphoto.big { max-height: none; }
+  .spgrid:has(#spItemsD[open]) .spphoto:not(.big) { position: sticky; top: -16px; z-index: 3; max-height: 22vh; box-shadow: 0 6px 12px rgb(0 0 0 / 0.15); }
   #dlgSpend, #dlgScan { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); }
   #dlgSpend form, #dlgScan .body { padding: 16px; }
   .spitem { grid-template-columns: 2.8rem minmax(0, 1fr) auto; padding-bottom: 8px; border-bottom: 1px solid var(--line); } .spitem .unit2 { grid-column: 1 / 3; grid-row: 2; width: 7rem; } .spitem select { grid-column: 2 / 4; grid-row: 2; justify-self: end; width: auto; max-width: 100%; } .spitem .spunit { grid-column: 1 / -1; grid-row: 3; } .spith { display: none; }
@@ -1697,7 +1712,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 59 · Stand 03.11.2026 02:04</p>
+        <p class="appver" id="appVer">Depotblick Version 60 · Stand 03.11.2026 10:34</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -1893,7 +1908,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   <form method="dialog" id="spForm" novalidate>
     <div class="dhead"><h2 id="spTitle">Ausgabe eintragen</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
     <div class="spgrid">
-      <div class="spphoto" id="spPhoto" hidden title="Antippen zum Vergrößern"><img id="spImg" alt="Foto des Kassenzettels"></div>
+      <div class="spphoto" id="spPhoto" hidden title="Antippen zum Vergrößern"><div class="spph"><img id="spImg" alt="Foto des Kassenzettels"><div class="spov" id="spOv"></div></div></div>
       <div class="spmain">
         <p class="hint spnote" id="spScanNote" hidden></p>
         <div class="fields">
@@ -1905,6 +1920,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <div id="spParts" style="display:grid;gap:8px"></div><p class="note" id="spRest" hidden style="margin:0"></p></div>
         <details class="spitems" id="spItemsD"><summary>Artikel <span class="muted" id="spItemsN"></span></summary>
           <p class="note" style="margin:6px 0">Trag ein, was du gekauft hast: Menge, Artikel und Preis der Zeile. „2x Käse“ zählt als 2 Stück. Ist die Summe leer, wird sie aus den Artikeln berechnet. Wählst du bei einem Artikel ein anderes Pocket, wird der Einkauf aufgeteilt.</p>
+          <p class="note" id="spBoxNote" hidden style="margin:0 0 6px">Tippst du auf einen Artikel, leuchtet seine Zeile im Foto auf. Gelb umrandet sind Stellen, die schwer zu lesen waren.</p>
           <div class="spith" aria-hidden="true"><span>Menge</span><span>Artikel</span><span>Preis</span><span>Pocket</span><span></span></div>
           <div id="spItems" style="display:grid;gap:6px"></div><button type="button" class="link" id="spItemAdd" style="margin-top:6px">+ Artikel</button></details>
         <div class="field"><label for="spNote">Notiz</label><input id="spNote" placeholder="optional"></div>
@@ -1919,17 +1935,26 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   <div class="body">
     <div class="dhead"><h2>Kassenzettel scannen</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
     <div data-st="pick" class="scpick">
+      <p class="scpart" id="scPartPick" hidden></p>
       <button type="button" class="btn" id="scCamBtn">📷 Foto aufnehmen</button>
-      <button type="button" class="btn ghost" id="scPickBtn">Bild auswählen</button>
-      <p class="note desk" style="margin:0">Oder ein Foto hierher ziehen.</p>
+      <button type="button" class="btn ghost" id="scPickBtn">Bild oder PDF auswählen</button>
+      <button type="button" class="link" id="scAppCam">Mit der Kamera-App des Handys fotografieren</button>
+      <p class="note desk" style="margin:0">Oder ein Foto oder einen digitalen Kassenbon (PDF) hierher ziehen.</p>
       <p class="note" style="margin:0">Tipp: Zettel glatt auf einen dunklen Untergrund legen, gerade von oben fotografieren, gutes Licht. Die Erkennung läuft nur auf deinem Gerät, das Foto wird nirgends hochgeladen.</p>
       <button type="button" class="btn ghost" id="scManual">✍️ Kassenzettel selbst eintragen</button>
-      <input type="file" id="scCam" accept="image/*" capture="environment" hidden><input type="file" id="scFile" accept="image/*" hidden>
+      <input type="file" id="scCam" accept="image/*" capture="environment" hidden><input type="file" id="scFile" accept="image/*,application/pdf,.pdf" hidden>
+    </div>
+    <div data-st="cam" hidden class="sccam">
+      <div class="camwrap" id="camWrap"><video id="camVid" playsinline muted autoplay></video><div class="camframe" id="camFrame"></div><div class="camhint" id="camHint">Zettel in den Rahmen legen</div></div>
+      <div class="camctl"><button type="button" class="btn ghost sm" id="camTorch" hidden aria-pressed="false">🔦 Licht</button><button type="button" class="btn" id="camShot">Auslösen</button><button type="button" class="btn ghost sm" id="camAuto" aria-pressed="true">Automatisch</button></div>
+      <p class="note" style="margin:0">Bei „Automatisch“ löst die Kamera selbst aus, sobald das Bild ruhig und scharf ist. <button type="button" class="link" id="camBack">Abbrechen</button></p>
     </div>
     <div data-st="crop" hidden style="display:grid;gap:10px">
+      <p class="scpart" id="scPartCrop" hidden></p>
       <p class="note" style="margin:0">Passe den Rahmen an den Zettel an. Ecken und Ränder lassen sich ziehen.</p>
+      <p class="scqual" id="scQual" hidden></p>
       <div class="scwrap" id="scWrap"><canvas id="scCanvas"></canvas><div class="scbox" id="scBox"><i data-h="tl"></i><i data-h="tr"></i><i data-h="bl"></i><i data-h="br"></i><i data-h="t"></i><i data-h="b"></i><i data-h="l"></i><i data-h="r"></i></div></div>
-      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="row" style="gap:6px"><button type="button" class="btn ghost sm" id="scRot">↻ Drehen</button><button type="button" class="btn ghost sm" id="scAll">Ganzes Bild</button><button type="button" class="btn ghost sm" id="scBack">Anderes Foto</button></span><button type="button" class="btn" id="scGo">Lesen</button></div>
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="row" style="gap:6px"><button type="button" class="btn ghost sm" id="scRot">↻ Drehen</button><button type="button" class="btn ghost sm" id="scAll">Ganzes Bild</button><button type="button" class="btn ghost sm" id="scBack">Anderes Foto</button><button type="button" class="btn ghost sm" id="scMore" title="Für lange Kassenzettel: unteren Teil extra fotografieren">+ Weiteres Foto anhängen</button></span><button type="button" class="btn" id="scGo">Lesen</button></div>
     </div>
     <div data-st="busy" hidden class="scbusy"><p id="scBusy">Lese Kassenzettel …</p><progress id="scProg" max="1" value="0"></progress><p class="note" style="margin:0">Das dauert ein paar Sekunden.</p></div>
   </div>
@@ -1997,6 +2022,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const eur0 = mkFmt({ style: "currency", currency: "EUR", maximumFractionDigits: 0 }, "•••• €");
   const compact = mkFmt({ notation: "compact", maximumFractionDigits: 1 }, "•••");
   const nf = (d) => new Intl.NumberFormat("de-DE", { maximumFractionDigits: d });
+  const nf2 = new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false });
   const pct = (v) => (isFinite(v) ? (v >= 0 ? "+" : "") + nf(2).format(v * 100) + " %" : "–");
   const signed = (v) => (v >= 0 ? "+" : "") + eur.format(v);
   const cls = (v) => (v > 0.005 ? "gain" : v < -0.005 ? "loss" : "");
@@ -7745,8 +7771,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     // Summe leer oder schon automatisch: aus den Artikeln übernehmen
     if (n && (spAutoT || !$("#spTotal").value.trim())) { $("#spTotal").value = spISum() ? nf(2).format(spISum()) : ""; spAutoT = true; $("#spTotal").classList.add("auto"); if (spParts.length === 1) spRenderParts(); else spPreview(); }
   }
+  // Markierungen im Foto: schwer lesbare Stellen gelb, der gewählte Artikel blau
+  let spWeak = null;
+  function spOv(hi) {
+    const ov = $("#spOv"), it = hi != null ? spItems[hi] : null, pc = (b) => `left:${b[0] * 100}%;top:${b[1] * 100}%;width:${b[2] * 100}%;height:${b[3] * 100}%`;
+    ov.innerHTML = (spWeak || []).map((b) => `<i style="${pc(b)}"></i>`).join("") + (it && it.box ? `<b style="${pc(it.box)}"></b>` : "");
+    $$("#spItems .spitem").forEach((row, i) => row.classList.toggle("hi", i === hi && !!(it && it.box)));
+    const ph = $("#spPhoto"), img = $("#spImg");
+    if (it && it.box && !ph.hidden && img.clientHeight) { const y = it.box[1] * img.clientHeight; if (y < ph.scrollTop + 10 || y > ph.scrollTop + ph.clientHeight - 30) ph.scrollTo({ top: Math.max(0, y - ph.clientHeight / 3), behavior: "smooth" }); }
+  }
   function spRenderItems() {
-    $("#spItems").innerHTML = spItems.map((it, i) => `<div class="spitem"><input class="spqi" data-it="${i}" data-k="qty" inputmode="numeric" value="${it.qty > 1 ? it.qty : ""}" placeholder="1" aria-label="Menge"><input class="spti" data-it="${i}" data-k="text" value="${esc(it.text)}" placeholder="z. B. 2x Käse" aria-label="Artikel"><span class="unit2"><input data-it="${i}" data-k="price" inputmode="decimal" value="${it.price != null ? nf(2).format(it.price) : ""}" placeholder="0,00" aria-label="Preis"${it.unsure ? ' class="unsure" title="Bitte prüfen, hier war die Schrift unsicher"' : ""}><span>€</span></span><select data-it="${i}" data-k="cat" aria-label="Pocket für diesen Artikel">${catOpts(it.cat, "wie oben")}</select><button type="button" class="icon-btn" data-ix="${i}" aria-label="Artikel entfernen">✕</button><span class="spunit"${it.qty > 1 && it.price ? "" : " hidden"}>${it.qty > 1 && it.price ? "je " + eur.format(it.price / it.qty) : ""}</span></div>`).join("");
+    $("#spItems").innerHTML = spItems.map((it, i) => `<div class="spitem"><input class="spqi" data-it="${i}" data-k="qty" inputmode="numeric" value="${it.qty > 1 ? it.qty : ""}" placeholder="1" aria-label="Menge"><input class="spti" data-it="${i}" data-k="text" value="${esc(it.text)}" placeholder="z. B. 2x Käse" aria-label="Artikel"><span class="unit2"><input data-it="${i}" data-k="price" inputmode="decimal" value="${it.price != null ? nf2.format(it.price) : ""}" placeholder="0,00" aria-label="Preis"${it.unsure ? ' class="unsure" title="Bitte prüfen, hier war die Schrift unsicher"' : ""}><span>€</span></span><select data-it="${i}" data-k="cat" aria-label="Pocket für diesen Artikel">${catOpts(it.cat, "wie oben")}</select><button type="button" class="icon-btn" data-ix="${i}" aria-label="Artikel entfernen">✕</button><span class="spunit"${it.qty > 1 && it.price ? "" : " hidden"}>${it.qty > 1 && it.price ? "je " + eur.format(it.price / it.qty) : ""}</span></div>`).join("");
     spItemsInfo();
     $$("#spItems [data-it]").forEach((el) => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
       const it = spItems[+el.dataset.it], k = el.dataset.k;
@@ -7759,6 +7794,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $$("#spItems [data-k=price], #spItems [data-k=qty]").forEach((el) => el.addEventListener("change", () => upd(+el.dataset.it)));
     $$("#spItems input").forEach((el) => el.addEventListener("keydown", (e) => { if (e.key !== "Enter") return; e.preventDefault(); const i = +el.dataset.it; if (i === spItems.length - 1) $("#spItemAdd").click(); else { const nx = $$("#spItems [data-k=text]")[i + 1]; if (nx) nx.focus(); } }));
     $$("#spItems [data-ix]").forEach((b) => b.addEventListener("click", () => { spItems.splice(+b.dataset.ix, 1); spRenderItems(); }));
+    $$("#spItems .spitem").forEach((row, i) => { row.addEventListener("focusin", () => spOv(i)); row.addEventListener("click", () => spOv(i)); });
+    $("#spBoxNote").hidden = !spItems.some((x) => x.box); spOv(null);
   }
   // Aufteilung aus den Artikeln: je Budget die Summe, Rest (Pfand, Rabatt, Rundung) zum Hauptbudget
   function spFromItems() {
@@ -7782,14 +7819,18 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#storeList").innerHTML = [...new Set(B.spends.map((x) => x.store).filter(Boolean))].slice(0, 60).map((x) => `<option value="${esc(x)}">`).join("");
     const sug = r ? bSuggest(r.store, r.kind) : null;
     spParts = s ? s.parts.map((p) => ({ cat: p.cat, amount: s.parts.length > 1 ? p.amount : null })) : [{ cat: sug ? sug.cat : (B.cats[0] || {}).id || "", amount: null }];
-    spItems = s ? (s.items || []).map((x) => Object.assign({}, x)) : r ? r.items.map((x) => ({ text: x.text, price: x.price, qty: x.qty || 1, cat: bItemCat(x.text) })) : [];
+    spItems = s ? (s.items || []).map((x) => Object.assign({}, x)) : r ? r.items.map((x) => Object.assign({ text: x.text, price: x.price, qty: x.qty || 1, cat: bItemCat(x.text) }, x.box ? { box: x.box } : {}, x.unsure ? { unsure: true } : {})) : [];
+    spWeak = s ? s.weak || null : r ? r.weak || null : null;
     ["spStore", "spDate", "spTotal"].forEach((k) => $("#" + k).classList.toggle("unsure", !!(r && r.unsure[{ spStore: "store", spDate: "date", spTotal: "total" }[k]])));
     let note = "";
     if (r) {
       const bad = Object.keys(r.unsure).length;
-      note = r.source === "qr" ? "Betrag und Datum aus dem QR-Code der Kasse. " : "";
+      note = r.source === "qr" ? "Betrag und Datum aus dem QR-Code der Kasse. " : r.source === "pdf" ? "Aus dem digitalen Kassenbon gelesen, ohne Texterkennung. " : "";
       note += r.total == null ? "Keine Summe gefunden, bitte eintragen." : r.items.length && !r.sumOk ? `Erkannte Artikel: ${eur.format(r.isum)}, Summe: ${eur.format(r.total)}. Gebucht wird die Summe; die Artikel kannst du unten korrigieren, musst du aber nicht.` : r.items.length ? `${r.items.length} Artikel erkannt, sie ergeben genau die Summe.` : "";
       if (bad) note += " Gelb markierte Felder bitte prüfen.";
+      // Schon gebucht? Gleiches Datum und gleicher Betrag
+      const dup = r.total != null && r.date ? B.spends.find((x) => x.date === r.date && Math.abs(x.total - r.total) < 0.005) : null;
+      if (dup) note = `Achtung: Am ${fmtDate(dup.date)} hast du schon ${eur.format(dup.total)}${dup.store ? " bei " + dup.store : ""} gebucht. Ist das derselbe Zettel? ` + note;
       if (sug && sug.why === "gelernt") note += ` ${esc(bCatName(sug.cat))} wie beim letzten Mal bei ${esc(r.store)}.`;
     }
     $("#spScanNote").textContent = note.trim(); $("#spScanNote").hidden = !note.trim();
@@ -7799,7 +7840,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (manual) $("#spTitle").textContent = "Kassenzettel eintragen";
     spRenderParts(); spRenderItems(); spDateHint();
     $("#spPhoto").hidden = true; $("#spImg").removeAttribute("src");
-    const showImg = (blob) => { if (!blob) return; $("#spImg").src = URL.createObjectURL(blob); $("#spPhoto").hidden = false; };
+    const showImg = (blob) => { if (!blob) return; $("#spImg").src = URL.createObjectURL(blob); $("#spPhoto").hidden = false; spOv(null); };
     $("#dlgSpend").classList.toggle("wide", !!(scan || (s && s.photoId)));
     if (scan) showImg(scan.photo); else if (s && s.photoId) PhotoDB.get(s.photoId).then(showImg);
     if (!$("#dlgSpend").open) $("#dlgSpend").showModal();
@@ -7838,8 +7879,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (Math.abs(sum - T) > 0.009) return err(`Die Aufteilung ergibt ${eur.format(sum)}, die Summe ist ${eur.format(T)}.`);
     const merged = []; ps.filter((p) => Math.abs(p.amount) > 0.0001).forEach((p) => { const m = merged.find((x) => x.cat === p.cat); if (m) m.amount = Math.round((m.amount + p.amount) * 100) / 100; else merged.push({ cat: p.cat, amount: p.amount }); });
     const B = bData(), sp = spEdit || { id: uid(), source: spScan ? spScan.r.source || "scan" : "manual" };
-    Object.assign(sp, { date, store: $("#spStore").value.trim(), total: T, parts: merged, note: $("#spNote").value.trim(), items: spItems.filter((i) => i.text.trim() || i.price).map((i) => ({ text: i.text.trim(), price: i.price, qty: i.qty > 0 ? i.qty : 1, cat: i.cat || "" })) });
-    if (spScan && spScan.photo && B.keepPhotos) { sp.photoId = "p" + sp.id; await PhotoDB.put(sp.photoId, spScan.photo); }
+    Object.assign(sp, { date, store: $("#spStore").value.trim(), total: T, parts: merged, note: $("#spNote").value.trim(), items: spItems.filter((i) => i.text.trim() || i.price).map((i) => Object.assign({ text: i.text.trim(), price: i.price, qty: i.qty > 0 ? i.qty : 1, cat: i.cat || "" }, i.box ? { box: i.box } : {})) });
+    if (spScan && spScan.photo && B.keepPhotos) { sp.photoId = "p" + sp.id; await PhotoDB.put(sp.photoId, spScan.photo); if (spWeak && spWeak.length) sp.weak = spWeak; }
     if (!spEdit) B.spends.push(sp);
     bLearn(sp); bSave();
     $("#dlgSpend").close();
@@ -7857,12 +7898,16 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (window.Tesseract) return Promise.resolve();
     return new Promise((res, rej) => { const s = document.createElement("script"); s.src = OCR.js; s.onload = res; s.onerror = () => rej(new Error("load")); document.head.appendChild(s); });
   }
-  async function ocrWorker() {
-    if (OCR.worker) return OCR.worker;
-    await ocrScript();
-    OCR.worker = await Tesseract.createWorker("deu", 1, { langPath: OCR.lang, logger: (m) => OCR.prog && OCR.prog(m) });
-    await OCR.worker.setParameters({ tessedit_pageseg_mode: "6", preserve_interword_spaces: "1" });
-    return OCR.worker;
+  function ocrWorker() {
+    if (OCR.wp) return OCR.wp;
+    OCR.wp = (async () => {
+      await ocrScript();
+      const w = await Tesseract.createWorker("deu", 1, { langPath: OCR.lang, logger: (m) => OCR.prog && OCR.prog(m) });
+      await w.setParameters({ tessedit_pageseg_mode: "6", preserve_interword_spaces: "1" });
+      return (OCR.worker = w);
+    })();
+    OCR.wp.catch(() => { OCR.wp = null; });
+    return OCR.wp;
   }
   // Papier finden: helle Spalten und Zeilen gegen dunklen Hintergrund (Schwelle nach Otsu)
   function rcBox(img) {
@@ -7954,7 +7999,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const items = [], end = totalLine >= 0 ? totalLine : lines.length; let pendQ = null, pendT = null;
     for (let i = 0; i < end; i++) {
       // Steuerklasse am Preis klebend („1,394“ = 1,39 A, „3,498“ = 3,49 B)
-      let l = lines[i].replace(/(\d[,.]\d{2})[48&](?=(\s+\S{1,3})*\s*$)/, "$1 A"); if (RC_SKIP.test(l)) { pendT = null; continue; }
+      let l = lines[i].replace(/(\d[,.]\d{2})[4*&]([AB8&])(?=\s|$)/, "$1 *$2").replace(/(\d[,.]\d{2})[48&](?=(\s+\S{1,3})*\s*$)/, "$1 A"); if (RC_SKIP.test(l)) { pendT = null; continue; }
       // Eigene Mengenzeile wie „2 x 1,29“ oder „2 Stk x 1,29“: gehört zum Artikel davor oder danach
       const qo = l.match(/^\s*(\d{1,2})\s*(?:stk\.?|st\.?)?\s*[xX×*]\s*(\d+[,.]\d{2})\s*€?\s*$/i);
       if (qo) { const q = +qo[1], u = rcNum(qo[2]), prev = items[items.length - 1]; if (prev && Math.abs(prev.price - q * u) < 0.02) prev.qty = q; else pendQ = [q, u]; continue; }
@@ -8029,16 +8074,159 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   // Foto für die Ausgabe: Ausschnitt, höchstens 1000 px breit
   function rcThumb(img, box) { const sw = box.w * img.width, sh = box.h * img.height, s = Math.min(1, 1000 / sw), c = Object.assign(document.createElement("canvas"), { width: Math.round(sw * s), height: Math.round(sh * s) }); c.getContext("2d").drawImage(img, box.x * img.width, box.y * img.height, sw, sh, 0, 0, c.width, c.height); return toBlob(c, 0.6); }
 
-  const SC = { img: null, box: null, text: "" };
+  // Mehrere Fotos zu einem Bild für die Ausgabe untereinander setzen; merkt sich, wo jedes Teil liegt
+  async function rcThumbs(pages) {
+    const cs = pages.map((p) => ({ p, sw: p.box.w * p.img.width, sh: p.box.h * p.img.height }));
+    const W = Math.round(Math.min(1000, Math.max(...cs.map((c) => c.sw)))); let H = 0; cs.forEach((c) => { c.h = Math.round(c.sh * (W / c.sw)); c.y = H; H += c.h; });
+    const k = Math.min(1, 12000 / H), c = Object.assign(document.createElement("canvas"), { width: Math.max(1, Math.round(W * k)), height: Math.max(1, Math.round(H * k)) }), g = c.getContext("2d");
+    cs.forEach((x) => g.drawImage(x.p.img, x.p.box.x * x.p.img.width, x.p.box.y * x.p.img.height, x.sw, x.sh, 0, x.y * k, c.width, x.h * k));
+    return { blob: await toBlob(c, 0.6), pages: cs.map((x) => ({ y: x.y / H, h: x.h / H })) };
+  }
+  // Wo steht was im Foto: Zeilen aus der Texterkennung den Artikeln zuordnen, schwer lesbare Wörter merken
+  function rcBoxes(r, th) {
+    const o = r._o; delete r._o; if (!o || !th) return;
+    const R4 = (v) => Math.round(v * 1e4) / 1e4, map = (bb, i) => { const pg = th.pages[i], W = o[i].W, H = o[i].H; return [R4(bb.x0 / W), R4(pg.y + (bb.y0 / H) * pg.h), R4((bb.x1 - bb.x0) / W), R4(((bb.y1 - bb.y0) / H) * pg.h)]; };
+    const lines = o.flatMap((x, i) => (x.d.lines || []).map((l) => ({ t: (l.text || "").toLowerCase(), b: map(l.bbox, i) })));
+    r.weak = o.flatMap((x, i) => (x.d.words || []).filter((w) => w.confidence < 55 && /[A-Za-z0-9ÄÖÜäöü]{2,}/.test(w.text || "")).map((w) => map(w.bbox, i))).slice(0, 150);
+    let at = 0;
+    r.items.forEach((it) => {
+      const cents = String(Math.round(Math.abs(it.price || 0) * 100)), w0 = ((it.text || "").toLowerCase().match(/[a-zäöüß]{3,}/) || [""])[0];
+      let best = -1, bs = 0;
+      for (let j = at; j < lines.length && j < at + 20; j++) { const lt = lines[j].t, sc = (cents.length >= 2 && lt.replace(/\D/g, "").includes(cents) ? 2 : 0) + (w0 && lt.includes(w0) ? 1 : 0); if (sc > bs) { bs = sc; best = j; if (sc === 3) break; } }
+      if (best >= 0) { it.box = lines[best].b; at = best + 1; }
+    });
+  }
+  // Langer Zettel: zweites Foto anhängen, doppelte Zeilen an der Naht weglassen
+  const rcLev = (a, b) => { let p = Array.from({ length: b.length + 1 }, (_, j) => j); for (let i = 1; i <= a.length; i++) { const q = [i]; for (let j = 1; j <= b.length; j++) q[j] = Math.min(p[j] + 1, q[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = q; } return p[b.length]; };
+  function rcJoin(a, b) {
+    if (!a) return b; const A = a.split("\n").filter((l) => l.trim()), Bl = b.split("\n").filter((l) => l.trim());
+    const nz = (l) => l.toLowerCase().replace(/[^a-z0-9äöüß]/g, ""), sim = (x, y) => { const m = Math.max(x.length, y.length); return !m || Math.abs(x.length - y.length) > m * 0.4 ? 0 : 1 - rcLev(x, y) / m; };
+    for (let k = Math.min(10, A.length, Bl.length); k >= 1; k--) for (let j = 0; j <= Math.min(3, Bl.length - k); j++) {
+      let ok = true; for (let t = 0; t < k && ok; t++) { const x = nz(A[A.length - k + t]), y = nz(Bl[j + t]); if (x.length < 4 || sim(x, y) < 0.75) ok = false; }
+      if (ok) return A.concat(Bl.slice(j + k)).join("\n");
+    }
+    return A.concat(Bl).join("\n");
+  }
+  // Qualität vor dem Lesen: Helligkeit, Schärfe (stärkste Kanten), Spiegelung (ausgebrannte Stellen mitten in Schriftzeilen)
+  const lapTop = (L, W, H, share) => { const hist = new Uint32Array(1021); let cnt = 0; for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x; hist[Math.min(1020, Math.abs(4 * L[i] - L[i - 1] - L[i + 1] - L[i - W] - L[i + W]) | 0)]++; cnt++; } const need = Math.max(1, Math.round(cnt * share)); let got = 0, sum = 0; for (let k = 1020; k >= 0 && got < need; k--) { const t = Math.min(hist[k], need - got); sum += t * k; got += t; } return sum / got; };
+  function rcQual(img, box) {
+    const sw = box.w * img.width, sh = box.h * img.height, s = Math.min(1, 600 / sw), W = Math.max(8, Math.round(sw * s)), H = Math.max(8, Math.round(sh * s));
+    const c = Object.assign(document.createElement("canvas"), { width: W, height: H }), g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(img, box.x * img.width, box.y * img.height, sw, sh, 0, 0, W, H);
+    const d = g.getImageData(0, 0, W, H).data, n = W * H, L = new Float32Array(n); let mean = 0;
+    for (let i = 0; i < n; i++) { L[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; mean += L[i]; } mean /= n;
+    const sharp = lapTop(L, W, H, 0.02);
+    const GX = 8, GY = 24, hi = new Uint32Array(GX * GY), dk = new Uint32Array(GX * GY), nn = new Uint32Array(GX * GY);
+    for (let y = 0; y < H; y++) { const gy = Math.min(GY - 1, Math.floor((y * GY) / H)); for (let x = 0; x < W; x++) { const k = gy * GX + Math.min(GX - 1, Math.floor((x * GX) / W)), v = L[y * W + x]; nn[k]++; if (v >= 248) hi[k]++; if (v < 110) dk[k]++; } }
+    let glare = 0; for (let gy = 0; gy < GY; gy++) { const ink = (gx) => dk[gy * GX + gx] > nn[gy * GX + gx] * 0.01; for (let gx = 1; gx < GX - 1; gx++) { const k = gy * GX + gx; if (hi[k] > nn[k] * 0.85 && dk[k] === 0 && [...Array(gx).keys()].some(ink) && [...Array(GX - gx - 1).keys()].some((j) => ink(gx + 1 + j))) glare++; } }
+    return { mean, sharp, glare };
+  }
+  const QUAL_SHARP = 20, CAM_MIN = 40;
+  function scQualShow() {
+    let m = [];
+    try { const q = rcQual(SC.img, SC.box); if (q.mean < 70) m.push("Das Foto ist sehr dunkel, mehr Licht hilft."); if (q.sharp < QUAL_SHARP) m.push("Das Foto ist unscharf. Halte das Handy ruhig und tippe zum Scharfstellen auf den Zettel."); if (q.glare >= 2) m.push("Auf dem Zettel spiegelt etwas. Halte das Handy etwas schräger oder ändere das Licht."); SC.q = q; } catch (e) {}
+    const el = $("#scQual"); el.hidden = !m.length; el.textContent = m.length ? "⚠️ " + m.join(" ") + " Ein neues Foto wird meist besser erkannt." : "";
+    if (m.length) $("#scGo").textContent = "Trotzdem lesen";
+  }
+
+  const SC = { img: null, box: null, text: "", done: [] };
   
-  function scOpen() { scStep("pick"); $("#dlgScan").showModal(); }
-  function scStep(k) { $$("#dlgScan [data-st]").forEach((el) => (el.hidden = el.dataset.st !== k)); }
+  function scOpen() { SC.done = []; scParts(); scStep("pick"); $("#dlgScan").showModal(); if (navigator.onLine !== false) ocrWorker().catch(() => {}); }
+  function scStep(k) { $$("#dlgScan [data-st]").forEach((el) => (el.hidden = el.dataset.st !== k)); if (k !== "cam") camStop(); }
+  // Teile eines langen Zettels
+  function scParts() {
+    const n = SC.done.length; $("#scPartPick").hidden = $("#scPartCrop").hidden = !n;
+    $("#scPartPick").textContent = `Teil ${n + 1}: Fotografiere jetzt weiter unten. Lass ein, zwei Zeilen vom letzten Foto mit drauf.`;
+    $("#scPartCrop").textContent = `Teil ${n + 1} von deinem langen Zettel`;
+    $("#scGo").textContent = n ? `Alle ${n + 1} Teile lesen` : "Lesen";
+  }
+  const isPdf = (f) => /pdf/i.test(f.type || "") || /\.pdf$/i.test(f.name || "");
   async function scFile(file) {
-    if (!file || !/^image\//.test(file.type || "image/")) { toast("Bitte ein Foto wählen"); return; }
-    if (!$("#dlgScan").open) $("#dlgScan").showModal();
+    if (file && isPdf(file)) return scPdf(file);
+    if (!file || !/^image\//.test(file.type || "image/")) { toast("Bitte ein Foto oder PDF wählen"); return; }
+    if (!$("#dlgScan").open) { SC.done = []; $("#dlgScan").showModal(); }
     scStep("busy"); $("#scBusy").textContent = "Lade Foto …";
     try { SC.img = await rcLoad(file); } catch (e) { scStep("pick"); toast("Das Foto ließ sich nicht öffnen"); return; }
-    SC.box = rcBox(SC.img); scShow(); scStep("crop");
+    SC.box = rcBox(SC.img); scCropShow();
+  }
+  function scCropShow() { scShow(); scParts(); scStep("crop"); scQualShow(); }
+  // ---------- Eigene Kamera mit Rahmen: löst aus, wenn das Bild ruhig und scharf ist ----------
+  const CAM = { st: null, t: null, prev: null, still: 0, best: [], auto: true };
+  function camStop() { if (CAM.t) clearInterval(CAM.t); CAM.t = null; if (CAM.st) CAM.st.getTracks().forEach((t) => t.stop()); CAM.st = null; const v = $("#camVid"); if (v && v.srcObject) v.srcObject = null; }
+  async function camStart() {
+    if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { $("#scCam").click(); return; }
+    scStep("cam"); $("#camHint").textContent = "Kamera startet …"; $("#camFrame").classList.remove("ok");
+    let st;
+    try { st = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 2560 }, height: { ideal: 1920 } } }); }
+    catch (e) { scStep("pick"); toast(/NotAllowed|Permission|Security/i.test((e && e.name) || "") ? "Kamera nicht erlaubt. Nimm die Kamera-App oder erlaube die Kamera in den Einstellungen." : "Die Kamera ließ sich nicht starten. Nimm die Kamera-App."); return; }
+    if (!$("#dlgScan").open || $('#dlgScan [data-st="cam"]').hidden) { st.getTracks().forEach((t) => t.stop()); return; }
+    CAM.st = st; const v = $("#camVid"); v.srcObject = st; try { await v.play(); } catch (e) {}
+    const tr = st.getVideoTracks()[0], cap = tr && tr.getCapabilities ? tr.getCapabilities() : {};
+    try { if (cap.focusMode && cap.focusMode.includes("continuous")) await tr.applyConstraints({ advanced: [{ focusMode: "continuous" }] }); } catch (e) {}
+    // Licht (Taschenlampe) gibt es nur, wo der Browser es erlaubt, z. B. Chrome auf Android; am iPhone nicht
+    $("#camTorch").hidden = !cap.torch; if (cap.torch) camTorch(S.ui.torch !== false);
+    CAM.auto = S.ui.camAuto !== false; $("#camAuto").setAttribute("aria-pressed", String(CAM.auto));
+    CAM.prev = null; CAM.still = 0; CAM.best = []; CAM.t = setInterval(camTick, 200);
+  }
+  async function camTorch(on) { const tr = CAM.st && CAM.st.getVideoTracks()[0]; if (!tr) return; try { await tr.applyConstraints({ advanced: [{ torch: on }] }); $("#camTorch").setAttribute("aria-pressed", String(on)); } catch (e) { $("#camTorch").hidden = true; } }
+  // Rahmen auf das Kamerabild umrechnen (Anzeige füllt die Fläche, Ränder werden abgeschnitten)
+  function camFrameBox() {
+    const v = $("#camVid"), vw = v.videoWidth, vh = v.videoHeight; if (!vw || !vh) return null;
+    const wr = $("#camWrap").getBoundingClientRect(), fr = $("#camFrame").getBoundingClientRect(), s = Math.max(wr.width / vw, wr.height / vh), ox = (wr.width - vw * s) / 2, oy = (wr.height - vh * s) / 2;
+    const bx = Math.max(0, (fr.left - wr.left - ox) / s / vw), by = Math.max(0, (fr.top - wr.top - oy) / s / vh);
+    return { x: bx, y: by, w: Math.min(1 - bx, fr.width / s / vw), h: Math.min(1 - by, fr.height / s / vh) };
+  }
+  const camSmall = document.createElement("canvas");
+  function camTick() {
+    const v = $("#camVid"), b = camFrameBox(); if (!b || v.readyState < 2) return;
+    const W = 240, H = Math.max(40, Math.min(720, Math.round((W * b.h * v.videoHeight) / (b.w * v.videoWidth)))); camSmall.width = W; camSmall.height = H;
+    const g = camSmall.getContext("2d", { willReadFrequently: true }); g.drawImage(v, b.x * v.videoWidth, b.y * v.videoHeight, b.w * v.videoWidth, b.h * v.videoHeight, 0, 0, W, H);
+    const d = g.getImageData(0, 0, W, H).data, n = W * H, L = new Float32Array(n); let mean = 0;
+    for (let i = 0; i < n; i++) { L[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; mean += L[i]; } mean /= n;
+    let mot = 99; if (CAM.prev && CAM.prev.length === n) { mot = 0; for (let i = 0; i < n; i++) mot += Math.abs(L[i] - CAM.prev[i]); mot /= n; }
+    CAM.prev = L;
+    const sharp = lapTop(L, W, H, 0.03); CAM.best.push(sharp); if (CAM.best.length > 15) CAM.best.shift();
+    const still = mot < 3.5, dark = mean < 55, ok = still && !dark && sharp >= CAM_MIN && sharp >= Math.max(...CAM.best) * 0.8;
+    CAM.still = ok ? CAM.still + 1 : 0; CAM.last = { mean, mot, sharp };
+    $("#camFrame").classList.toggle("ok", CAM.still > 0);
+    $("#camHint").textContent = dark ? "Zu dunkel, mehr Licht" : !still ? "Halte das Handy ruhig" : sharp < CAM_MIN ? "Noch unscharf, etwas näher oder weiter weg" : CAM.auto ? "Gut so, still halten …" : "Gut so, jetzt auslösen";
+    if (CAM.auto && CAM.still >= 6) camShoot();
+  }
+  function camShoot() {
+    const v = $("#camVid"); if (!v || !v.videoWidth) return; const b = camFrameBox();
+    const s = Math.min(1, 2400 / Math.max(v.videoWidth, v.videoHeight)), c = Object.assign(document.createElement("canvas"), { width: Math.round(v.videoWidth * s), height: Math.round(v.videoHeight * s) });
+    c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+    camStop(); SC.img = c;
+    // Den Rahmen etwas großzügiger nehmen, damit keine Zeile abgeschnitten ist
+    const m = 0.03; SC.box = b ? (() => { const x = Math.max(0, b.x - m), y = Math.max(0, b.y - m); return { x, y, w: Math.min(1 - x, b.w + 2 * m), h: Math.min(1 - y, b.h + 2 * m) }; })() : rcBox(c);
+    scCropShow();
+  }
+  // ---------- Digitaler Kassenbon (PDF): Text steht schon drin, keine Texterkennung nötig ----------
+  const PDFJS = { js: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js", worker: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js" };
+  function pdfLib() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    return new Promise((res, rej) => { const el = document.createElement("script"); el.src = PDFJS.js; el.onload = () => { if (!window.pdfjsLib) return rej(new Error("load")); window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS.worker; res(window.pdfjsLib); }; el.onerror = () => rej(new Error("load")); document.head.appendChild(el); });
+  }
+  // Textstücke zu Zeilen: gleiche Höhe = eine Zeile, links nach rechts
+  function pdfLines(tc) {
+    const rows = [];
+    tc.items.forEach((it) => { if (!it.str || !it.str.trim()) return; const y = it.transform[5], x = it.transform[4]; let r = rows.find((q) => Math.abs(q.y - y) < Math.max(2, (it.height || 8) * 0.5)); if (!r) rows.push((r = { y, it: [] })); r.it.push({ x, s: it.str, w: it.width || 0 }); });
+    return rows.sort((a, b) => b.y - a.y).map((r) => { r.it.sort((a, b) => a.x - b.x); let out = "", end = null; r.it.forEach((q) => { out += end == null ? q.s : (q.x - end > 6 ? "   " : q.x - end > 1 ? " " : "") + q.s; end = q.x + q.w; }); return out; }).join("\n");
+  }
+  async function scPdf(file) {
+    if (!$("#dlgScan").open) { SC.done = []; $("#dlgScan").showModal(); }
+    scStep("busy"); $("#scBusy").textContent = "Lese digitalen Kassenbon …"; $("#scProg").value = 0.3;
+    try {
+      const lib = await pdfLib(), doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false }).promise;
+      let text = ""; for (let i = 1; i <= Math.min(doc.numPages, 6); i++) text += pdfLines(await (await doc.getPage(i)).getTextContent()) + "\n";
+      const pg = await doc.getPage(1), w0 = pg.getViewport({ scale: 1 }).width, scan = text.replace(/\s/g, "").length < 20, vp = pg.getViewport({ scale: (scan ? 2400 : 1000) / w0 });
+      const c = Object.assign(document.createElement("canvas"), { width: Math.round(vp.width), height: Math.min(16000, Math.round(vp.height)) }), g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+      await pg.render({ canvasContext: g, viewport: vp }).promise;
+      // Gescanntes PDF ohne Text: wie ein Foto lesen
+      if (scan) { SC.img = c; SC.box = { x: 0, y: 0, w: 1, h: 1 }; scCropShow(); return; }
+      SC.text = text; const r = rcParse(text); r.source = "pdf";
+      $("#dlgScan").close(); openSpend(null, { r, photo: await toBlob(c, 0.7) });
+    } catch (e) { scStep("pick"); toast(/load|fetch|network/i.test(String(e && e.message)) ? "Der PDF-Leser konnte nicht geladen werden (offline?)" : "Das PDF ließ sich nicht lesen"); }
   }
   function scShow() {
     const c = $("#scCanvas"), s = Math.min(1, 900 / Math.max(SC.img.width, SC.img.height));
@@ -8064,33 +8252,43 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       }
       SC.box = b; scBoxDraw();
     });
-    const end = () => (drag = null); wrap.addEventListener("pointerup", end); wrap.addEventListener("pointercancel", end);
+    const end = () => { if (drag) scQualShow(); drag = null; }; wrap.addEventListener("pointerup", end); wrap.addEventListener("pointercancel", end);
   })();
   async function scRead() {
-    scStep("busy"); const bar = $("#scProg"); $("#scBusy").textContent = "Lese Kassenzettel …"; bar.value = 0;
-    const photo = await rcThumb(SC.img, SC.box);
+    const pages = SC.done.concat([{ img: SC.img, box: SC.box }]), lbl = () => (pages.length > 1 ? `Lese Teil ${(SC.pg || 0) + 1} von ${pages.length} …` : "Lese Kassenzettel …");
+    scStep("busy"); const bar = $("#scProg"); $("#scBusy").textContent = lbl(); bar.value = 0;
+    const th = await rcThumbs(pages), photo = th.blob;
     let r = null;
     try {
-      OCR.prog = (m) => { if (m.status === "recognizing text") { bar.value = m.progress; $("#scBusy").textContent = "Lese Kassenzettel …"; } else if (/load|initializ/i.test(m.status)) $("#scBusy").textContent = OCR.worker ? "Lese Kassenzettel …" : "Lade Texterkennung (nur beim ersten Mal, ein paar MB) …"; };
+      OCR.prog = (m) => { if (m.status === "recognizing text") { bar.value = m.progress; $("#scBusy").textContent = lbl(); } else if (/load|initializ/i.test(m.status)) $("#scBusy").textContent = OCR.worker ? "Lese Kassenzettel …" : "Lade Texterkennung (nur beim ersten Mal, ein paar MB) …"; };
       const w = await ocrWorker();
-      const pass = async (T) => rcParse((SC.text = (await w.recognize(rcPrep(SC.img, SC.box, T))).data.text));
+      const pass = async (T) => { const out = []; let text = ""; for (let i = 0; i < pages.length; i++) { SC.pg = i; const cv = rcPrep(pages[i].img, pages[i].box, T), d = (await w.recognize(cv)).data; out.push({ d, W: cv.width, H: cv.height }); text = rcJoin(text, d.text); } SC.text = text; const x = rcParse(text); x._o = out; return x; };
       r = await pass(0.82);
       // Passen Artikel und Summe nicht, zweiter Versuch mit anderer Schwelle; das bessere Ergebnis zählt
       if (!r.sumOk && r.total != null) { $("#scBusy").textContent = "Zweiter Durchgang für die Artikel …"; bar.value = 0; const r2 = await pass(0.88); const dif = (x) => (x.total == null ? 1e9 : Math.abs(x.isum - x.total)); if (r2.total != null && dif(r2) < dif(r)) r = r2; }
+      rcBoxes(r, th);
     } catch (e) {
       r = { store: "", kind: null, date: null, total: null, items: [], isum: 0, sumOk: false, unsure: { store: 1, date: 1, total: 1 }, source: "manual" };
       toast(/load|fetch|network|import/i.test(String(e && e.message)) ? "Texterkennung konnte nicht geladen werden (offline?). Bitte selbst eintragen." : "Texterkennung geht hier nicht. Bitte selbst eintragen.");
     } finally { OCR.prog = null; }
-    const qr = await rcQr(SC.img);
+    delete r._o; const qr = await rcQr(pages[pages.length - 1].img);
     if (qr) { r.total = qr.total; delete r.unsure.total; if (qr.date) { r.date = qr.date; delete r.unsure.date; } r.sumOk = Math.abs(r.isum - r.total) < 0.005; r.source = "qr"; }
-    $("#dlgScan").close();
+    $("#dlgScan").close(); SC.done = [];
     openSpend(null, { r, photo });
   }
-  $("#scCamBtn").addEventListener("click", () => $("#scCam").click());
+  $("#scCamBtn").addEventListener("click", camStart);
+  $("#scAppCam").addEventListener("click", () => $("#scCam").click());
+  $("#camShot").addEventListener("click", camShoot);
+  $("#camAuto").addEventListener("click", () => { CAM.auto = !CAM.auto; S.ui.camAuto = CAM.auto; savePrefs(); $("#camAuto").setAttribute("aria-pressed", String(CAM.auto)); CAM.still = 0; });
+  $("#camTorch").addEventListener("click", () => { const on = $("#camTorch").getAttribute("aria-pressed") !== "true"; S.ui.torch = on; savePrefs(); camTorch(on); });
+  $("#camBack").addEventListener("click", () => scStep("pick"));
+  $("#dlgScan").addEventListener("close", camStop);
+  document.addEventListener("visibilitychange", () => { if (document.hidden && CAM.st) scStep("pick"); });
+  $("#scMore").addEventListener("click", () => { SC.done.push({ img: SC.img, box: SC.box }); scParts(); scStep("pick"); });
   $("#scPickBtn").addEventListener("click", () => $("#scFile").click());
   ["scCam", "scFile"].forEach((k) => $("#" + k).addEventListener("change", (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) scFile(f); }));
-  $("#scRot").addEventListener("click", () => { SC.img = rcRotate(SC.img); SC.box = rcBox(SC.img); scShow(); });
-  $("#scAll").addEventListener("click", () => { SC.box = { x: 0, y: 0, w: 1, h: 1 }; scBoxDraw(); });
+  $("#scRot").addEventListener("click", () => { SC.img = rcRotate(SC.img); SC.box = rcBox(SC.img); scShow(); scParts(); scQualShow(); });
+  $("#scAll").addEventListener("click", () => { SC.box = { x: 0, y: 0, w: 1, h: 1 }; scBoxDraw(); scParts(); scQualShow(); });
   $("#scGo").addEventListener("click", scRead);
   $("#scBack").addEventListener("click", () => scStep("pick"));
   $("#scManual").addEventListener("click", () => { $("#dlgScan").close(); openSpend(null, null, true); });
