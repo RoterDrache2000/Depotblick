@@ -387,6 +387,7 @@ html[data-theme="dark"] input.unsure { background: #3A3210; }
 .scqual { background: var(--div-soft); border-radius: 8px; padding: 8px 10px; margin: 0; font-size: 0.88rem; }
 .scpart { margin: 0; font-weight: 500; }
 .spph { position: relative; } .spov { position: absolute; inset: 0; pointer-events: none; }
+.spsavein { display: grid; gap: 4px; margin-top: 8px; font-size: 0.9rem; }
 .spsave { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 8px; } .spsave .field span:first-child { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
 .spov i { position: absolute; border: 1.5px solid #e2b100; background: rgb(255 205 0 / 0.14); border-radius: 2px; }
 .spov b { position: absolute; border: 2px solid var(--accent); background: rgb(60 100 240 / 0.16); border-radius: 3px; box-shadow: 0 0 0 3px rgb(60 100 240 / 0.25); transition: top 0.15s, left 0.15s, width 0.15s, height 0.15s; }
@@ -1715,7 +1716,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 62 · Stand 03.11.2026 17:05</p>
+        <p class="appver" id="appVer">Depotblick Version 63 · Stand 03.11.2026 17:33</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -1932,8 +1933,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             <label class="field"><span>Aufrunden auf</span><select id="spRound"><option value="0">aus</option><option value="1">1 €</option><option value="2">2 €</option><option value="3">3 €</option><option value="4">4 €</option><option value="5">5 €</option><option value="10">10 €</option></select></label>
             <label class="field"><span>Saveback</span><span class="unit2"><input id="spSb" inputmode="decimal" placeholder="0"><span>%</span></span></label>
           </div>
+          <div class="spsavein"><label class="toggle"><input type="checkbox" id="spIncR"> Aufrundung ins Pocket einrechnen (+)</label><label class="toggle"><input type="checkbox" id="spIncS"> Saveback vom Pocket abziehen (−)</label></div>
           <p class="note" id="spSaveInfo" style="margin:6px 0 0"></p>
-          <p class="note" style="margin:4px 0 0">Wird nur in der Auswertung gezählt, nicht bei den Sparplänen. Was du hier einstellst, <b>bleibt für die nächsten Kassenzettel an, bis du es hier wieder auf „aus“ und 0 % stellst.</b></p>
+          <p class="note" style="margin:4px 0 0">Wird in der Auswertung gezählt, nicht bei den Sparplänen. Ins Pocket und in die Ausgabenliste geht es nur mit Häkchen. Was du hier einstellst, <b>bleibt für die nächsten Kassenzettel an, bis du es hier wieder auf „aus“ und 0 % stellst.</b></p>
         </details>
         <div class="field"><label for="spNote">Notiz</label><input id="spNote" placeholder="optional"></div>
         <div class="spprev" id="spPrev"></div>
@@ -7792,14 +7794,15 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   function spSaveCalc(T) {
     const n = +$("#spRound").value || 0, pct = eurIn($("#spSb").value || "0"), sb = isFinite(pct) && pct > 0 ? Math.min(pct, 100) : 0;
     const round = n && isFinite(T) && T > 0 ? r2c(Math.ceil(r2c(T) / n - 1e-9) * n - T) : 0;
-    return { n, pct: sb, round, sbAmt: sb && isFinite(T) && T > 0 ? r2c((T * sb) / 100) : 0 };
+    const sbAmt = sb && isFinite(T) && T > 0 ? r2c((T * sb) / 100) : 0, incR = $("#spIncR").checked, incS = $("#spIncS").checked;
+    return { n, pct: sb, round, sbAmt, incR, incS, delta: r2c((incR ? round : 0) - (incS ? sbAmt : 0)) };
   }
   function spSaveInfo() {
     const T = spTotal(), v = spSaveCalc(isFinite(T) ? T : spISum()), on = v.n || v.pct;
     $("#spSaveN").textContent = on ? "· an" + (v.n ? `, auf ${v.n} €` : "") + (v.pct ? `, ${nf(2).format(v.pct)} %` : "") : "· aus";
-    $("#spSaveInfo").textContent = on ? (v.round || v.sbAmt ? [v.n ? `Aufgerundet: ${eur.format(v.round)}` : "", v.pct ? `Saveback: ${eur.format(v.sbAmt)}` : ""].filter(Boolean).join(" · ") + ` · zusammen ${eur.format(v.round + v.sbAmt)} gespart` : "Trag die Summe ein, dann siehst du hier, wie viel gespart wird.") : "Aus. Stell hier ein, wenn deine Bank-App aufrundet oder du Saveback bekommst.";
+    $("#spSaveInfo").textContent = on ? (v.round || v.sbAmt ? [v.n ? `Aufgerundet: ${eur.format(v.round)}` : "", v.pct ? `Saveback: ${eur.format(v.sbAmt)}` : ""].filter(Boolean).join(" · ") + ` · zusammen ${eur.format(v.round + v.sbAmt)} gespart` + (v.delta ? ` · vom Pocket gehen ${eur.format(r2c(T + v.delta))} ab statt ${eur.format(T)}` : " · das Pocket bleibt unverändert") : "Trag die Summe ein, dann siehst du hier, wie viel gespart wird.") : "Aus. Stell hier ein, wenn deine Bank-App aufrundet oder du Saveback bekommst.";
   }
-  ["spRound", "spSb"].forEach((k) => $("#" + k).addEventListener(k === "spRound" ? "change" : "input", spSaveInfo));
+  ["spRound", "spSb", "spIncR", "spIncS"].forEach((k) => $("#" + k).addEventListener(k === "spSb" ? "input" : "change", spSaveInfo));
   $("#spTotal").addEventListener("input", () => spSaveInfo());
   function spPreview() {
     const ps = spResolved(), T = spTotal(), k = $("#spDate").value || today();
@@ -7872,11 +7875,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spDel").hidden = !s; $("#spErr").hidden = true;
     $("#spStore").value = s ? s.store : r ? r.store : "";
     $("#spDate").value = s ? s.date : r && r.date ? r.date : today();
-    $("#spTotal").value = s ? nf(2).format(s.total) : r && r.total != null ? nf(2).format(r.total) : "";
+    const sDelta = s && s.save && s.save.delta ? s.save.delta : 0;
+    $("#spTotal").value = s ? nf(2).format(r2c(s.total - sDelta)) : r && r.total != null ? nf(2).format(r.total) : "";
     $("#spNote").value = s ? s.note || "" : "";
     $("#storeList").innerHTML = [...new Set(B.spends.map((x) => x.store).filter(Boolean))].slice(0, 60).map((x) => `<option value="${esc(x)}">`).join("");
     const sug = r ? bSuggest(r.store, r.kind) : null;
-    spParts = s ? s.parts.map((p) => ({ cat: p.cat, amount: s.parts.length > 1 ? p.amount : null })) : [{ cat: sug ? sug.cat : (B.cats[0] || {}).id || "", amount: null }];
+    spParts = s ? s.parts.map((p, i, a) => ({ cat: p.cat, amount: a.length > 1 ? (sDelta && p === a.reduce((x, y) => (y.amount > x.amount ? y : x)) ? r2c(p.amount - sDelta) : p.amount) : null })) : [{ cat: sug ? sug.cat : (B.cats[0] || {}).id || "", amount: null }];
     spItems = s ? (s.items || []).map((x) => Object.assign({}, x)) : r ? r.items.map((x) => Object.assign({ text: x.text, price: x.price, qty: x.qty || 1, cat: bItemCat(x.text) }, x.box ? { box: x.box } : {}, x.unsure ? { unsure: true } : {})) : [];
     spWeak = s ? s.weak || null : r ? r.weak || null : null;
     ["spStore", "spDate", "spTotal"].forEach((k) => $("#" + k).classList.toggle("unsure", !!(r && r.unsure[{ spStore: "store", spDate: "date", spTotal: "total" }[k]])));
@@ -7892,7 +7896,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (sug && sug.why === "gelernt") note += ` ${esc(bCatName(sug.cat))} wie beim letzten Mal bei ${esc(r.store)}.`;
     }
     $("#spScanNote").textContent = note.trim(); $("#spScanNote").hidden = !note.trim();
-    { const cfg = s ? s.save || { n: 0, pct: 0 } : B.saveCfg || { n: 0, pct: 0 }; $("#spRound").value = String(cfg.n || 0); $("#spSb").value = cfg.pct ? nf(2).format(cfg.pct) : ""; $("#spSaveD").open = !!(cfg.n || cfg.pct); spSaveInfo(); }
+    { const cfg = s ? s.save || { n: 0, pct: 0 } : B.saveCfg || { n: 0, pct: 0 }; $("#spRound").value = String(cfg.n || 0); $("#spSb").value = cfg.pct ? nf(2).format(cfg.pct) : ""; $("#spIncR").checked = !!cfg.incR; $("#spIncS").checked = !!cfg.incS; $("#spSaveD").open = !!(cfg.n || cfg.pct); spSaveInfo(); }
     if (manual && !spItems.length) spItems.push({ text: "", price: null, qty: 1, cat: "" });
     spAutoT = false; $("#spTotal").classList.remove("auto");
     $("#spItemsD").hidden = false; $("#spItemsD").open = !!manual;
@@ -7940,7 +7944,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const B = bData(), sp = spEdit || { id: uid(), source: spScan ? spScan.r.source || "scan" : "manual" };
     Object.assign(sp, { date, store: $("#spStore").value.trim(), total: T, parts: merged, note: $("#spNote").value.trim(), items: spItems.filter((i) => i.text.trim() || i.price).map((i) => Object.assign({ text: i.text.trim(), price: i.price, qty: i.qty > 0 ? i.qty : 1, cat: i.cat || "" }, i.box ? { box: i.box } : {})) });
     if (spScan && spScan.photo && B.keepPhotos) { sp.photoId = "p" + sp.id; await PhotoDB.put(sp.photoId, spScan.photo); if (spWeak && spWeak.length) sp.weak = spWeak; }
-    { const v = spSaveCalc(T); if (v.n || v.pct) sp.save = v; else delete sp.save; if (!spEdit) B.saveCfg = { n: v.n, pct: v.pct }; }
+    { const v = spSaveCalc(T); if (v.n || v.pct) { sp.save = v; if (v.delta) { const big = sp.parts.reduce((x, y) => (y.amount > x.amount ? y : x)); big.amount = r2c(big.amount + v.delta); sp.total = r2c(T + v.delta); sp.save.base = T; } } else delete sp.save; if (!spEdit) B.saveCfg = { n: v.n, pct: v.pct, incR: v.incR, incS: v.incS }; }
     if (!spEdit) B.spends.push(sp);
     bLearn(sp); bSave();
     $("#dlgSpend").close();
