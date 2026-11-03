@@ -382,9 +382,12 @@ html[data-theme="dark"] input.unsure { background: #3A3210; }
 .camhint { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); background: rgb(0 0 0 / 0.65); color: #fff; padding: 6px 12px; border-radius: 99px; font-size: 0.86rem; white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; }
 .camctl { display: flex; gap: 8px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
 .camctl #camShot { flex: 1 1 auto; justify-content: center; }
+.camprog { position: absolute; left: 9%; right: 9%; bottom: 2%; height: 5px; border-radius: 3px; background: rgb(255 255 255 / 0.25); overflow: hidden; } .camprog b { display: block; height: 100%; width: 0; background: #3ccf7a; transition: width 0.2s; }
+.camauto { min-width: 6.5rem; justify-content: center; } .camauto[aria-pressed="false"] { background: var(--surface); color: var(--muted); border: 1px solid var(--line); text-decoration: line-through; }
 .scqual { background: var(--div-soft); border-radius: 8px; padding: 8px 10px; margin: 0; font-size: 0.88rem; }
 .scpart { margin: 0; font-weight: 500; }
 .spph { position: relative; } .spov { position: absolute; inset: 0; pointer-events: none; }
+.spsave { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 8px; } .spsave .field span:first-child { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
 .spov i { position: absolute; border: 1.5px solid #e2b100; background: rgb(255 205 0 / 0.14); border-radius: 2px; }
 .spov b { position: absolute; border: 2px solid var(--accent); background: rgb(60 100 240 / 0.16); border-radius: 3px; box-shadow: 0 0 0 3px rgb(60 100 240 / 0.25); transition: top 0.15s, left 0.15s, width 0.15s, height 0.15s; }
 .spitem.hi { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
@@ -1712,7 +1715,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 61 · Stand 03.11.2026 12:07</p>
+        <p class="appver" id="appVer">Depotblick Version 62 · Stand 03.11.2026 17:05</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -1760,6 +1763,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <div class="card"><div class="card-h"><h3>Größte Geschäfte</h3></div><div id="bwStores"></div></div></div>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3 id="bwItH">Was du gekauft hast</h3><span class="note">Antippen zeigt alle Kassenzettel mit dem Artikel. Dort kannst du ihn auch umbenennen oder zusammenfassen, z. B. alle Spaghetti als „Nudeln“.</span></div></div>
             <div class="row bwitq"><input id="bwItQ" type="search" placeholder="Artikel suchen" aria-label="Artikel suchen"><div class="seg" id="bwItScope" role="group" aria-label="Wo suchen"><button type="button" data-v="r">Zeitraum</button><button type="button" data-v="a">Alle Zettel</button></div></div><div id="bwItems"></div></div>
+          <div class="card" id="bwSave" hidden><div class="card-h"><div style="display:grid;gap:2px"><h3>Aufgerundet und Saveback</h3><span class="note">Was du beim Bezahlen nebenbei gespart hast. Nur zur Übersicht, es zählt nicht zu den Sparplänen.</span></div></div><div class="kpis bmk" id="bwSaveK"></div><div id="bwSaveL" style="margin-top:10px"></div></div>
           <div class="card" id="bwDep" hidden><div class="card-h"><div style="display:grid;gap:2px"><h3>Pfand und Leergut</h3><span class="note">Extra gezählt und nicht bei den Artikeln. Das Leergut ist schon von den Einkäufen abgezogen.</span></div></div><div class="kpis bmk" id="bwDepK"></div></div>
           <div class="card"><div class="card-h"><h3>Ausgaben pro Monat</h3></div><div class="chart" id="bwChart"></div></div>
         </div>
@@ -1923,6 +1927,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <p class="note" id="spBoxNote" hidden style="margin:0 0 6px">Tippst du auf einen Artikel, leuchtet seine Zeile im Foto auf. Gelb umrandet sind Stellen, die schwer zu lesen waren.</p>
           <div class="spith" aria-hidden="true"><span>Menge</span><span>Artikel</span><span>Preis</span><span>Pocket</span><span></span></div>
           <div id="spItems" style="display:grid;gap:6px"></div><button type="button" class="link" id="spItemAdd" style="margin-top:6px">+ Artikel</button></details>
+        <details class="spitems" id="spSaveD"><summary>Aufrunden und Saveback <span class="muted" id="spSaveN"></span></summary>
+          <div class="spsave">
+            <label class="field"><span>Aufrunden auf</span><select id="spRound"><option value="0">aus</option><option value="1">1 €</option><option value="2">2 €</option><option value="3">3 €</option><option value="4">4 €</option><option value="5">5 €</option><option value="10">10 €</option></select></label>
+            <label class="field"><span>Saveback</span><span class="unit2"><input id="spSb" inputmode="decimal" placeholder="0"><span>%</span></span></label>
+          </div>
+          <p class="note" id="spSaveInfo" style="margin:6px 0 0"></p>
+          <p class="note" style="margin:4px 0 0">Wird nur in der Auswertung gezählt, nicht bei den Sparplänen. Was du hier einstellst, <b>bleibt für die nächsten Kassenzettel an, bis du es hier wieder auf „aus“ und 0 % stellst.</b></p>
+        </details>
         <div class="field"><label for="spNote">Notiz</label><input id="spNote" placeholder="optional"></div>
         <div class="spprev" id="spPrev"></div>
       </div>
@@ -1945,9 +1957,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <input type="file" id="scCam" accept="image/*" capture="environment" hidden><input type="file" id="scFile" accept="image/*,application/pdf,.pdf" hidden>
     </div>
     <div data-st="cam" hidden class="sccam">
-      <div class="camwrap" id="camWrap"><video id="camVid" playsinline muted autoplay></video><div class="camframe" id="camFrame"></div><div class="camhint" id="camHint">Zettel in den Rahmen legen</div></div>
-      <div class="camctl"><button type="button" class="btn ghost sm" id="camTorch" hidden aria-pressed="false">🔦 Licht</button><button type="button" class="btn" id="camShot">Auslösen</button><button type="button" class="btn ghost sm" id="camAuto" aria-pressed="true">Automatisch</button></div>
-      <p class="note" style="margin:0">Bei „Automatisch“ löst die Kamera selbst aus, sobald das Bild ruhig und scharf ist. <button type="button" class="link" id="camBack">Abbrechen</button></p>
+      <div class="camwrap" id="camWrap"><video id="camVid" playsinline muted autoplay></video><div class="camframe" id="camFrame"></div><div class="camhint" id="camHint">Zettel in den Rahmen legen</div><div class="camprog"><b id="camProg"></b></div></div>
+      <div class="camctl"><button type="button" class="btn ghost sm" id="camTorch" hidden aria-pressed="false">🔦 Licht</button><button type="button" class="btn" id="camShot">Auslösen</button><button type="button" class="btn sm camauto" id="camAuto" aria-pressed="true">Auto: an</button></div>
+      <p class="note" style="margin:0" id="camNote">Auto an: Die Kamera löst selbst aus, sobald das Bild kurz ruhig ist. <button type="button" class="link" id="camBack">Abbrechen</button></p>
     </div>
     <div data-st="crop" hidden style="display:grid;gap:10px">
       <p class="scpart" id="scPartCrop" hidden></p>
@@ -2239,7 +2251,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   // Alles, was gespeichert und gesichert wird, an einer Stelle
   const pack = (data, extra) => Object.assign({}, extra || {}, { v: 2, txs: data.txs, assets: data.assets, budget: data.budget, plans: data.plans || [], depots: data.depots, wealth: data.wealth, pots: data.pots, watch: data.watch, goals: data.goals, tax: data.tax, target: data.target, retire: data.retire });
   const normBudget = (b) => ({ inc: Array.isArray(b && b.inc) ? b.inc : [], exp: Array.isArray(b && b.exp) ? b.exp : [], cushion: b && b.cushion != null && isFinite(+b.cushion) ? +b.cushion : null, debt: b && (b.debt === "none" || b.debt === "some") ? b.debt : null,
-    cats: Array.isArray(b && b.cats) ? b.cats : [], spends: Array.isArray(b && b.spends) ? b.spends.filter((x) => x && x.date && Array.isArray(x.parts)) : [], rules: Array.isArray(b && b.rules) ? b.rules : [], keepPhotos: b && b.keepPhotos === false ? false : true });
+    cats: Array.isArray(b && b.cats) ? b.cats : [], spends: Array.isArray(b && b.spends) ? b.spends.filter((x) => x && x.date && Array.isArray(x.parts)) : [], rules: Array.isArray(b && b.rules) ? b.rules : [], keepPhotos: b && b.keepPhotos === false ? false : true, alias: b && b.alias && typeof b.alias === "object" ? b.alias : {}, saveCfg: b && b.saveCfg && typeof b.saveCfg === "object" ? b.saveCfg : { n: 0, pct: 0 } });
   const Store = {
     ok: true,
     load() {
@@ -7684,6 +7696,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const st = {}; list.forEach((s) => { const n = (s.store || "Ohne Geschäft").trim(), kk = bNorm(n) || n; const e = st[kk] || (st[kk] = { n, v: 0, c: 0 }); e.v += s.total; e.c++; });
     const top = Object.values(st).sort((a, b) => b.v - a.v).slice(0, 8), mt = top.length ? top[0].v : 1;
     $("#bwStores").innerHTML = top.length ? top.map((e) => `<div class="bwst"><span class="n">${esc(e.n)}</span><span class="tr"><b style="width:${(e.v / mt) * 100}%"></b></span><span class="num">${eur0.format(e.v)}</span><span class="muted num">${e.c}×</span></div>`).join("") : '<p class="hint">Keine Ausgaben in diesem Zeitraum.</p>';
+    // Aufrunden und Saveback
+    const svOf = (ls) => ls.reduce((o, s) => { if (s.save) { o.r += s.save.round || 0; o.b += s.save.sbAmt || 0; if ((s.save.round || 0) + (s.save.sbAmt || 0) > 0) o.n++; } return o; }, { r: 0, b: 0, n: 0 });
+    const svA = svOf(B.spends), svR = svOf(list), svFirst = B.spends.filter((s) => s.save).map((s) => s.date).sort()[0];
+    $("#bwSave").hidden = !svA.n;
+    if (svA.n) {
+      $("#bwSaveK").innerHTML = `<div class="kpi"><span class="eyebrow">Gespart im Zeitraum</span><span class="v big">${eur.format(svR.r + svR.b)}</span><span class="s">${svR.n ? svR.n + " Einkäufe" : "in diesem Zeitraum nichts"}</span></div>
+        <div class="kpi"><span class="eyebrow">Aufgerundet</span><span class="v">${eur.format(svR.r)}</span><span class="s">Saveback ${eur.format(svR.b)}</span></div>
+        <div class="kpi"><span class="eyebrow">Insgesamt</span><span class="v">${eur.format(svA.r + svA.b)}</span><span class="s">seit ${fmtDate(svFirst)}</span></div>`;
+      const last = list.filter((s) => s.save && (s.save.round || 0) + (s.save.sbAmt || 0) > 0).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 6);
+      $("#bwSaveL").innerHTML = last.map((s) => `<div class="bwst"><span class="n">${fmtDate(s.date)} · ${esc(s.store || "Ohne Geschäft")}</span><span class="muted num">${s.save.round ? "+" + eur.format(s.save.round) : ""}</span><span class="num">${s.save.sbAmt ? "+" + eur.format(s.save.sbAmt) : ""}</span><span class="muted num">${eur0.format(s.total)}</span></div>`).join("");
+    }
     // Pfand: zurückbekommen (Leergut, minus) und bezahlt (Pfand auf Flaschen, plus)
     const depOf = (ls) => { const o = { back: 0, paid: 0, n: 0 }; ls.forEach((s) => { let hit = false; (s.items || []).forEach((it) => { if (!isDep(it.text) || !it.price) return; if (it.price < 0) { o.back -= it.price; hit = true; } else o.paid += it.price; }); if (hit) o.n++; }); return o; };
     const dAll = depOf(B.spends), dR = depOf(list);
@@ -7764,6 +7787,20 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (ps[0].amount == null) ps[0].amount = Math.round((T - ps.slice(1).reduce((x, p) => x + p.amount, 0)) * 100) / 100;
     return ps;
   }
+  // Aufrunden (Bank-App rundet auf den nächsten 1/2/…/10 €) und Saveback (Prozent vom Einkauf): nur Statistik
+  const r2c = (v) => Math.round(v * 100) / 100;
+  function spSaveCalc(T) {
+    const n = +$("#spRound").value || 0, pct = eurIn($("#spSb").value || "0"), sb = isFinite(pct) && pct > 0 ? Math.min(pct, 100) : 0;
+    const round = n && isFinite(T) && T > 0 ? r2c(Math.ceil(r2c(T) / n - 1e-9) * n - T) : 0;
+    return { n, pct: sb, round, sbAmt: sb && isFinite(T) && T > 0 ? r2c((T * sb) / 100) : 0 };
+  }
+  function spSaveInfo() {
+    const T = spTotal(), v = spSaveCalc(isFinite(T) ? T : spISum()), on = v.n || v.pct;
+    $("#spSaveN").textContent = on ? "· an" + (v.n ? `, auf ${v.n} €` : "") + (v.pct ? `, ${nf(2).format(v.pct)} %` : "") : "· aus";
+    $("#spSaveInfo").textContent = on ? (v.round || v.sbAmt ? [v.n ? `Aufgerundet: ${eur.format(v.round)}` : "", v.pct ? `Saveback: ${eur.format(v.sbAmt)}` : ""].filter(Boolean).join(" · ") + ` · zusammen ${eur.format(v.round + v.sbAmt)} gespart` : "Trag die Summe ein, dann siehst du hier, wie viel gespart wird.") : "Aus. Stell hier ein, wenn deine Bank-App aufrundet oder du Saveback bekommst.";
+  }
+  ["spRound", "spSb"].forEach((k) => $("#" + k).addEventListener(k === "spRound" ? "change" : "input", spSaveInfo));
+  $("#spTotal").addEventListener("input", () => spSaveInfo());
   function spPreview() {
     const ps = spResolved(), T = spTotal(), k = $("#spDate").value || today();
     let rest = "";
@@ -7855,6 +7892,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (sug && sug.why === "gelernt") note += ` ${esc(bCatName(sug.cat))} wie beim letzten Mal bei ${esc(r.store)}.`;
     }
     $("#spScanNote").textContent = note.trim(); $("#spScanNote").hidden = !note.trim();
+    { const cfg = s ? s.save || { n: 0, pct: 0 } : B.saveCfg || { n: 0, pct: 0 }; $("#spRound").value = String(cfg.n || 0); $("#spSb").value = cfg.pct ? nf(2).format(cfg.pct) : ""; $("#spSaveD").open = !!(cfg.n || cfg.pct); spSaveInfo(); }
     if (manual && !spItems.length) spItems.push({ text: "", price: null, qty: 1, cat: "" });
     spAutoT = false; $("#spTotal").classList.remove("auto");
     $("#spItemsD").hidden = false; $("#spItemsD").open = !!manual;
@@ -7902,6 +7940,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const B = bData(), sp = spEdit || { id: uid(), source: spScan ? spScan.r.source || "scan" : "manual" };
     Object.assign(sp, { date, store: $("#spStore").value.trim(), total: T, parts: merged, note: $("#spNote").value.trim(), items: spItems.filter((i) => i.text.trim() || i.price).map((i) => Object.assign({ text: i.text.trim(), price: i.price, qty: i.qty > 0 ? i.qty : 1, cat: i.cat || "" }, i.box ? { box: i.box } : {})) });
     if (spScan && spScan.photo && B.keepPhotos) { sp.photoId = "p" + sp.id; await PhotoDB.put(sp.photoId, spScan.photo); if (spWeak && spWeak.length) sp.weak = spWeak; }
+    { const v = spSaveCalc(T); if (v.n || v.pct) sp.save = v; else delete sp.save; if (!spEdit) B.saveCfg = { n: v.n, pct: v.pct }; }
     if (!spEdit) B.spends.push(sp);
     bLearn(sp); bSave();
     $("#dlgSpend").close();
@@ -7994,7 +8033,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     // Datum: 30.10.26, 30.10.2026, 2026-10-30 oder 30. Okt. 2026
     let date = null;
     const ok = (y, mo, d) => { if (y < 100) y += 2000; if (d >= 1 && d <= 31 && mo >= 1 && mo <= 12 && y >= 2000 && y <= 2100) { const iso = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`; if (iso <= today()) return iso; } return null; };
-    for (const l of lines) {
+    // Zeitstempel der Kasse (TSE, z. B. 2026-10-30T15:37:58) ist am verlässlichsten
+    for (const l of lines) { const m = l.match(/\b(20\d{2})-(\d{2})-(\d{2})[T1 ]?\d{2}[:;.]\d{2}/); if (m && (date = ok(+m[1], +m[2], +m[3]))) break; }
+    if (!date) for (const l of lines) {
       let m = l.match(/\b(\d{1,2})[.\/](\d{1,2})[.\/](\d{4}|\d{2})\b/); if (m && (date = ok(+m[3], +m[2], +m[1]))) break;
       m = l.match(/\b(\d{4})-(\d{2})-(\d{2})\b/); if (m && (date = ok(+m[1], +m[2], +m[3]))) break;
       m = l.match(/\b(\d{1,2})\.?\s+([A-Za-zäÄ]{3,9})\.?\s+(\d{4})\b/); if (m && RC_MON[m[2].toLowerCase().slice(0, m[2].toLowerCase().startsWith("mär") ? 3 : 3)] && (date = ok(+m[3], RC_MON[m[2].toLowerCase().slice(0, 3)], +m[1]))) break;
@@ -8050,7 +8091,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const negW = always || /(PFAND|AKTION\s*-)/i.test(l);
       price = Math.abs(price); if (always || (negW && dash)) price = -price;
       // Stückpreis × Menge muss zum Zeilenpreis passen, sonst ist eine Ziffer falsch gelesen
-      let unsureP = false; { const um2 = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/); if (um2 && qty > 1) { const u = rcNum(um2[1]); if (Math.abs(u * qty - price) > 0.015) unsureP = true; } }
+      let unsureP = false; { const um2 = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/); if (um2 && qty > 1) { const u = rcNum(um2[1]); if (Math.abs(u * qty - price) > 0.015) { unsureP = true;
+        // Nur eine Ziffer anders als Stückpreis × Menge (3,96 statt 3,98): dann stimmt das Produkt
+        const a = String(Math.round(Math.abs(price) * 100)), c = String(Math.round(u * qty * 100)); if (a.length === c.length && [...a].filter((ch, k) => ch !== c[k]).length === 1) price = Math.sign(price || 1) * Math.round(u * qty * 100) / 100; } } }
       // „1,35 € x  2,70“ (Menge unleserlich): aus Zeilenpreis ÷ Stückpreis
       const um = head.match(/(\d+[,.]\d{2})\s*€?\s*[xX×*]\s*\S{0,2}\s*$/);
       if (!qm && um) { const r = price / rcNum(um[1]); if (rcNum(um[1]) > 0 && Math.round(r) >= 2 && Math.abs(r - Math.round(r)) < 0.03) qty = Math.round(r); }
@@ -8108,7 +8151,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const o = r._o; delete r._o; if (!o || !th) return;
     const R4 = (v) => Math.round(v * 1e4) / 1e4, map = (bb, i) => { const pg = th.pages[i], W = o[i].W, H = o[i].H; return [R4(bb.x0 / W), R4(pg.y + (bb.y0 / H) * pg.h), R4((bb.x1 - bb.x0) / W), R4(((bb.y1 - bb.y0) / H) * pg.h)]; };
     const lines = o.flatMap((x, i) => (x.d.lines || []).map((l) => ({ t: (l.text || "").toLowerCase(), b: map(l.bbox, i) })));
-    r.weak = o.flatMap((x, i) => (x.d.words || []).filter((w) => w.confidence < 55 && /[A-Za-z0-9ÄÖÜäöü]{2,}/.test(w.text || "")).map((w) => map(w.bbox, i))).slice(0, 150);
+    r.weak = o.flatMap((x, i) => (x.d.words || []).filter((w) => w.confidence < 55 && w.confidence > 15 && /[A-Za-z0-9ÄÖÜäöü]{3,}/.test(w.text || "") && (w.bbox.x1 - w.bbox.x0) < x.W * 0.6 && (w.bbox.y1 - w.bbox.y0) < x.H * 0.06).map((w) => map(w.bbox, i))).slice(0, 120);
     let at = 0;
     r.items.forEach((it) => {
       const cents = String(Math.round(Math.abs(it.price || 0) * 100)), w0 = ((it.text || "").toLowerCase().match(/[a-zäöüß]{3,}/) || [""])[0];
@@ -8142,7 +8185,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     let glare = 0; for (let gy = 0; gy < GY; gy++) { const ink = (gx) => dk[gy * GX + gx] > nn[gy * GX + gx] * 0.01; for (let gx = 1; gx < GX - 1; gx++) { const k = gy * GX + gx; if (hi[k] > nn[k] * 0.85 && dk[k] === 0 && [...Array(gx).keys()].some(ink) && [...Array(GX - gx - 1).keys()].some((j) => ink(gx + 1 + j))) glare++; } }
     return { mean, sharp, glare };
   }
-  const QUAL_SHARP = 20, CAM_MIN = 40;
+  const QUAL_SHARP = 20, CAM_MIN = 22;
   function scQualShow() {
     let m = [];
     try { const q = rcQual(SC.img, SC.box); if (q.mean < 70) m.push("Das Foto ist sehr dunkel, mehr Licht hilft."); if (q.sharp < QUAL_SHARP) m.push("Das Foto ist unscharf. Halte das Handy ruhig und tippe zum Scharfstellen auf den Zettel."); if (q.glare >= 2) m.push("Auf dem Zettel spiegelt etwas. Halte das Handy etwas schräger oder ändere das Licht."); SC.q = q; } catch (e) {}
@@ -8178,7 +8221,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { $("#scCam").click(); return; }
     scStep("cam"); $("#camHint").textContent = "Kamera startet …"; $("#camFrame").classList.remove("ok");
     let st;
-    try { st = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 2560 }, height: { ideal: 1920 } } }); }
+    try { st = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 4096 }, height: { ideal: 3072 } } }); }
     catch (e) { scStep("pick"); toast(/NotAllowed|Permission|Security/i.test((e && e.name) || "") ? "Kamera nicht erlaubt. Nimm die Kamera-App oder erlaube die Kamera in den Einstellungen." : "Die Kamera ließ sich nicht starten. Nimm die Kamera-App."); return; }
     if (!$("#dlgScan").open || $('#dlgScan [data-st="cam"]').hidden) { st.getTracks().forEach((t) => t.stop()); return; }
     CAM.st = st; const v = $("#camVid"); v.srcObject = st; try { await v.play(); } catch (e) {}
@@ -8186,9 +8229,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     try { if (cap.focusMode && cap.focusMode.includes("continuous")) await tr.applyConstraints({ advanced: [{ focusMode: "continuous" }] }); } catch (e) {}
     // Licht (Taschenlampe) gibt es nur, wo der Browser es erlaubt, z. B. Chrome auf Android; am iPhone nicht
     $("#camTorch").hidden = !cap.torch; if (cap.torch) camTorch(S.ui.torch !== false);
-    CAM.auto = S.ui.camAuto !== false; $("#camAuto").setAttribute("aria-pressed", String(CAM.auto));
+    CAM.auto = S.ui.camAuto !== false; camAutoShow();
     CAM.prev = null; CAM.still = 0; CAM.best = []; CAM.t = setInterval(camTick, 200);
   }
+  function camAutoShow() { const b = $("#camAuto"); b.setAttribute("aria-pressed", String(CAM.auto)); b.textContent = CAM.auto ? "Auto: an" : "Auto: aus"; $("#camNote").firstChild.textContent = CAM.auto ? "Auto an: Die Kamera löst selbst aus, sobald das Bild kurz ruhig ist. " : "Auto aus: Tippe auf „Auslösen“, wenn der Zettel gut zu sehen ist. "; $("#camProg").style.width = "0"; }
   async function camTorch(on) { const tr = CAM.st && CAM.st.getVideoTracks()[0]; if (!tr) return; try { await tr.applyConstraints({ advanced: [{ torch: on }] }); $("#camTorch").setAttribute("aria-pressed", String(on)); } catch (e) { $("#camTorch").hidden = true; } }
   // Rahmen auf das Kamerabild umrechnen (Anzeige füllt die Fläche, Ränder werden abgeschnitten)
   function camFrameBox() {
@@ -8204,22 +8248,37 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const g = camSmall.getContext("2d", { willReadFrequently: true }); g.drawImage(v, b.x * v.videoWidth, b.y * v.videoHeight, b.w * v.videoWidth, b.h * v.videoHeight, 0, 0, W, H);
     const d = g.getImageData(0, 0, W, H).data, n = W * H, L = new Float32Array(n); let mean = 0;
     for (let i = 0; i < n; i++) { L[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; mean += L[i]; } mean /= n;
-    let mot = 99; if (CAM.prev && CAM.prev.length === n) { mot = 0; for (let i = 0; i < n; i++) mot += Math.abs(L[i] - CAM.prev[i]); mot /= n; }
-    CAM.prev = L;
-    const sharp = lapTop(L, W, H, 0.03); CAM.best.push(sharp); if (CAM.best.length > 15) CAM.best.shift();
-    const still = mot < 3.5, dark = mean < 55, ok = still && !dark && sharp >= CAM_MIN && sharp >= Math.max(...CAM.best) * 0.8;
-    CAM.still = ok ? CAM.still + 1 : 0; CAM.last = { mean, mot, sharp };
-    $("#camFrame").classList.toggle("ok", CAM.still > 0);
+    // Bewegung auf 8×8-Blöcken gemittelt, damit Bildrauschen nicht als Wackeln zählt
+    const BW = Math.floor(W / 8), BH = Math.floor(H / 8), Q = new Float32Array(BW * BH);
+    for (let y = 0; y < BH * 8; y++) for (let x = 0; x < BW * 8; x++) Q[((y / 8) | 0) * BW + ((x / 8) | 0)] += L[y * W + x] / 64;
+    let mot = 99; if (CAM.prev && CAM.prev.length === Q.length) { mot = 0; for (let i = 0; i < Q.length; i++) mot += Math.abs(Q[i] - CAM.prev[i]); mot /= Q.length; }
+    CAM.prev = Q;
+    const sharp = lapTop(L, W, H, 0.03); CAM.best.push(sharp); if (CAM.best.length > 20) CAM.best.shift();
+    const still = mot < 6, dark = mean < 45, ok = still && !dark && sharp >= CAM_MIN && sharp >= Math.max(...CAM.best) * 0.6;
+    CAM.still = ok ? CAM.still + 1 : Math.max(0, CAM.still - 2); CAM.last = { mean, mot, sharp };
+    $("#camFrame").classList.toggle("ok", ok);
+    $("#camProg").style.width = CAM.auto ? Math.min(100, (CAM.still / 5) * 100) + "%" : "0";
     $("#camHint").textContent = dark ? "Zu dunkel, mehr Licht" : !still ? "Halte das Handy ruhig" : sharp < CAM_MIN ? "Noch unscharf, etwas näher oder weiter weg" : CAM.auto ? "Gut so, still halten …" : "Gut so, jetzt auslösen";
-    if (CAM.auto && CAM.still >= 6) camShoot();
+    if (CAM.auto && CAM.still >= 5) camShoot();
   }
-  function camShoot() {
-    const v = $("#camVid"); if (!v || !v.videoWidth) return; const b = camFrameBox();
-    const s = Math.min(1, 2400 / Math.max(v.videoWidth, v.videoHeight)), c = Object.assign(document.createElement("canvas"), { width: Math.round(v.videoWidth * s), height: Math.round(v.videoHeight * s) });
+  async function camShoot() {
+    const v = $("#camVid"); if (!v || !v.videoWidth || CAM.busy) return; CAM.busy = true; const b = camFrameBox();
+    const s = Math.min(1, 2400 / Math.max(v.videoWidth, v.videoHeight)); let c = Object.assign(document.createElement("canvas"), { width: Math.round(v.videoWidth * s), height: Math.round(v.videoHeight * s) });
     c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
-    camStop(); SC.img = c;
+    // Wo möglich (Chrome auf Android) ein echtes Foto in voller Auflösung statt eines Videobilds
+    try {
+      const tr = CAM.st && CAM.st.getVideoTracks()[0];
+      if (tr && "ImageCapture" in window) { $("#camHint").textContent = "Foto wird aufgenommen …"; const blob = await Promise.race([new ImageCapture(tr).takePhoto(), new Promise((r) => setTimeout(() => r(null), 4000))]); if (blob) { const im = await rcLoad(blob); if (im && Math.abs(im.width / im.height - c.width / c.height) < 0.02) c = im; } }
+    } catch (e) {}
+    CAM.busy = false; camStop(); SC.img = c;
     // Den Rahmen etwas großzügiger nehmen, damit keine Zeile abgeschnitten ist
     const m = 0.03; SC.box = b ? (() => { const x = Math.max(0, b.x - m), y = Math.max(0, b.y - m); return { x, y, w: Math.min(1 - x, b.w + 2 * m), h: Math.min(1 - y, b.h + 2 * m) }; })() : rcBox(c);
+    // Im Rahmen noch die Papierkante suchen, damit dunkler Untergrund nicht mitgelesen wird
+    try {
+      const f = SC.box, sub = Object.assign(document.createElement("canvas"), { width: Math.max(1, Math.round(f.w * c.width)), height: Math.max(1, Math.round(f.h * c.height)) });
+      sub.getContext("2d").drawImage(c, f.x * c.width, f.y * c.height, sub.width, sub.height, 0, 0, sub.width, sub.height);
+      const p = rcBox(sub); if (p.w < 0.995 || p.h < 0.995) SC.box = { x: f.x + p.x * f.w, y: f.y + p.y * f.h, w: p.w * f.w, h: p.h * f.h };
+    } catch (e) {}
     scCropShow();
   }
   // ---------- Digitaler Kassenbon (PDF): Text steht schon drin, keine Texterkennung nötig ----------
@@ -8300,7 +8359,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   $("#scCamBtn").addEventListener("click", camStart);
   $("#scAppCam").addEventListener("click", () => $("#scCam").click());
   $("#camShot").addEventListener("click", camShoot);
-  $("#camAuto").addEventListener("click", () => { CAM.auto = !CAM.auto; S.ui.camAuto = CAM.auto; savePrefs(); $("#camAuto").setAttribute("aria-pressed", String(CAM.auto)); CAM.still = 0; });
+  $("#camAuto").addEventListener("click", () => { CAM.auto = !CAM.auto; S.ui.camAuto = CAM.auto; savePrefs(); CAM.still = 0; camAutoShow(); });
   $("#camTorch").addEventListener("click", () => { const on = $("#camTorch").getAttribute("aria-pressed") !== "true"; S.ui.torch = on; savePrefs(); camTorch(on); });
   $("#camBack").addEventListener("click", () => scStep("pick"));
   $("#dlgScan").addEventListener("close", camStop);
