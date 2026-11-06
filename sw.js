@@ -1,23 +1,33 @@
 // Depotblick Service Worker: hält die App offline verfügbar. Kursabrufe (andere Adressen) gehen immer direkt ins Netz.
-const CACHE = "depotblick-20261103211023";
+const CACHE = "depotblick-20261106083924";
 // Texterkennung (Tesseract.js und deutsches Sprachpaket von jsDelivr): einmal laden, dann offline aus dem Speicher
-const OCR = "depotblick-ocr-5.1.1";
+const OCR = "depotblick-ocr-5.1.1"; // Texterkennung: Tesseract, onnxruntime und PaddleOCR-Modelle bleiben über Updates hinweg gespeichert
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png", "icon-180.png", "icon-32.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE && k !== OCR).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", (e) => {
-  const u = new URL(e.request.url);
-  if (e.request.method === "GET" && u.hostname === "cdn.jsdelivr.net" && /tesseract/.test(u.pathname)) {
-    e.respondWith(caches.open(OCR).then(async (c) => (await c.match(e.request)) || fetch(e.request).then((r) => { if (r.ok) c.put(e.request, r.clone()); return r; })));
-    return;
-  }
-  if (e.request.method !== "GET" || u.origin !== location.origin) return;
-  // Erst aus dem Speicher (schnell, offline), im Hintergrund die neue Version holen
-  e.respondWith(caches.open(CACHE).then(async (c) => {
-    const hit = await c.match(e.request, { ignoreSearch: true });
-    const net = fetch(e.request).then((r) => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit);
-    return hit || net;
-  }));
+  
+const u = new URL(e.request.url);
+  
+if (e.request.method === "GET" && ((u.hostname === "cdn.jsdelivr.net" && /tesseract|onnxruntime-web/.test(u.pathname)) || (u.origin === location.origin && /\/pp-(det|rec|dict)\./.test(u.pathname)))) {
+    
+e.respondWith(caches.open(OCR).then(async (c) => (await c.match(e.request)) || fetch(e.request).then((r) => { if (r.ok) c.put(e.request, r.clone()); return r; })));
+    
+return;
+  
+}
+  
+if (e.request.method !== "GET" || u.origin !== location.origin) return;
+  
+// Erst aus dem Speicher (schnell, offline), im Hintergrund die neue Version holen
+  
+e.respondWith(caches.open(CACHE).then(async (c) => {
+    
+const hit = await c.match(e.request, { ignoreSearch: true });
+    
+const net = fetch(e.request).then((r) => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit);
+    
+return hit || net;
+  
+}));
 });
-
-
