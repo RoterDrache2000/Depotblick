@@ -1725,7 +1725,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 68 · Stand 10.11.2026 16:25</p>
+        <p class="appver" id="appVer">Depotblick Version 69 · Stand 10.11.2026 16:42</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -5097,8 +5097,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   // Saveback und Cashback pro Jahr aus den Buchungen: letzte 12 Monate, bei kürzerer Zeit hochgerechnet
   function sbAuto() {
     const tx = (C.txs || []).filter((t) => t.type === "buy" && t.bonus); if (!tx.length) return { y: 0, n: 0, months: 0 };
-    const now = new Date(), from = iso(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())), first = tx.map((t) => t.date).sort()[0];
-    const last = tx.filter((t) => t.date >= from), sum = last.reduce((x, t) => x + t.shares * t.price, 0), months = Math.max(1, Math.min(12, Math.round(days(first > from ? first : from, iso(now)) / 30.44)));
+    const ds = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const now = new Date(), from = ds(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())), first = tx.map((t) => t.date).sort()[0];
+    const st = first > from ? first : from, last = tx.filter((t) => t.date >= from), sum = last.reduce((x, t) => x + t.shares * t.price, 0), months = Math.max(1, Math.min(12, Math.round((now - new Date(st + "T00:00:00")) / 864e5 / 30.44)));
     return { y: Math.round((sum * 12) / months), n: last.length, months };
   }
   function fcOpts(B) {
