@@ -1716,7 +1716,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 66 · Stand 09.11.2026 12:10</p>
+        <p class="appver" id="appVer">Depotblick Version 67 · Stand 10.11.2026 11:43</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -7522,11 +7522,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       // Rest von vor dem Anlegen (z. B. 50 € aus dem Vormonat), zählt einmal mit
       if (+c.startAmt && st >= perStart(p, since || st)) carry += +c.startAmt;
     }
-    const avail = amt + carry, spent = bSpentIn(c.id, st, en, skip), left = avail - spent, t = today();
+    // Mit Übertrag und Limit: der Rest sammelt sich weiter im Topf, ausgeben willst du pro Zeitraum aber nur bis zum Limit
+    const avail = amt + carry, spent = bSpentIn(c.id, st, en, skip), lim = c.rollover && +c.limit > 0 ? +c.limit : 0, cap = lim || avail, left = cap - spent, pot = avail - spent, t = today();
     const daysLeft = t >= st && t < en ? Math.round(days(t, en)) : 0;
-    return { st, en, label: perLabel(p, st), amt, carry, avail, spent, left, pct: avail > 0 ? spent / avail : spent > 0 ? 9 : 0, daysLeft, perDay: daysLeft > 0 ? left / daysLeft : null };
+    return { st, en, label: perLabel(p, st), amt, carry, avail, cap, lim, pot, spent, left, pct: cap > 0 ? spent / cap : spent > 0 ? 9 : 0, daysLeft, perDay: daysLeft > 0 ? left / daysLeft : null };
   }
-  const bLevel = (c, st) => (st.free ? "ok" : st.spent > st.avail + 0.005 ? "over" : st.pct * 100 >= (c.warnAt || 80) ? "warn" : "ok");
+  const bLevel = (c, st) => (st.free ? "ok" : st.spent > st.cap + 0.005 ? "over" : st.pct * 100 >= (c.warnAt || 80) ? "warn" : "ok");
   // Vorschlag für ein Geschäft: gelernte Regel, sonst Art der Kette, sonst erstes Budget
   const bNorm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9äöüß&]+/g, " ").trim();
   function bSuggest(store, kind) {
@@ -7571,7 +7572,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#bmLabel").textContent = "Heute, " + fmtDate(t);
     $("#bmEmpty").hidden = bReal(B).length > 0 || B.spends.length > 0; $("#bmBody").hidden = !$("#bmEmpty").hidden;
     if (!$("#bmEmpty").hidden) return;
-    const sts = B.cats.map((c) => ({ c, st: bState(c, t) })), lim = sts.filter(({ c }) => !c.free), left = lim.reduce((x, { st }) => x + st.left, 0), avail = lim.reduce((x, { st }) => x + st.avail, 0);
+    const sts = B.cats.map((c) => ({ c, st: bState(c, t) })), lim = sts.filter(({ c }) => !c.free), left = lim.reduce((x, { st }) => x + st.left, 0), avail = lim.reduce((x, { st }) => x + st.cap, 0);
     const inM = (m) => B.spends.filter((s) => ym(s.date) === m), mSum = (m) => inM(m).reduce((x, s) => x + s.total, 0), cur = mSum(k), prev = mSum(ymAdd(k, -1));
     const dayN = new Date().getDate(), prevSame = B.spends.filter((s) => ym(s.date) === ymAdd(k, -1) && +s.date.slice(8) <= dayN).reduce((x, s) => x + s.total, 0);
     $("#bmKpis").innerHTML = `<div class="kpi"><span class="eyebrow">Übrig in deinen Pockets</span><span class="v big ${left < 0 ? "loss" : ""}">${lim.length ? eur0.format(left) : "–"}</span><span class="s">${lim.length ? "von " + eur0.format(avail) + (new Set(lim.map(({ c }) => c.period || "month")).size > 1 ? ", jedes Pocket in seinem Zeitraum (Woche, Monat …)" : "") : "Noch keine Pockets"}</span></div>
@@ -7582,7 +7583,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (c.free) return `<button type="button" class="bcat bfree" data-cat="${esc(c.id)}"><span class="i" style="background:color-mix(in srgb, var(${c.color || "--c8"}) 16%, transparent)">${esc(c.icon)}</span><span class="t"><span class="row1"><b>${esc(c.name)}</b><span class="num">${eur0.format(st.spent)}</span></span><span class="row2"><span class="muted">ohne Obergrenze · für alles, was in kein Pocket passt · ${esc(st.label)}</span></span></span></button>`;
       const lv = bLevel(c, st);
       const sub = st.left >= 0 ? `noch <b class="num">${eur.format(st.left)}</b>${st.perDay != null && st.left > 0 && st.daysLeft > 1 ? ` · ${st.daysLeft} Tage, etwa ${eur.format(st.perDay)} pro Tag` : ""}` : `<b class="num loss">${eur.format(-st.left)} drüber</b>`;
-      return `<button type="button" class="bcat" data-cat="${esc(c.id)}"><span class="i" style="background:color-mix(in srgb, var(${c.color || "--c1"}) 16%, transparent)">${esc(c.icon)}</span><span class="t"><span class="row1"><b>${esc(c.name)}</b><span class="num">${eur0.format(st.spent)} <span class="muted">von ${eur0.format(st.avail)}</span></span></span>${bBar(c, st)}<span class="row2">${sub}<span class="muted"> · ${esc(st.label)}</span>${st.carry ? `<span class="muted"> · ${st.carry > 0 ? "+" : "−"}${eur0.format(Math.abs(st.carry))} übertragen</span>` : ""}${lv === "warn" ? ' <span class="pill warn">' + nf(0).format(st.pct * 100) + " %</span>" : ""}</span></span></button>`;
+      return `<button type="button" class="bcat" data-cat="${esc(c.id)}"><span class="i" style="background:color-mix(in srgb, var(${c.color || "--c1"}) 16%, transparent)">${esc(c.icon)}</span><span class="t"><span class="row1"><b>${esc(c.name)}</b><span class="num">${eur0.format(st.spent)} <span class="muted">von ${eur0.format(st.cap)}${st.lim ? " Limit" : ""}</span></span></span>${bBar(c, st)}<span class="row2">${sub}<span class="muted"> · ${esc(st.label)}</span>${st.lim ? `<span class="muted"> · im Topf ${eur0.format(st.pot)}</span>` : st.carry ? `<span class="muted"> · ${st.carry > 0 ? "+" : "−"}${eur0.format(Math.abs(st.carry))} übertragen</span>` : ""}${lv === "warn" ? ' <span class="pill warn">' + nf(0).format(st.pct * 100) + " %</span>" : ""}</span></span></button>`;
     }).join("");
     $$("#bmCats [data-cat]").forEach((b) => b.addEventListener("click", () => { S.bFilter = b.dataset.cat; location.hash = "#bausgaben"; }));
     const list = B.spends.slice().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
@@ -7609,6 +7610,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         <select data-f="period" aria-label="Zeitraum">${PERIODS.map(([v, l]) => `<option value="${v}"${(c.period || "month") === v ? " selected" : ""}>${l}</option>`).join("")}</select></div>
       <div class="btr2"><label class="btwarn">Am Ende <select data-f="rollover" aria-label="Was mit dem Rest passiert"><option value=""${c.rollover ? "" : " selected"}>neu starten</option><option value="1"${c.rollover ? " selected" : ""}>Rest übertragen</option></select></label>
         ${c.rollover ? `<label class="btwarn" title="Geld, das schon da war, bevor du das Pocket angelegt hast">Schon übrig <span class="unit2"><input data-f="startAmt" inputmode="decimal" value="${c.startAmt ? nf2.format(c.startAmt).replace(/,00$/, "") : ""}" placeholder="0" aria-label="Schon übrig, zum Beispiel aus dem Vormonat"><span>€</span></span></label>` : ""}
+        ${c.rollover ? `<label class="btwarn" title="Der Rest sammelt sich weiter im Topf, aber pro Zeitraum willst du nur bis hierhin ausgeben">Limit <span class="unit2"><input data-f="limit" inputmode="decimal" value="${c.limit ? nf2.format(c.limit).replace(/,00$/, "") : ""}" placeholder="kein" aria-label="Ausgabe-Limit pro Zeitraum"><span>€</span></span></label>` : ""}
         <label class="btwarn">Warnung ab <span class="unit2"><input data-f="warnAt" inputmode="numeric" value="${c.warnAt || 80}" aria-label="Warnung ab Prozent"><span>%</span></span></label>
         <span class="btcol" role="group" aria-label="Farbe">${B_COLS.map((x) => `<button type="button" data-col="${x}" aria-pressed="${x === (c.color || "--c1")}" style="background:var(${x})" aria-label="Farbe"></button>`).join("")}</span>
         <span class="btmv"><button type="button" class="icon-btn" data-mv="-1" aria-label="Nach oben"${i === 0 ? " disabled" : ""}>↑</button><button type="button" class="icon-btn" data-mv="1" aria-label="Nach unten"${i === B.cats.length - 1 ? " disabled" : ""}>↓</button><button type="button" class="icon-btn" data-del aria-label="Budget löschen">✕</button></span></div></div>`).join("");
@@ -7624,6 +7626,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       $$("[data-f]", card).forEach((el) => el.addEventListener(el.type === "checkbox" || el.tagName === "SELECT" ? "change" : "input", () => {
         const f = el.dataset.f;
         if (f === "rollover") { c.rollover = !!el.value; bSave(); PAGE_RENDER.btoepfe(); return; }
+        else if (f === "limit") { const v = el.value.trim() === "" ? 0 : eurIn(el.value); if (!isFinite(v) || v < 0) return; c.limit = v || undefined; }
         else if (f === "startAmt") { const v = el.value.trim() === "" ? 0 : eurIn(el.value); if (!isFinite(v)) return; c.startAmt = v || undefined; }
         else if (f === "amount") { const v = el.value.trim() === "" ? 0 : eurIn(el.value); if (!isFinite(v) || v < 0) return; c.amount = v; }
         else if (f === "warnAt") { const v = parseNum(el.value); if (!isFinite(v) || v < 1 || v > 200) return; c.warnAt = v; }
