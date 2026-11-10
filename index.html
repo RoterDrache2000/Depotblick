@@ -327,6 +327,10 @@ html[data-area="budget"] .nd, html:not([data-area="budget"]) .nb { display: none
 .btr1 { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr) 7.5rem 8rem; gap: 8px; align-items: center; }
 .btr2 { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.84rem; }
 .bticon { font-size: 1.1rem; padding-inline: 4px; }
+.rbtbl.pot .rbh, .rbtbl.pot .rbr { grid-template-columns: minmax(0, 1.3fr) 4.2rem minmax(0, 2.2fr) minmax(60px, 0.8fr) 8.5rem; }
+@media (max-width: 820px) { .rbtbl.pot .rbr { grid-template-columns: minmax(0, 1fr) 3.6rem 5.4rem; } .rbtbl.pot .rbr .rbpin { grid-column: 1 / -1; grid-row: 2; } .rbtbl.pot .rbr .rbbar { grid-row: 3; } .rbtbl.pot .rbr > span:last-child { grid-row: 3; } }
+.rbpots { display: grid; gap: 8px; } .rbpot { display: grid; grid-template-columns: minmax(0, 1fr) 6rem auto auto; gap: 8px; align-items: center; } .rbpin { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; } .rbpin select { max-width: 11rem; } .rbpin .unit2 { width: 8.5rem; }
+@media (max-width: 640px) { .rbpot { grid-template-columns: minmax(0, 1fr) 5.5rem auto; } .rbpot .note { grid-column: 1 / -1; grid-row: 2; } }
 .btwarn { display: flex; align-items: center; gap: 6px; } .btwarn .unit2 { width: 4.6rem; }
 .btcol { display: flex; gap: 5px; } .btcol button { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; }
 .btcol button[aria-pressed="true"] { border-color: var(--ink); }
@@ -1411,6 +1415,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             <div class="field"><label class="toggle"><input type="checkbox" id="spAvd"> Als Altersvorsorgedepot, mit Zulagen<button type="button" class="info" data-info="Altersvorsorgedepot im Sparplan" aria-label="Erklärung: Altersvorsorgedepot">i</button></label>
               <div class="g3 two" id="spAvdF" hidden style="margin-top:8px"><div class="field"><label for="spAvdKids">Kinder mit Kindergeld</label><div class="unit"><input id="spAvdKids" inputmode="numeric" placeholder="0"><span>Kinder</span></div></div></div>
               <span class="note" id="spAvdNote" hidden></span></div>
+            <div class="field"><label class="toggle"><input type="checkbox" id="spSbOn"> Saveback und Cashback einrechnen<button type="button" class="info" data-info="Saveback" aria-label="Erklärung: Saveback">i</button></label>
+              <div id="spSbF" hidden style="display:grid;gap:6px;margin-top:8px"><div class="sseg" id="spSbMode" role="group" aria-label="Woher der Betrag kommt"><button type="button" data-v="auto">Aus meinen Buchungen</button><button type="button" data-v="manual">Selbst eingeben</button></div>
+                <div class="unit"><input id="spSbAmt" inputmode="decimal" aria-label="Saveback und Cashback pro Jahr"><span>€ / Jahr</span></div><span class="note" id="spSbNote"></span></div></div>
             <div class="field"><span class="lab">Rendite pro Jahr vor Kosten<button type="button" class="info" data-info="Rendite-Spanne" aria-label="Erklärung: Rendite-Spanne">i</button></span><div class="sseg" id="spRet" role="group" aria-label="Renditestufe"></div></div>
             <details class="more" id="spMore"><summary>Weitere Annahmen</summary>
               <div class="more-in">
@@ -1454,13 +1461,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
                 <span><i style="background:var(--muted)"></i>Startkapital <b class="num" id="spVStart"></b></span>
                 <span><i style="background:var(--accent);opacity:.55"></i>Deine Raten <b class="num" id="spVPaid"></b></span>
                 <span><i style="background:var(--accent)"></i>Zinseszins <b class="num" id="spVGrow"></b></span>
-                <span id="spLZul" hidden><i style="background:var(--c2)"></i>Zulagen vom Staat <b class="num" id="spVZul"></b></span>
+                <span id="spLZul" hidden><i style="background:var(--c2)"></i><span id="spLZulT">Zulagen vom Staat</span> <b class="num" id="spVZul"></b></span>
               </div>
             </div>
             <div class="card" style="display:grid;gap:14px">
               <div class="row" style="justify-content:space-between"><h3>Was die ETF-Kosten ausmachen<button type="button" class="info" data-info="TER" aria-label="Erklärung: TER">i</button></h3><button type="button" class="link" id="spTerGo">TER je ETF ansehen</button></div>
               <div class="terg" id="spTerG"></div>
               <div class="tercmp" id="spTerCmp"></div>
+              <details class="more" id="spTerEtf"><summary>Kosten je ETF <span class="muted" id="spTerEtfN"></span></summary><div class="tablewrap" style="margin-top:8px"><table id="spTerTbl"></table></div><p class="note" style="margin-top:6px">Kosten über die Laufzeit: anteilig nach Wert, Sparrate und TER des ETFs. Die TER änderst du unter „Meine Sparpläne“.</p></details>
               <p class="terhow" id="spTerHow"></p>
             </div>
             <div class="card" style="display:grid;gap:10px"><h3>Meilensteine</h3><div class="miles" id="spMiles"></div></div>
@@ -1569,6 +1577,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         <div data-pane="rb" hidden class="crpane">
           <h2 class="seth sph">Zielaufteilung</h2>
           <div class="card"><div class="card-h"><div style="display:grid;gap:2px"><h3>So soll dein Depot aufgeteilt sein<button type="button" class="info" data-info="Zielaufteilung" aria-label="Erklärung: Zielaufteilung">i</button></h3><span class="note" id="rbSumNote"></span></div><div class="seg" id="rbBy" role="group" aria-label="Ebene"></div></div>
+            <div id="rbPots" hidden style="display:grid;gap:8px;margin-bottom:12px"></div>
             <div class="rbtbl" id="rbTbl"></div>
             <div class="row" style="gap:8px 14px;margin-top:12px"><button type="button" class="btn ghost sm" id="rbFromIst">Heutige Aufteilung übernehmen</button><button type="button" class="btn ghost sm" id="rbEven">Gleich verteilen</button><span class="row" style="gap:6px"><span class="note">Toleranz ±</span><span class="unit2" style="width:5.5rem"><input id="rbTol" inputmode="decimal"><span>Pp.</span></span></span></div></div>
           <div class="card"><div class="card-h"><h3>Ausgleichen</h3><div class="seg" id="rbMode" role="group" aria-label="Wie ausgleichen"></div></div>
@@ -1716,7 +1725,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 67 · Stand 10.11.2026 11:43</p>
+        <p class="appver" id="appVer">Depotblick Version 68 · Stand 10.11.2026 16:25</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -2295,7 +2304,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     priv: !!prefs.priv,
     ui: Object.assign({ lastBackup: 0, bkEvery: 30, since: Date.now(), bench: "", benchOn: true, mvView: "list", warnTitle: 5, warnCountry: 60, warnSector: 30 }, prefs.ui || {}),
     mvMode: "", mvAll: false,
-    fc: Object.assign({ start: null, rate: null, ret: 7, retMin: 5, retMax: 9, inf: 2, dyn: 0, dynMode: "pct", dynEur: 0, years: 30, stop: 0, goal: null, avd: false, avdKids: 0, phases: [], tax: true }, prefs.fc || {}),
+    fc: Object.assign({ start: null, rate: null, ret: 7, retMin: 5, retMax: 9, inf: 2, dyn: 0, dynMode: "pct", dynEur: 0, years: 30, stop: 0, goal: null, avd: false, avdKids: 0, sbOn: false, sbMode: "auto", sbAmt: 0, phases: [], tax: true }, prefs.fc || {}),
   };
   // Kein Beispieldepot mehr: die App startet leer
   const isDemo = () => false;
@@ -5085,9 +5094,16 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   // Sparerpauschbetrag aus den Depots (Freistellungsaufträge), höchstens 1.000 € bzw. 2.000 € verheiratet
   const hcFsa = () => Math.min(S.data.tax && S.data.tax.married ? 2000 : 1000, S.data.depots.reduce((x, d) => x + fsaOf(d), 0));
   const hcBz = () => { const B = Object.assign({}, BASISZINS, (S.data.tax && S.data.tax.basiszins) || {}), y = Object.keys(B).map(Number).sort((a, b) => b - a)[0]; return Math.max(0, +B[y] || 0); };
+  // Saveback und Cashback pro Jahr aus den Buchungen: letzte 12 Monate, bei kürzerer Zeit hochgerechnet
+  function sbAuto() {
+    const tx = (C.txs || []).filter((t) => t.type === "buy" && t.bonus); if (!tx.length) return { y: 0, n: 0, months: 0 };
+    const now = new Date(), from = iso(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())), first = tx.map((t) => t.date).sort()[0];
+    const last = tx.filter((t) => t.date >= from), sum = last.reduce((x, t) => x + t.shares * t.price, 0), months = Math.max(1, Math.min(12, Math.round(days(first > from ? first : from, iso(now)) / 30.44)));
+    return { y: Math.round((sum * 12) / months), n: last.length, months };
+  }
   function fcOpts(B) {
     const f = S.fc;
-    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
+    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), sbY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.sbAmt || 0 : sbAuto().y) : 0, phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
   }
   function simulate(o, ret, ys, sc, months) {
     // Monatlich. In einer Krise ersetzt der Krisenverlauf (abwärts, dann zurück aufs alte Hoch) die normale Rendite
@@ -5105,7 +5121,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (m > 0 && m % 12 === 0) rc = rc * (1 + o.dyn) + (o.dynY || 0);
       if (m > 0 && o.dynM) rc += o.dynM;
       if (o.phases && o.phases.length) { const ph = o.phases.find((x) => x.m === m); if (ph) rc = ph.rate; }
-      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; if (m >= m27) own += rc; }
+      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; if (m >= m27) own += rc; if (o.sbY > 0) { const sb = o.sbY / 12; Bv += sb; B0 += sb; zul += sb; } }
       A *= f[m] * kA; Bv *= f[m] * kB; A0 *= f[m]; B0 *= f[m];
       if (o.avd && (m + 1 - m27) % 12 === 0 && m >= m27) { const y = Math.min(1800, own), z = y > 0 ? avdZulage(y) + o.avdKids * 300 * Math.min(1, y / 300) : 0; Bv += z; B0 += z; zul += z; own = 0; }
       if (!(o.stopM > 0 && m >= o.stopM)) inY += rc;
@@ -5215,7 +5231,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spRateReset").hidden = f.rate == null; $("#spRateReset").textContent = eur0.format(B.rate) + " aus Sparplänen";
     $("#spStartReset").hidden = f.start == null; $("#spStartReset").textContent = eur0.format(B.value) + " aus Depot"; $("#spStartNote").hidden = f.start != null;
     sseg("#spYears", FC_YEARS.map((y) => [String(y), y + " J."]), String(f.years), (v) => { f.years = +v; fcChanged(); });
-    setIn("#spYearsIn", f.years); setIn("#spStop", f.stop > 0 ? f.stop : ""); $("#spAvd").checked = !!f.avd; $("#spTax").checked = f.tax !== false; $("#spTax").disabled = !!f.avd; renderPhases(); setIn("#spAvdKids", f.avdKids > 0 ? f.avdKids : "");
+    setIn("#spYearsIn", f.years); setIn("#spStop", f.stop > 0 ? f.stop : ""); $("#spAvd").checked = !!f.avd; $("#spSbOn").checked = !!f.sbOn; $("#spTax").checked = f.tax !== false; $("#spTax").disabled = !!f.avd; renderPhases(); setIn("#spAvdKids", f.avdKids > 0 ? f.avdKids : "");
     const key = [f.retMin, f.ret, f.retMax].join(",");
     $("#spRet").innerHTML = RET_PRESETS.map(([v, l, s]) => `<button type="button" data-v="${v}" aria-pressed="${v === key}">${l}<small>${s}</small></button>`).join("");
     $$("#spRet button").forEach((b) => b.addEventListener("click", () => { [f.retMin, f.ret, f.retMax] = b.dataset.v.split(",").map(Number); fcChanged(); }));
@@ -5257,6 +5273,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spPh").addEventListener("click", (e) => { const d = e.target.closest("[data-pdel]"); if (!d) return; f.phases.splice(+d.dataset.pdel, 1); fcChanged(); });
     $("#spTax").addEventListener("change", (e) => { f.tax = e.target.checked; fcChanged(); });
     $("#spAvd").addEventListener("change", (e) => { f.avd = e.target.checked; fcChanged(); });
+    $("#spSbOn").addEventListener("change", (e) => { f.sbOn = e.target.checked; fcChanged(); });
+    $$("#spSbMode [data-v]").forEach((b) => b.addEventListener("click", () => { f.sbMode = b.dataset.v; if (f.sbMode === "manual" && !f.sbAmt) f.sbAmt = sbAuto().y || 0; fcChanged(); }));
+    $("#spSbAmt").addEventListener("input", (e) => { if (f.sbMode !== "manual") return; const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 100000) return; f.sbAmt = v; fcChanged(); });
     $("#spAvdKids").addEventListener("input", (e) => { const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 10) return; f.avdKids = Math.round(v); fcChanged(); });
     $("#spStop").addEventListener("input", (e) => { const s0 = e.target.value.trim(), v = s0 === "" ? 0 : parseNum(s0); if (!isFinite(v) || v < 0 || v > 100) return; f.stop = Math.round(v); fcChanged(); });
     $("#spDyn").addEventListener("input", (e) => {
@@ -5474,7 +5493,9 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spCrashTxt").innerHTML = `${esc(sc.name)} ${cr.mode === "once" ? "nach " + cr.at + " Jahren" : "nach " + cr.at + " Jahren, dann alle " + cr.every + " Jahre"}${R.crash ? (p.nc > p.v ? " · " + eur0.format(p.nc - p.v) + " weniger" : p.v > p.nc ? " · " + eur0.format(p.v - p.nc) + " mehr, weil die Raten im Tief günstig kaufen" : "") : ""} · <button type="button" class="link" data-go-cr style="font-size:inherit">im Krisen-Test ändern</button>${R.crash ? ` · <button type="button" class="link" data-crash-off style="font-size:inherit;color:var(--loss)">entfernen</button>` : ""}`;
     const rates = p.paid - o.start, zulS = p.zul || 0, grow = p.v - p.paid - zulS;
     $("#spBStart").style.flex = Math.max(o.start, 0); $("#spBPaid").style.flex = Math.max(rates, 0); $("#spBGrow").style.flex = Math.max(grow, 0); $("#spBZul").style.flex = Math.max(zulS, 0);
-    $("#spLZul").hidden = !o.avd; $("#spVZul").textContent = shortEur(zulS);
+    $("#spLZul").hidden = !(o.avd || o.sbY > 0); $("#spVZul").textContent = shortEur(zulS); $("#spLZulT").textContent = o.avd && o.sbY > 0 ? "Zulagen und Saveback" : o.sbY > 0 ? "Saveback und Cashback" : "Zulagen vom Staat";
+    { const a = sbAuto(); $("#spSbF").hidden = !f.sbOn; $$("#spSbMode [data-v]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === (f.sbMode || "auto")))); const inp = $("#spSbAmt"); inp.readOnly = f.sbMode !== "manual"; if (document.activeElement !== inp) inp.value = f.sbMode === "manual" ? (f.sbAmt ? nf2.format(f.sbAmt).replace(/,00$/, "") : "") : a.y ? String(a.y) : "0";
+      $("#spSbNote").textContent = f.sbMode === "manual" ? "Kommt zur Sparrate dazu, solange du sparst. Es zählt nicht als dein eigenes Geld." : a.n ? `${a.n} Buchungen mit Saveback oder Cashback in den letzten ${a.months} Monaten, hochgerechnet auf ein Jahr.` : "Noch keine Saveback- oder Cashback-Buchungen gefunden. Wähle „Selbst eingeben“."; }
     $("#spAvdF").hidden = $("#spAvdNote").hidden = !o.avd;
     if (o.avd) { const y1 = Math.min(1800, o.rate * 12), z1 = y1 > 0 ? avdZulage(y1) + o.avdKids * 300 * Math.min(1, y1 / 300) : 0; $("#spAvdNote").textContent = `Rund ${eur0.format(z1)} Zulagen im Jahr${o.rate > 150 ? ". Gefördert werden nur 150 € im Monat, der Rest läuft ohne Zulage" : ""}. Ab 2027, nur mit Pflicht in der Rentenversicherung. Auszahlung frühestens mit 65, dann voll steuerpflichtig.`; }
     $("#spVStart").textContent = shortEur(o.start); $("#spVPaid").textContent = shortEur(rates); $("#spVGrow").textContent = shortEur(Math.max(grow, 0));
@@ -5490,6 +5511,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     ].map(([l, v, s2]) => `<div><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s2}</span></div>`).join("");
     const mx = Math.max(p.g, 1);
     $("#spTerCmp").innerHTML = `<div class="r"><span>Ohne Kosten</span><span class="t no" style="width:100%"></span><b class="num">${shortEur(p.g)}</b></div><div class="r"><span>Mit TER</span><span class="t" style="width:${Math.max(2, (p.v / mx) * 100)}%"></span><b class="num">${shortEur(p.v)}</b></div>`;
+    // Je ETF: Kosten pro Jahr heute und sein Anteil an den Kosten über die Laufzeit
+    { const rows = B.rows.filter((r) => r.ter.v > 0 || /^(ETF|Fonds)$/.test(r.a.cls || "")), wt = (r) => (r.value + r.rate * 12) * r.ter.v, W = rows.reduce((x, r) => x + wt(r), 0);
+      $("#spTerEtfN").textContent = rows.length ? "· " + rows.length + " ETFs" : "";
+      $("#spTerTbl").innerHTML = rows.length ? `<thead><tr><th>ETF</th><th class="r">TER</th><th class="r">pro Jahr</th><th class="r">in ${Y} J.</th></tr></thead><tbody>${rows.sort((a, b) => wt(b) - wt(a)).map((r) => `<tr><td style="max-width:14rem;overflow:hidden;text-overflow:ellipsis" title="${esc(r.a.name || r.a.symbol)}">${esc(r.a.name || r.a.symbol)}${r.rate ? `<div class="note">Rate ${eur0.format(r.rate)}</div>` : ""}</td><td class="r num">${nf(2).format(r.ter.v)} %</td><td class="r num">${eur.format((r.value * r.ter.v) / 100)}</td><td class="r num">${W > 0 ? shortEur((cost * wt(r)) / W) : "–"}</td></tr>`).join("")}</tbody>` : '<tbody><tr><td class="muted">Keine ETFs oder Fonds im Depot.</td></tr></tbody>'; }
     $("#spTerHow").innerHTML = `<b>So wird gerechnet:</b> Jeden Monat wächst das Depot mit der Rendite, danach wird ein Zwölftel der TER abgezogen. Aus ${numStr(f.ret)} % Rendite werden so rund ${nf(2).format(net * 100)} %. Von 10.000 € gehen im Jahr also etwa ${eur0.format(10000 * terW)} an den Fonds. Weil die TER ein Prozentsatz ist, kostet sie in Euro umso mehr, je größer dein Depot wird, und das Geld fehlt dir zusätzlich beim Zinseszins. Darum ist der Unterschied nach ${Y} Jahren größer als die Summe der einzelnen Jahreskosten.`;
     const ms = [1e5, 25e4, 5e5, 1e6, 2e6, 5e6].filter((t) => t > o.start).map((t) => { const q = R.pts.slice(0, Y + 1).find((x) => x.v >= t); return q ? [t, q.y] : null; }).filter(Boolean).slice(0, 4);
     $("#spMiles").innerHTML = ms.length ? ms.map(([t, y]) => `<div class="mile"><span class="note">${shortEur(t)}</span><b>${y0 + y}</b></div>`).join("") : '<p class="note" style="margin:0">Kein weiterer Meilenstein in dieser Laufzeit.</p>';
@@ -5559,7 +5584,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       S.fc.years = G().years; S.fc.stop = sv;
       savePrefs(); syncInputs(); setTab("fc"); toast(eur0.format(S.fc.rate) + " pro Monat als Sparrate eingetragen");
     });
-    $("#spTerGo").addEventListener("click", () => { setTab("my"); $("#fcPos").scrollIntoView({ behavior: "smooth", block: "center" }); });
+    $("#spTerGo").addEventListener("click", () => { const d = $("#spTerEtf"); if (d) { d.open = !d.open; if (d.open) d.scrollIntoView({ behavior: "smooth", block: "nearest" }); return; } setTab("my"); $("#fcPos").scrollIntoView({ behavior: "smooth", block: "center" }); });
   }
 
   // ---------- Zielaufteilung und Rebalancing ----------
@@ -5567,6 +5592,17 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const T = S.data.target || (S.data.target = { by: "pos", w: {}, tol: 5, minRate: 25, mode: "plans", once: 2000, months: 12, rate: null });
     ["pos", "cls"].forEach((k) => { if (!T["w_" + k]) T["w_" + k] = k === T.by ? T.w || {} : {}; });
     return T;
+  }
+  // Töpfe (z. B. „Sicher“ 80 %, „Chance“ 20 %): jedes Wertpapier gehört in einen Topf und hat dort eine eigene Gewichtung
+  function rbPots(T) {
+    if (!Array.isArray(T.pots) || !T.pots.length) T.pots = [{ id: "p1", name: "Sicher (Welt-ETFs)", pct: 80 }, { id: "p2", name: "Chance (Sektoren, gehebelt)", pct: 20 }];
+    T.potOf = T.potOf || {}; T.potW = T.potW || {}; return T.pots;
+  }
+  function rbPotW(T, items) {
+    const pots = rbPots(T), W = {};
+    pots.forEach((pt) => { const mem = items.filter((it) => T.potOf[it.key] === pt.id), sw = mem.reduce((x, it) => x + (+T.potW[it.key] || 0), 0);
+      mem.forEach((it) => { const w = sw > 0 ? (+T.potW[it.key] || 0) / sw : 1 / mem.length; W[it.key] = Math.round(pt.pct * w * 100) / 100; }); });
+    return W;
   }
   // Ist-Werte und Sparraten je Position oder Anlageklasse
   function rbItems(T) {
@@ -5603,20 +5639,33 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const r5 = (v) => Math.round(v / 5) * 5;
   const durM = (m) => (m < 24 ? m + (m === 1 ? " Monat" : " Monaten") : nf(1).format(m / 12) + " Jahren");
   function renderRb() {
-    const T = rbState(), items = rbItems(T), W = T["w_" + T.by], V = items.reduce((x, it) => x + it.v, 0);
-    seg("#rbBy", [["pos", "Positionen"], ["cls", "Anlageklassen"]], T.by, (v) => { T.by = v; commit(); });
+    const T = rbState(), items = rbItems(T), W = T.by === "pot" ? rbPotW(T, items) : T["w_" + T.by], V = items.reduce((x, it) => x + it.v, 0);
+    seg("#rbBy", [["pos", "Positionen"], ["cls", "Anlageklassen"], ["pot", "Töpfe"]], T.by, (v) => { T.by = v; commit(); });
+    $("#rbPots").hidden = T.by !== "pot"; $("#rbFromIst").textContent = T.by === "pot" ? "Gewichtung im Topf wie heute" : "Heutige Aufteilung übernehmen"; $("#rbEven").textContent = T.by === "pot" ? "Im Topf gleich verteilen" : "Gleich verteilen";
+    if (T.by === "pot") { const pots = rbPots(T), ps = pots.reduce((x, pt) => x + (+pt.pct || 0), 0);
+      $("#rbPots").innerHTML = `<div class="rbpots">${pots.map((pt, i) => { const mem = items.filter((it) => T.potOf[it.key] === pt.id), iv = V > 0 ? mem.reduce((x, it) => x + it.v, 0) / V : 0; return `<div class="rbpot"><input data-pn="${i}" value="${esc(pt.name)}" aria-label="Name des Topfs"><span class="unit2"><input data-pp="${i}" inputmode="decimal" value="${numStr(pt.pct, 1)}" aria-label="Anteil des Topfs"><span>%</span></span><span class="note">heute ${nf(1).format(iv * 100)} % · ${mem.length} ${mem.length === 1 ? "Wertpapier" : "Wertpapiere"}</span>${pots.length > 1 ? `<button type="button" class="icon-btn" data-pdel="${i}" aria-label="Topf löschen">✕</button>` : ""}</div>`; }).join("")}</div>
+        <div class="row" style="gap:8px 14px"><button type="button" class="btn ghost sm" id="rbPotAdd">+ Topf</button><span class="note"${Math.abs(ps - 100) > 0.05 ? ' style="color:var(--loss)"' : ""}>Töpfe zusammen ${nf(1).format(ps)} %${Math.abs(ps - 100) > 0.05 ? ", es müssen 100 % sein" : " ✓"}</span></div>`;
+      const sv = () => { Store.save(S.data); renderRb(); };
+      $$("#rbPots [data-pn]").forEach((el) => el.addEventListener("change", () => { pots[+el.dataset.pn].name = el.value.trim() || "Topf"; sv(); }));
+      $$("#rbPots [data-pp]").forEach((el) => el.addEventListener("change", () => { const v = parseNum(el.value); if (isFinite(v) && v >= 0 && v <= 100) pots[+el.dataset.pp].pct = v; sv(); }));
+      $$("#rbPots [data-pdel]").forEach((el) => el.addEventListener("click", () => { const pt = pots.splice(+el.dataset.pdel, 1)[0]; Object.keys(T.potOf).forEach((k) => { if (T.potOf[k] === pt.id) delete T.potOf[k]; }); sv(); }));
+      $("#rbPotAdd").addEventListener("click", () => { pots.push({ id: "p" + Date.now().toString(36), name: "Neuer Topf", pct: 0 }); sv(); });
+    }
     $$("#rbBy button").forEach((b) => b.classList.remove("chip"));
     const sum = items.reduce((x, it) => x + (+W[it.key] || 0), 0);
     const near = Math.abs(sum - 100) <= 1 && sum > 0;
     $("#rbSumNote").innerHTML = Math.abs(sum - 100) < 0.05 ? "Summe 100 % ✓" : near ? `Summe ${nf(1).format(sum)} %, wird auf 100 % umgerechnet` : `<span style="color:var(--loss)">Summe ${nf(1).format(sum)} %, es müssen 100 % sein</span>`;
     const tol = (T.tol || 5) / 100;
+    $("#rbTbl").classList.toggle("pot", T.by === "pot");
     $("#rbTbl").innerHTML = `<div class="rbh"><span>${T.by === "cls" ? "Klasse" : "Wertpapier"}</span><span class="r">Ist</span><span class="r">Ziel</span><span></span><span class="r">Abweichung</span></div>` + items.map((it) => {
       const ist = V > 0 ? it.v / V : 0, z = (+W[it.key] || 0) / 100, d = ist - z, out = Math.abs(d) > tol && W[it.key] != null;
       return `<div class="rbr"><span class="n" title="${esc(it.name)}">${esc(it.name)}</span><span class="r num">${nf(1).format(ist * 100)} %</span>
-        <span class="unit2 zin"><input data-rbk="${esc(it.key)}" inputmode="decimal" value="${W[it.key] != null ? numStr(W[it.key], 1) : ""}" placeholder="0" aria-label="Ziel in Prozent für ${esc(it.name)}"><span>%</span></span>
+        ${T.by === "pot" ? `<span class="rbpin"><select data-rpo="${esc(it.key)}" aria-label="Topf für ${esc(it.name)}"><option value="">kein Topf</option>${rbPots(T).map((pt) => `<option value="${esc(pt.id)}"${T.potOf[it.key] === pt.id ? " selected" : ""}>${esc(pt.name)}</option>`).join("")}</select>${T.potOf[it.key] ? `<span class="unit2"><input data-rpw="${esc(it.key)}" inputmode="decimal" value="${T.potW[it.key] != null ? numStr(T.potW[it.key], 1) : ""}" placeholder="gleich" aria-label="Gewichtung im Topf"><span>% im Topf</span></span><span class="note">Ziel ${nf(1).format(W[it.key] || 0)} %</span>` : ""}</span>` : `<span class="unit2 zin"><input data-rbk="${esc(it.key)}" inputmode="decimal" value="${W[it.key] != null ? numStr(W[it.key], 1) : ""}" placeholder="0" aria-label="Ziel in Prozent für ${esc(it.name)}"><span>%</span></span>`}
         <span class="rbbar"><i style="width:${Math.min(100, ist * 100)}%"></i><b style="left:${Math.min(100, z * 100)}%"></b></span>
         <span class="r num ${out ? (d > 0 ? "warn-t" : "loss") : "muted"}">${W[it.key] == null ? "–" : Math.abs(d) < 0.0005 ? "±0 Pp." : (d >= 0 ? "+" : "−") + nf(1).format(Math.abs(d) * 100) + ' Pp.<span class="desk"> · ' + (d >= 0 ? "+" : "−") + eur0.format(Math.abs(d * V)) + "</span>"}</span></div>`;
     }).join("");
+    $$("#rbTbl [data-rpo]").forEach((el) => el.addEventListener("change", () => { if (el.value) T.potOf[el.dataset.rpo] = el.value; else delete T.potOf[el.dataset.rpo]; Store.save(S.data); renderRb(); }));
+    $$("#rbTbl [data-rpw]").forEach((el) => el.addEventListener("change", () => { const v = parseNum(el.value); if (el.value.trim() === "") delete T.potW[el.dataset.rpw]; else if (isFinite(v) && v >= 0 && v <= 100) T.potW[el.dataset.rpw] = v; Store.save(S.data); renderRb(); }));
     $$("#rbTbl [data-rbk]").forEach((inp) => inp.addEventListener("change", () => { const v = parseNum(inp.value); if (inp.value.trim() === "") delete W[inp.dataset.rbk]; else if (isFinite(v) && v >= 0 && v <= 100) W[inp.dataset.rbk] = v; Store.save(S.data); renderRb(); }));
     const ti = $("#rbTol"); if (document.activeElement !== ti) ti.value = numStr(T.tol || 5, 1);
     seg("#rbMode", [["plans", "Nur über Sparpläne"], ["once", "Einmalbetrag"], ["sell", "Mit Verkauf"]], T.mode, (v) => { T.mode = v; Store.save(S.data); renderRb(); });
@@ -5671,9 +5720,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     items.forEach((it, i) => { if (z[i] > 0) need = Math.max(need, it.v / Math.min(1, z[i] + tol) - V); });
     return Math.max(0, need);
   }
+  const items0 = (T) => rbItems(T);
   $("#rbTol").addEventListener("change", (e) => { const v = parseNum(e.target.value); if (isFinite(v) && v > 0 && v <= 50) { rbState().tol = v; Store.save(S.data); renderRb(); } });
-  $("#rbFromIst").addEventListener("click", () => { const T = rbState(), items = rbItems(T), V = items.reduce((x, it) => x + it.v, 0); const W = (T["w_" + T.by] = {}); items.forEach((it) => (W[it.key] = V > 0 ? Math.round((it.v / V) * 1000) / 10 : 0)); const d = Math.round((100 - Object.values(W).reduce((x, y) => x + y, 0)) * 10) / 10; if (items.length) W[items[0].key] = Math.round((W[items[0].key] + d) * 10) / 10; Store.save(S.data); renderRb(); });
-  $("#rbEven").addEventListener("click", () => { const T = rbState(), items = rbItems(T), W = (T["w_" + T.by] = {}), n = items.length; items.forEach((it, i) => (W[it.key] = Math.round((100 / n) * 10) / 10)); if (n) W[items[0].key] = Math.round((100 - (Math.round((100 / n) * 10) / 10) * (n - 1)) * 10) / 10; Store.save(S.data); renderRb(); });
+  $("#rbFromIst").addEventListener("click", () => { const T = rbState(), items = rbItems(T); if (T.by === "pot") { rbPots(T); rbPots(T).forEach((pt) => { const mem = items.filter((it) => T.potOf[it.key] === pt.id), sv = mem.reduce((x, it) => x + it.v, 0); mem.forEach((it) => (T.potW[it.key] = sv > 0 ? Math.round((it.v / sv) * 1000) / 10 : 0)); }); Store.save(S.data); renderRb(); return; } const V = items.reduce((x, it) => x + it.v, 0); const W = (T["w_" + T.by] = {}); items.forEach((it) => (W[it.key] = V > 0 ? Math.round((it.v / V) * 1000) / 10 : 0)); const d = Math.round((100 - Object.values(W).reduce((x, y) => x + y, 0)) * 10) / 10; if (items.length) W[items[0].key] = Math.round((W[items[0].key] + d) * 10) / 10; Store.save(S.data); renderRb(); });
+  $("#rbEven").addEventListener("click", () => { const T0 = rbState(); if (T0.by === "pot") { rbPots(T0); items0(T0).forEach((it) => delete T0.potW[it.key]); Store.save(S.data); renderRb(); return; } const T = T0, items = rbItems(T), W = (T["w_" + T.by] = {}), n = items.length; items.forEach((it, i) => (W[it.key] = Math.round((100 / n) * 10) / 10)); if (n) W[items[0].key] = Math.round((100 - (Math.round((100 / n) * 10) / 10) * (n - 1)) * 10) / 10; Store.save(S.data); renderRb(); });
 
   // ---------- Sparplan-Tagebuch ----------
   function planEvents(p) {
