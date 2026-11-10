@@ -1416,9 +1416,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             <div class="field"><label class="toggle"><input type="checkbox" id="spAvd"> Als Altersvorsorgedepot, mit Zulagen<button type="button" class="info" data-info="Altersvorsorgedepot im Sparplan" aria-label="Erklärung: Altersvorsorgedepot">i</button></label>
               <div class="g3 two" id="spAvdF" hidden style="margin-top:8px"><div class="field"><label for="spAvdKids">Kinder mit Kindergeld</label><div class="unit"><input id="spAvdKids" inputmode="numeric" placeholder="0"><span>Kinder</span></div></div></div>
               <span class="note" id="spAvdNote" hidden></span></div>
-            <div class="field"><label class="toggle"><input type="checkbox" id="spSbOn"> Saveback und Cashback einrechnen<button type="button" class="info" data-info="Saveback" aria-label="Erklärung: Saveback">i</button></label>
+            <div class="field"><label class="toggle"><input type="checkbox" id="spSbOn"> Saveback, Cashback und Round-ups einrechnen<button type="button" class="info" data-info="Saveback" aria-label="Erklärung: Saveback">i</button></label>
               <div id="spSbF" hidden style="display:grid;gap:6px;margin-top:8px"><div class="sseg" id="spSbMode" role="group" aria-label="Woher der Betrag kommt"><button type="button" data-v="auto">Aus meinen Buchungen</button><button type="button" data-v="manual">Selbst eingeben</button></div>
-                <div class="unit"><input id="spSbAmt" inputmode="decimal" aria-label="Saveback und Cashback pro Jahr"><span>€ / Jahr</span></div><span class="note" id="spSbNote"></span></div></div>
+                <label class="lab" for="spSbAmt">Saveback und Cashback (geschenkt)</label><div class="unit"><input id="spSbAmt" inputmode="decimal" aria-label="Saveback und Cashback pro Jahr"><span>€ / Jahr</span></div>
+                <label class="lab" for="spRuAmt">Round-ups (dein Geld, beim Bezahlen aufgerundet)</label><div class="unit"><input id="spRuAmt" inputmode="decimal" aria-label="Round-ups pro Jahr"><span>€ / Jahr</span></div><span class="note" id="spSbNote"></span></div></div>
             <div class="field"><span class="lab">Rendite pro Jahr vor Kosten<button type="button" class="info" data-info="Rendite-Spanne" aria-label="Erklärung: Rendite-Spanne">i</button></span><div class="sseg" id="spRet" role="group" aria-label="Renditestufe"></div></div>
             <details class="more" id="spMore"><summary>Weitere Annahmen</summary>
               <div class="more-in">
@@ -1726,7 +1727,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 70 · Stand 10.11.2026 17:08</p>
+        <p class="appver" id="appVer">Depotblick Version 71 · Stand 10.11.2026 17:36</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -3050,7 +3051,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   window.addEventListener("scroll", closePop, { passive: true });
 
   const TYPE_L = { buy: "Kauf", sell: "Verkauf", div: "Dividende" };
-  const planChip = (t) => (t.bonus ? ' <span class="chip sm bonus">Saveback</span>' : C.plans && C.plans.byTx[t.id] ? ' <span class="chip sm">Sparplan</span>' : "");
+  const planChip = (t) => (t.bonus ? ' <span class="chip sm bonus">Saveback</span>' : t.roundup ? ' <span class="chip sm">Round-up</span>' : C.plans && C.plans.byTx[t.id] ? ' <span class="chip sm">Sparplan</span>' : "");
   const short = (iso) => { const [y, m, dd] = iso.split("-"); return dd + "." + m + "." + y.slice(2); };
   const gainPill = (v, pctv) => `<span class="pill ${v >= 0 ? "gain" : "loss"}">${v >= 0 ? "▲" : "▼"} ${pct(pctv).replace(" %", "")} %</span>`;
   const txAmount = (t) => (t.type === "div" ? (t.amount || 0) - (t.tax || 0) : t.type === "buy" ? -(t.shares * t.price + (t.fee || 0)) : t.shares * t.price - (t.fee || 0) - (t.tax || 0));
@@ -5096,8 +5097,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const hcFsa = () => Math.min(S.data.tax && S.data.tax.married ? 2000 : 1000, S.data.depots.reduce((x, d) => x + fsaOf(d), 0));
   const hcBz = () => { const B = Object.assign({}, BASISZINS, (S.data.tax && S.data.tax.basiszins) || {}), y = Object.keys(B).map(Number).sort((a, b) => b - a)[0]; return Math.max(0, +B[y] || 0); };
   // Saveback und Cashback pro Jahr aus den Buchungen: letzte 12 Monate, bei kürzerer Zeit hochgerechnet
-  function sbAuto() {
-    const tx = (C.txs || []).filter((t) => t.type === "buy" && t.bonus); if (!tx.length) return { y: 0, n: 0, months: 0 };
+  function sbAuto(kind) {
+    const tx = (C.txs || []).filter((t) => t.type === "buy" && (kind === "ru" ? t.roundup : t.bonus)); if (!tx.length) return { y: 0, n: 0, months: 0 };
     const ds = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const now = new Date(), from = ds(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())), first = tx.map((t) => t.date).sort()[0];
     const st = first > from ? first : from, last = tx.filter((t) => t.date >= from), sum = last.reduce((x, t) => x + t.shares * t.price, 0), months = Math.max(1, Math.min(12, Math.round((now - new Date(st + "T00:00:00")) / 864e5 / 30.44)));
@@ -5105,7 +5106,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   function fcOpts(B) {
     const f = S.fc;
-    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), sbY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.sbAmt || 0 : sbAuto().y) : 0, phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
+    return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), sbY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.sbAmt || 0 : sbAuto().y) : 0, ruY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.ruAmt || 0 : sbAuto("ru").y) : 0, phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
   }
   function simulate(o, ret, ys, sc, months) {
     // Monatlich. In einer Krise ersetzt der Krisenverlauf (abwärts, dann zurück aufs alte Hoch) die normale Rendite
@@ -5123,7 +5124,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (m > 0 && m % 12 === 0) rc = rc * (1 + o.dyn) + (o.dynY || 0);
       if (m > 0 && o.dynM) rc += o.dynM;
       if (o.phases && o.phases.length) { const ph = o.phases.find((x) => x.m === m); if (ph) rc = ph.rate; }
-      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; if (m >= m27) own += rc; if (o.sbY > 0) { const sb = o.sbY / 12; Bv += sb; B0 += sb; zul += sb; } }
+      if (!(o.stopM > 0 && m >= o.stopM)) { Bv += rc; B0 += rc; paid += rc; if (m >= m27) own += rc; if (o.sbY > 0) { const sb = o.sbY / 12; Bv += sb; B0 += sb; zul += sb; } if (o.ruY > 0) { const ru = o.ruY / 12; Bv += ru; B0 += ru; paid += ru; } }
       A *= f[m] * kA; Bv *= f[m] * kB; A0 *= f[m]; B0 *= f[m];
       if (o.avd && (m + 1 - m27) % 12 === 0 && m >= m27) { const y = Math.min(1800, own), z = y > 0 ? avdZulage(y) + o.avdKids * 300 * Math.min(1, y / 300) : 0; Bv += z; B0 += z; zul += z; own = 0; }
       if (!(o.stopM > 0 && m >= o.stopM)) inY += rc;
@@ -5276,8 +5277,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spTax").addEventListener("change", (e) => { f.tax = e.target.checked; fcChanged(); });
     $("#spAvd").addEventListener("change", (e) => { f.avd = e.target.checked; fcChanged(); });
     $("#spSbOn").addEventListener("change", (e) => { f.sbOn = e.target.checked; fcChanged(); });
-    $$("#spSbMode [data-v]").forEach((b) => b.addEventListener("click", () => { f.sbMode = b.dataset.v; if (f.sbMode === "manual" && !f.sbAmt) f.sbAmt = sbAuto().y || 0; fcChanged(); }));
-    $("#spSbAmt").addEventListener("input", (e) => { if (f.sbMode !== "manual") return; const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 100000) return; f.sbAmt = v; fcChanged(); });
+    $$("#spSbMode [data-v]").forEach((b) => b.addEventListener("click", () => { f.sbMode = b.dataset.v; if (f.sbMode === "manual") { if (!f.sbAmt) f.sbAmt = sbAuto().y || 0; if (!f.ruAmt) f.ruAmt = sbAuto("ru").y || 0; } fcChanged(); }));
+    [["#spSbAmt", "sbAmt"], ["#spRuAmt", "ruAmt"]].forEach(([id, k]) => $(id).addEventListener("input", (e) => { if (f.sbMode !== "manual") return; const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 100000) return; f[k] = v; fcChanged(); }));
     $("#spAvdKids").addEventListener("input", (e) => { const v = e.target.value.trim() === "" ? 0 : parseNum(e.target.value.trim()); if (!isFinite(v) || v < 0 || v > 10) return; f.avdKids = Math.round(v); fcChanged(); });
     $("#spStop").addEventListener("input", (e) => { const s0 = e.target.value.trim(), v = s0 === "" ? 0 : parseNum(s0); if (!isFinite(v) || v < 0 || v > 100) return; f.stop = Math.round(v); fcChanged(); });
     $("#spDyn").addEventListener("input", (e) => {
@@ -5496,8 +5497,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const rates = p.paid - o.start, zulS = p.zul || 0, grow = p.v - p.paid - zulS;
     $("#spBStart").style.flex = Math.max(o.start, 0); $("#spBPaid").style.flex = Math.max(rates, 0); $("#spBGrow").style.flex = Math.max(grow, 0); $("#spBZul").style.flex = Math.max(zulS, 0);
     $("#spLZul").hidden = !(o.avd || o.sbY > 0); $("#spVZul").textContent = shortEur(zulS); $("#spLZulT").textContent = o.avd && o.sbY > 0 ? "Zulagen und Saveback" : o.sbY > 0 ? "Saveback und Cashback" : "Zulagen vom Staat";
-    { const a = sbAuto(); $("#spSbF").hidden = !f.sbOn; $$("#spSbMode [data-v]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === (f.sbMode || "auto")))); const inp = $("#spSbAmt"); inp.readOnly = f.sbMode !== "manual"; if (document.activeElement !== inp) inp.value = f.sbMode === "manual" ? (f.sbAmt ? nf2.format(f.sbAmt).replace(/,00$/, "") : "") : a.y ? String(a.y) : "0";
-      $("#spSbNote").textContent = f.sbMode === "manual" ? "Kommt zur Sparrate dazu, solange du sparst. Es zählt nicht als dein eigenes Geld." : a.n ? `${a.n} ${a.n === 1 ? "Buchung" : "Buchungen"} mit Saveback oder Cashback ${a.months === 1 ? "im letzten Monat" : "in den letzten " + a.months + " Monaten"}${a.months < 12 ? ", hochgerechnet auf ein Jahr" : ""}.` : "Noch keine Saveback- oder Cashback-Buchungen gefunden. Wähle „Selbst eingeben“."; }
+    { const a = sbAuto(), ar = sbAuto("ru"), man = f.sbMode === "manual"; $("#spSbF").hidden = !f.sbOn; $$("#spSbMode [data-v]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === (f.sbMode || "auto"))));
+      [["#spSbAmt", f.sbAmt, a], ["#spRuAmt", f.ruAmt, ar]].forEach(([id, mv, au]) => { const inp = $(id); inp.readOnly = !man; if (document.activeElement !== inp) inp.value = man ? (mv ? nf2.format(mv).replace(/,00$/, "") : "") : au.y ? String(au.y) : "0"; });
+      const nt = (x, l) => (x.n ? `${x.n} ${x.n === 1 ? "Buchung" : "Buchungen"} ${l} ${x.months === 1 ? "im letzten Monat" : "in den letzten " + x.months + " Monaten"}${x.months < 12 ? ", aufs Jahr hochgerechnet" : ""}` : `keine ${l}-Buchungen gefunden`);
+      $("#spSbNote").textContent = man ? "Kommt zur Sparrate dazu, solange du sparst. Saveback und Cashback zählen als geschenkt, Round-ups als dein eigenes Geld." : `Aus deinen Buchungen: ${nt(a, "Saveback/Cashback")}; ${nt(ar, "Round-up")}.${a.n && ar.n ? "" : " Fehlt etwas, wähle „Selbst eingeben“."}`; }
     $("#spAvdF").hidden = $("#spAvdNote").hidden = !o.avd;
     if (o.avd) { const y1 = Math.min(1800, o.rate * 12), z1 = y1 > 0 ? avdZulage(y1) + o.avdKids * 300 * Math.min(1, y1 / 300) : 0; $("#spAvdNote").textContent = `Rund ${eur0.format(z1)} Zulagen im Jahr${o.rate > 150 ? ". Gefördert werden nur 150 € im Monat, der Rest läuft ohne Zulage" : ""}. Ab 2027, nur mit Pflicht in der Rentenversicherung. Auszahlung frühestens mit 65, dann voll steuerpflichtig.`; }
     $("#spVStart").textContent = shortEur(o.start); $("#spVPaid").textContent = shortEur(rates); $("#spVGrow").textContent = shortEur(Math.max(grow, 0));
@@ -6549,11 +6552,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     out.push(cur); return out.map((s) => s.trim());
   }
   const BONUS_RE = /saveback|cashback|cash back|prämie|praemie|gratisaktie|incentive|belohnung|reward/i;
+  const ROUNDUP_RE = /round[\s_-]?ups?\b|aufrund/i;
   function mapType(v) {
     const s = String(v || "").toLowerCase();
     if (/verkauf|sell|sale|veräußerung/.test(s)) return "sell";
     if (/divid|ausschütt|distribution|ertrag|zins|interest|coupon|kupon/.test(s)) return "div";
-    if (/kauf|buy|purchase|sparplan|savings|einbuchung|saveback|cashback|bonus|prämie|praemie|reward/.test(s)) return "buy";
+    if (/kauf|buy|purchase|sparplan|savings|einbuchung|saveback|cashback|bonus|prämie|praemie|reward|round[\s_-]?ups?|aufrund/.test(s)) return "buy";
     return null;
   }
   // Bekannte Broker an der Kopfzeile erkennen. Nur Trade Republic ist mit einer echten Datei getestet
@@ -6605,7 +6609,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       }
       // Saveback, Cashback, Prämien: Anteile gibt es geschenkt, das Geld kommt nicht vom eigenen Konto
       const nm = g("name") || "", lt = nm ? l.split(nm).join(" ") : l, bonus = type === "buy" && (free || BONUS_RE.test(lt));
-      rows.push({ date, type, sym, name: g("name") || "", cls: mapCls(g("cls")), depot: g("depot") || "", shares: shares || 0, price: type === "div" ? 0 : price || 0, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined, bonus, plan: type === "buy" && PLAN_RE.test(l), buyAmt: type === "buy" ? (amount > 0 ? amount : shares * price) : 0 });
+      rows.push({ date, type, sym, name: g("name") || "", cls: mapCls(g("cls")), depot: g("depot") || "", shares: shares || 0, price: type === "div" ? 0 : price || 0, fee: type === "div" ? 0 : fee, tax, amount: type === "div" ? (amount > 0 ? amount : shares * price) : undefined, bonus, roundup: type === "buy" && !bonus && ROUNDUP_RE.test(lt), plan: type === "buy" && PLAN_RE.test(l), buyAmt: type === "buy" ? (amount > 0 ? amount : shares * price) : 0 });
     });
     // Kauf mit genau dem gutgeschriebenen Betrag in den Tagen danach = mit geschenktem Geld gekauft
     rewards.forEach((rw) => {
@@ -6635,7 +6639,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const dup = r.rows.filter((x) => x.dup).length, fresh = r.rows.length - dup;
     const names = { date: "Datum", type: "Typ", isin: "ISIN", symbol: "Kürzel", name: "Name", shares: "Stück", price: "Kurs", fee: "Gebühren", tax: "Steuern", amount: "Betrag" };
     $("#impStatus").innerHTML = `${fileName ? `<span class="num">${esc(fileName)}</span> · ` : ""}${r.rows.length + r.errors.length} Zeilen gelesen · ${r.rows.length} erkannt · ${dup} Duplikate · ${r.errors.length} übersprungen`;
-    const rowsHtml = r.rows.slice(0, 12).map((x) => `<tr><td class="num">${fmtDate(x.date)}</td><td><span class="badge ${x.type}"></span>${TYPE_L[x.type]}</td><td>${esc(x.name || x.sym)}${x.bonus ? ' <span class="chip sm bonus">Saveback</span>' : ""}</td><td class="r num">${x.shares ? nf(4).format(x.shares) : "–"}</td><td class="r num">${x.type === "div" ? eur.format(x.amount || 0) : eur.format(x.shares * x.price)}</td><td>${x.dup ? '<span class="pill neu">Duplikat, übersprungen</span>' : '<span class="pill gain">✓ erkannt</span>'}</td></tr>`).join("");
+    const rowsHtml = r.rows.slice(0, 12).map((x) => `<tr><td class="num">${fmtDate(x.date)}</td><td><span class="badge ${x.type}"></span>${TYPE_L[x.type]}</td><td>${esc(x.name || x.sym)}${x.bonus ? ' <span class="chip sm bonus">Saveback</span>' : x.roundup ? ' <span class="chip sm">Round-up</span>' : ""}</td><td class="r num">${x.shares ? nf(4).format(x.shares) : "–"}</td><td class="r num">${x.type === "div" ? eur.format(x.amount || 0) : eur.format(x.shares * x.price)}</td><td>${x.dup ? '<span class="pill neu">Duplikat, übersprungen</span>' : '<span class="pill gain">✓ erkannt</span>'}</td></tr>`).join("");
     const errHtml = r.errors.slice(0, 8).map((e) => `<tr><td colspan="5">${esc(e)}</td><td><span class="pill loss">! übersprungen</span></td></tr>`).join("");
     el.innerHTML = `<div class="card"><p class="hint" style="margin-bottom:10px">Zuordnung: ${Object.keys(r.col).map((k) => `${names[k]} ← „${esc(r.head[r.col[k]])}“`).join(" · ")}</p><div class="tablewrap"><table class="imptab"><thead><tr><th>Datum</th><th>Typ</th><th>Wertpapier</th><th class="r">Stück</th><th class="r">Betrag</th><th>Status</th></tr></thead><tbody>${rowsHtml}${errHtml}</tbody></table></div>${r.rows.length > 12 ? `<p class="hint" style="margin-top:8px">… und ${r.rows.length - 12} weitere erkannte Zeilen</p>` : ""}</div>`;
     go.disabled = !(fresh > 0);
@@ -6673,10 +6677,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       if (multiDepot()) { const dn = (r.depot || "").trim().toLowerCase(), dm = dn && S.data.depots.find((x) => x.name.trim().toLowerCase() === dn); t.depot = dm ? dm.id : $("#impDepot").value; }
       if (r.type === "div") t.amount = r.amount;
       if (r.bonus) t.bonus = true;
+      if (r.roundup) t.roundup = true;
       if (r.plan) t.plan = true;
       const k = txKey(t);
       // Schon vorhanden: Merkmale aus der neuen Datei nachtragen (Sparplan, Saveback)
-      if (have[k] > 0) { have[k]--; const ex = S.data.txs.find((x) => txKey(x) === k && ((r.bonus && !x.bonus) || (r.plan && !x.plan))); if (ex) { if (r.bonus) ex.bonus = true; if (r.plan) ex.plan = true; n++; } return; }
+      if (have[k] > 0) { have[k]--; const ex = S.data.txs.find((x) => txKey(x) === k && ((r.bonus && !x.bonus) || (r.roundup && !x.roundup) || (r.plan && !x.plan))); if (ex) { if (r.bonus) ex.bonus = true; if (r.roundup) ex.roundup = true; if (r.plan) ex.plan = true; n++; } return; }
       S.data.txs.push(t); n++;
     });
     commit();
