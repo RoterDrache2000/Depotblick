@@ -149,6 +149,16 @@ a { color: var(--accent); }
 .tax .fsa { display: grid; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .tax .fsa:last-child { border: 0; }
 .fbar { height: 10px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
+.amp { width: 11px; height: 11px; border-radius: 50%; flex: none; display: inline-block; background: var(--gain); } .amp.near { background: var(--div); } .amp.bad { background: var(--loss); } .amp.off { background: var(--faint); }
+.rule { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 4px; border-bottom: 1px solid var(--line); font-size: 0.88rem; } .rule small { display: block; color: var(--muted); font-size: 0.78rem; overflow-wrap: anywhere; }
+.ruleadd { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .ruleadd select { min-width: 0; max-width: 100%; font-size: 16px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); } .ruleadd .unit2 input { width: 4.2rem; }
+.rulesum { display: flex; gap: 10px; align-items: center; text-decoration: none; color: inherit; flex-wrap: wrap; }
+.ov { display: grid; } .ov .r { padding: 8px 2px; border-bottom: 1px solid var(--line); display: grid; gap: 5px; font-size: 0.88rem; min-width: 0; } .ov .r:last-child { border-bottom: 0; } .ov .h { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; } .ov .h > span { min-width: 0; overflow-wrap: anywhere; } .ov .h b { white-space: nowrap; }
+.mcbody { display: grid; gap: 12px; } .mcbody[hidden] { display: none; }
+.mcrows { display: grid; } .mcrows .r { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 0.9rem; padding: 7px 0; border-bottom: 1px solid var(--line); } .mcrows .r:last-child { border-bottom: 0; } .mcrows .r b { white-space: nowrap; }
+.tips { display: grid; gap: 10px; } .tip { background: var(--sunk); border-radius: 8px; padding: 10px 12px; font-size: 0.88rem; line-height: 1.45; } .tip ul { margin: 6px 0; padding-left: 18px; display: grid; gap: 4px; }
+.facst { display: grid; margin-top: 8px; } .facst .r { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.86rem; } .facst .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .facst select { font-size: 16px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); max-width: 7.5rem; }
+@media (max-width: 640px) { .facst .r { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .facst .n { grid-column: 1 / -1; } .facst select { max-width: none; width: 100%; } }
 .fbar b { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
 .bzgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
 .bz { display: grid; gap: 2px; font-size: 0.8rem; color: var(--muted); }
@@ -1143,6 +1153,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <div class="r" id="hKv"></div>
         </div>
         <div class="card riskcard" id="riskCard" hidden></div>
+        <div class="card riskcard" id="rulesCard" hidden></div>
         <div class="g2e" data-depot>
           <div class="card">
             <div class="card-h"><h3 id="moversH">Zuletzt am meisten bewegt</h3><div class="seg" id="mvView" role="group" aria-label="Ansicht"></div></div>
@@ -1154,6 +1165,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             <div class="row" id="allocSeg" role="group" aria-label="Aufteilen nach" style="margin-bottom:12px"></div>
             <div class="stack" id="allocStack" aria-hidden="true"></div>
             <div class="alloc" id="allocList"></div>
+            <div class="row" style="margin-top:12px"><button type="button" class="btn ghost sm" id="shareBtn">Depot als Bild teilen, ohne Beträge</button></div>
           </div>
         </div>
         <div id="homeGoal" hidden></div>
@@ -1291,7 +1303,12 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
           <details style="margin-top:10px"><summary>Basiszins je Jahr</summary><p class="hint" style="margin:6px 0">Den Basiszins gibt das Finanzministerium jedes Jahr Anfang Januar bekannt. Fehlt ein Jahr, trag ihn hier ein.</p><div class="bzgrid" id="bzGrid"></div></details></div>
         <div class="card"><div class="card-h"><h3>Erträge im Jahr</h3><span class="note">nach Teilfreistellung</span></div>
           <div class="tablewrap"><table id="taxTbl"></table></div>
-          <p class="foot" style="margin-top:8px">Gewinne nach FIFO: Die zuerst gekauften Anteile gelten als zuerst verkauft. Teilfreistellung: Aktienfonds 30 %, Mischfonds 15 %, Immobilienfonds 60 %. Verluste aus Aktien dürfen eigentlich nur mit Aktiengewinnen verrechnet werden, das ist hier vereinfacht.</p></div>
+          <p class="foot" style="margin-top:8px">Gewinne nach FIFO: Die zuerst gekauften Anteile gelten als zuerst verkauft. Teilfreistellung: Aktienfonds 30 %, Mischfonds 15 %, Immobilienfonds 60 %. Verluste aus Aktien dürfen nur mit Aktiengewinnen verrechnet werden. Das zeigt die Karte „Verlusttöpfe“ darunter.</p></div>
+        <div class="g2e">
+          <div class="card"><div class="card-h"><h3>Verlusttöpfe<button type="button" class="info" data-info="Verlusttopf" aria-label="Erklärung: Verlusttopf">i</button></h3><span class="note" id="ltSum"></span></div><div id="ltOut"></div>
+            <p class="foot" style="margin-top:8px">Schätzung über alle Depots zusammen, aus deinen Buchungen seit dem ersten Kauf. Verluste aus der Zeit davor kennt Depotblick nicht. Maßgeblich ist, was deine Bank ausweist.</p></div>
+          <div class="card" id="tipCard"><div class="card-h"><h3>Tipps zum Jahresende<button type="button" class="info" data-info="Steuer-Tipps" aria-label="Erklärung: Steuer-Tipps">i</button></h3><span class="pill warn">Schätzung</span></div><div class="tips" id="tipList"></div></div>
+        </div>
       </section>
 
       <!-- Transaktionen -->
@@ -1355,7 +1372,34 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <div id="clsBars"></div>
       <div class="stats" id="statStruct"></div>
     </section>
+  <section class="panel" aria-labelledby="hXr" data-st="struktur">
+    <div class="panel-head"><h2 id="hXr">ETFs aufgefächert<button type="button" class="info" data-info="ETFs aufgefächert" aria-label="Erklärung: ETFs aufgefächert">i</button></h2><button type="button" class="btn sm" id="xrBtn">ETFs in einzelne Firmen aufteilen</button></div>
+    <div id="xrOut" style="display:grid;gap:10px"></div>
+    <p class="foot">Für die großen Indizes kennt Depotblick die zehn größten Titel (gerundet, Stand 2025). Blau: hältst du auch direkt. Grün: steckt nur in deinen ETFs.</p>
+  </section>
+  <section class="panel" aria-labelledby="hOv" data-st="struktur">
+    <div class="panel-head"><h2 id="hOv">ETF-Überschneidung<button type="button" class="info" data-info="ETF-Überschneidung" aria-label="Erklärung: ETF-Überschneidung">i</button></h2><span class="hint" id="ovCount"></span></div>
+    <div id="ovOut" style="display:grid;gap:10px"></div>
+    <p class="foot">Ungefähre Werte aus den Länder- und Sektor-Gewichten der Indizes (Stand Herbst 2026) und ihren zehn größten Titeln (Stand 2025). Der genaue Wert steht im Factsheet der Anbieter.</p>
+  </section>
+  <div class="grid2" data-st="struktur">
+    <section class="panel" aria-labelledby="hCur">
+      <div class="panel-head"><h2 id="hCur">Währungen<button type="button" class="info" data-info="Währungen" aria-label="Erklärung: Währungen">i</button></h2></div>
+      <div id="curOut" style="display:grid;gap:10px"></div>
+      <p class="foot">Aus den Ländern der Firmen abgeleitet, auch durch ETFs hindurch (Index-Gewichte Stand Herbst 2026). In welcher Währung der ETF selbst notiert, spielt keine Rolle.</p>
+    </section>
+    <section class="panel" aria-labelledby="hFac">
+      <div class="panel-head"><h2 id="hFac">Groß oder klein, Wachstum oder Wert<button type="button" class="info" data-info="Faktoren" aria-label="Erklärung: Faktoren">i</button></h2><span class="pill warn">grob</span></div>
+      <div id="facOut" style="display:grid;gap:10px"></div>
+    </section>
+  </div>
   <section class="stats" id="concStats" aria-label="Konzentration" data-st="risiko"></section>
+  <section class="panel" aria-labelledby="hRules" data-st="risiko">
+    <div class="panel-head"><h2 id="hRules">Meine Anlage-Regeln<button type="button" class="info" data-info="Anlage-Regeln" aria-label="Erklärung: Anlage-Regeln">i</button></h2><span class="hint" id="rulesSum"></span></div>
+    <div id="rulesList"></div>
+    <div class="ruleadd"><select id="rlKind" aria-label="Worauf sich die Regel bezieht"><option value="stock">Jede Einzelaktie</option><option value="cls">Anlageklasse</option><option value="country">Land</option><option value="sector">Sektor</option></select><select id="rlKey" aria-label="Auswahl" hidden></select><select id="rlOp" aria-label="Höchstens oder mindestens" hidden><option value="max">höchstens</option><option value="min">mindestens</option></select><span class="unit2"><input id="rlPct" inputmode="decimal" value="5" aria-label="Anteil in Prozent"><span>%</span></span><button type="button" class="btn sm" id="rlAdd">+ Regel</button></div>
+    <p class="foot">Geprüft wird dein ganzes Depot. Gelb heißt: weniger als ein Zehntel von der Grenze entfernt. ETFs zählen bei Ländern und Sektoren anteilig mit.</p>
+  </section>
   <div class="grid2" data-st="struktur">
     <section class="panel" aria-labelledby="hCountries">
       <div class="panel-head"><h2 id="hCountries">Länder<button type="button" class="info" data-info="Länder" aria-label="Erklärung: Länder">i</button></h2><span class="hint" id="countryCount"></span></div>
@@ -1455,6 +1499,19 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
               <div class="chart" id="fcChart"></div>
               <div class="legend" id="fcLegend"></div>
               <div class="crashrow"><label class="toggle"><input type="checkbox" id="spCrashOn"> Krise einrechnen</label><span class="note" id="spCrashTxt"></span></div>
+            </div>
+            <div class="card" style="display:grid;gap:12px" id="mcCard">
+              <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><h3>Wie sicher ist das?<button type="button" class="info" data-info="Wahrscheinlichkeiten" aria-label="Erklärung: Wahrscheinlichkeiten">i</button></h3><label class="toggle"><input type="checkbox" id="mcOn"> 1.000 Verläufe durchspielen</label></div>
+              <p class="note" style="margin:0">Die Linie oben rechnet jedes Jahr mit derselben Rendite. In echt gibt es gute und schlechte Jahre. Hier spielt Depotblick 1.000 mögliche Zukünfte durch und zeigt, wie oft welches Ergebnis herauskommt.</p>
+              <div id="mcBody" class="mcbody" hidden>
+                <div class="field"><span class="lab">Wie stark schwankt dein Depot im Jahr?</span><div class="sseg" id="mcVol" role="group" aria-label="Schwankung"></div></div>
+                <div class="chart" id="mcChart"></div>
+                <div class="legend" id="mcLegend"></div>
+                <div class="mcrows" id="mcRows"></div>
+                <div class="field"><label class="lab" for="mcGoal">Dein Ziel</label><div class="unit"><input id="mcGoal" inputmode="decimal" aria-label="Ziel in Euro"><span>€</span></div></div>
+                <p class="ctext" id="mcGoalTxt" style="margin:0"></p>
+                <p class="note" id="mcNote" style="margin:0"></p>
+              </div>
             </div>
             <div class="card split">
               <div class="row" style="justify-content:space-between"><h3>Woraus der Endwert besteht<button type="button" class="info" data-info="Zinseszins" aria-label="Erklärung: Zinseszins">i</button></h3><span class="note" id="spCost"></span></div>
@@ -1727,7 +1784,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 71 · Stand 10.11.2026 17:36</p>
+        <p class="appver" id="appVer">Depotblick Version 72 · Stand 11.11.2026 18:43</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -1875,6 +1932,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <label class="field full chk" id="rowBonus"><input type="checkbox" id="fBonus"><span><b>Saveback, Cashback oder Prämie</b><small>Die Anteile gab es geschenkt, das Geld kam nicht von deinem Konto</small></span></label>
     </div>
     <p class="note" id="txTaxEst" hidden style="margin:0"></p>
+    <p class="note" id="txRuleWarn" hidden style="margin:0;color:var(--div)"></p>
     <p class="err" id="txErr" hidden></p>
     <div class="dfoot"><button type="button" class="btn danger left" id="txDelete" hidden>Löschen</button><button type="button" class="btn ghost" data-close>Abbrechen</button><button class="btn" type="submit">Speichern</button></div>
   </form>
@@ -2019,6 +2077,16 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 </dialog>
 
 <!-- Auswahl für Statistiken -->
+<dialog id="dlgShare">
+  <form method="dialog" novalidate>
+    <div class="dhead"><h2>Depot zeigen, ohne Beträge</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
+    <p class="note" style="margin:0">Das Bild zeigt nur Prozente: Aufteilung und Rendite. Euro-Beträge und Stückzahlen stehen nicht drin.</p>
+    <div class="row" id="shSeg" role="group" aria-label="Aufteilen nach" style="flex-wrap:wrap;gap:6px"></div>
+    <label class="toggle"><input type="checkbox" id="shNames" checked> Namen der Wertpapiere zeigen</label>
+    <img id="shImg" alt="Vorschau: Depot-Aufteilung in Prozent" style="width:100%;max-width:340px;height:auto;display:block;margin:0 auto;border-radius:12px;border:1px solid var(--line)">
+    <div class="dfoot"><button type="button" class="btn ghost" id="shDl">Herunterladen</button><button type="button" class="btn" id="shShare" hidden>Teilen</button></div>
+  </form>
+</dialog>
 <dialog id="dlgSel">
   <div class="body">
     <div class="dhead"><h2>Was soll in die Statistik?</h2><button class="icon-btn" type="button" data-close aria-label="Schließen">✕</button></div>
@@ -2255,14 +2323,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   const BASISZINS = { 2018: 0.87, 2019: 0.52, 2020: 0.07, 2021: -0.45, 2022: -0.05, 2023: 2.55, 2024: 2.29, 2025: 2.53 };
   const mkData = (d) => ({
     txs: (d && d.txs) || [], assets: (d && d.assets) || {}, budget: normBudget(d && d.budget), plans: normPlans(d && d.plans),
-    depots: normDepots(d && d.depots), wealth: arr(d && d.wealth), pots: arr(d && d.pots), watch: arr(d && d.watch),
+    depots: normDepots(d && d.depots), wealth: arr(d && d.wealth), pots: arr(d && d.pots), watch: arr(d && d.watch), rules: arr(d && d.rules),
     goals: Object.assign({ divMonthly: 0, divYield: null, divGrowth: 3, divReinvest: true, age: null, fireExp: null, fireWr: 4, fireAll: false, fireRate: null, wdStart: null, wdMonthly: null, wdInf: 2, wdRet: 5, wdCrash: false }, (d && d.goals) || {}),
     tax: Object.assign({ married: false, church: 0 }, (d && d.tax) || {}, { basiszins: Object.assign({}, BASISZINS, (d && d.tax && d.tax.basiszins) || {}) }),
     target: d && d.target && typeof d.target === "object" ? d.target : null,
     retire: Object.assign({ retire: 67, status: "ang", stkl: "1", church: 0, kids: 0 }, (d && d.retire) || {}),
   });
   // Alles, was gespeichert und gesichert wird, an einer Stelle
-  const pack = (data, extra) => Object.assign({}, extra || {}, { v: 2, txs: data.txs, assets: data.assets, budget: data.budget, plans: data.plans || [], depots: data.depots, wealth: data.wealth, pots: data.pots, watch: data.watch, goals: data.goals, tax: data.tax, target: data.target, retire: data.retire });
+  const pack = (data, extra) => Object.assign({}, extra || {}, { v: 2, txs: data.txs, assets: data.assets, budget: data.budget, plans: data.plans || [], depots: data.depots, wealth: data.wealth, pots: data.pots, watch: data.watch, rules: data.rules || [], goals: data.goals, tax: data.tax, target: data.target, retire: data.retire });
   const normBudget = (b) => ({ inc: Array.isArray(b && b.inc) ? b.inc : [], exp: Array.isArray(b && b.exp) ? b.exp : [], cushion: b && b.cushion != null && isFinite(+b.cushion) ? +b.cushion : null, debt: b && (b.debt === "none" || b.debt === "some") ? b.debt : null,
     cats: Array.isArray(b && b.cats) ? b.cats : [], spends: Array.isArray(b && b.spends) ? b.spends.filter((x) => x && x.date && Array.isArray(x.parts)) : [], rules: Array.isArray(b && b.rules) ? b.rules : [], keepPhotos: b && b.keepPhotos === false ? false : true, alias: b && b.alias && typeof b.alias === "object" ? b.alias : {}, saveCfg: b && b.saveCfg && typeof b.saveCfg === "object" ? b.saveCfg : { n: 0, pct: 0 } });
   const Store = {
@@ -2899,6 +2967,14 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   // ---------- Erklärungen (ⓘ) ----------
   const INFO = {
+    "ETFs aufgefächert": "Ein ETF ist ein Korb aus vielen Aktien. Aufgefächert siehst du, wie viel Prozent deines Depots in jeder einzelnen Firma stecken: deine Einzelaktien plus der Anteil, den du über ETFs hältst. Beispiel: 50 % MSCI World mit 5 % Apple darin ergeben 2,5 % Apple im Depot. Depotblick kennt je Index die zehn größten Titel, der Rest steht als „Übrige Firmen“ zusammen. Dieselbe Ansicht gibt es auf der Übersicht unter Aufteilung → Firmen.",
+    "ETF-Überschneidung": "Zwei ETFs überschneiden sich, wenn dieselben Firmen in beiden stecken. Ein MSCI World besteht zum Beispiel zu rund 70 % aus den Firmen des S&P 500. Wer beide hält, streut also kaum breiter, sondern gewichtet die USA höher. Depotblick schätzt den Wert aus den Länder- und Sektor-Gewichten der Indizes und ihren größten Titeln. Unter 30 % ergänzen sich zwei ETFs gut, über 60 % sind sie sich sehr ähnlich.",
+    "Währungen": "Eine Firma verdient ihr Geld in der Währung ihres Landes. Kaufst du einen Welt-ETF in Euro, steckt trotzdem zum großen Teil der US-Dollar drin. Fällt der Dollar gegen den Euro, sinkt der Wert in Euro, auch wenn die Kurse in den USA gleich bleiben. Depotblick ordnet jedes Land seiner Währung zu und rechnet ETFs anteilig durch. Über viele Jahre gleichen sich Währungsschwankungen meist aus.",
+    "Faktoren": "Zwei Blickwinkel auf deine Aktien. Größe: große Konzerne schwanken meist weniger, kleine Firmen haben mehr Chancen und mehr Risiko. Stil: Wachstumsfirmen sind teuer bewertet, weil man viel von ihnen erwartet (oft Technologie). Wertfirmen sind günstig bewertet und zahlen häufiger Dividenden (oft Banken, Energie, Versorger). Die Werte hier sind grob: ETFs nach ihrem Index, Einzelaktien nach Branche oder deiner eigenen Angabe.",
+    "Anlage-Regeln": "Hier legst du deine eigenen Grenzen fest, zum Beispiel „jede Einzelaktie höchstens 5 %“ oder „Krypto höchstens 5 %“. Depotblick prüft sie laufend. Grün heißt eingehalten, Gelb knapp an der Grenze, Rot verletzt. Auf der Übersicht siehst du die Ampel, und beim Eintragen eines Kaufs warnt die App, wenn der Kauf eine Regel verletzen würde. Die Regeln sind nur ein Hinweis, die App verbietet nichts.",
+    "Verlusttopf": "Machst du mit einem Verkauf Verlust, merkt sich die Bank den Betrag in einem Verlusttopf. Spätere Gewinne werden zuerst damit verrechnet, erst danach fällt Steuer an. Es gibt zwei Töpfe: Verluste aus Einzelaktien dürfen nur mit Gewinnen aus Einzelaktien verrechnet werden. Alles andere (ETFs, Fonds, Dividenden, Zinsen) landet im zweiten Topf und wird mit allen Erträgen verrechnet. Was am Jahresende übrig ist, geht ins nächste Jahr.",
+    "Steuer-Tipps": "Der Sparer-Pauschbetrag (1.000 €, zusammen veranlagt 2.000 €) gilt pro Kalenderjahr und verfällt, wenn du ihn nicht nutzt. Wer Gewinne bis zu dieser Höhe realisiert und sofort wieder kauft, hat danach einen höheren Einstand und zahlt später weniger Steuer. Umgekehrt senken realisierte Verluste die Steuer, wenn du schon über dem Freibetrag liegst. Alle Zahlen sind Schätzungen aus deinen Buchungen und keine Steuerberatung.",
+    "Wahrscheinlichkeiten": "Niemand kennt die Rendite der nächsten Jahre. Deshalb würfelt Depotblick 1.000 mögliche Verläufe: Jeder Monat bekommt eine zufällige Rendite, im Mittel so hoch wie oben eingestellt, mit der gewählten Schwankung. Danach werden die Ergebnisse sortiert. „In 80 von 100 Fällen mindestens X“ heißt: Nur in 20 von 100 Fällen kam weniger heraus. Je breiter der Fächer, desto unsicherer das Ergebnis. Das ist eine Rechnung mit Zufall, keine Vorhersage.",
     "Steuern auf Dividenden": "Ausschüttungen sind jedes Jahr steuerpflichtig. Bei Aktien-ETFs sind 30 % steuerfrei (Teilfreistellung). Dein Freistellungsauftrag aus Einstellungen → Depots bleibt jedes Jahr frei (höchstens 1.000 €, verheiratet 2.000 €). Auf den Rest zahlst du 25 % plus Soli und, wenn eingestellt, Kirchensteuer.",
     "Steuern in der Hochrechnung": "Jedes Jahr fällt auf thesaurierende ETFs die Vorabpauschale an (Basiszins × 0,7 × Depotwert am Jahresanfang, höchstens der Gewinn). Davon sind bei Aktien-ETFs 30 % steuerfrei (Teilfreistellung). Dein Freistellungsauftrag aus Einstellungen → Depots bleibt jedes Jahr steuerfrei. Die Steuer wird hier aus dem Depot bezahlt. Beim Verkauf am Ende ist der restliche Gewinn steuerpflichtig, die schon versteuerte Vorabpauschale wird angerechnet. Steuersatz: 25 % plus Soli und, wenn eingestellt, Kirchensteuer.",
     "Sparrate ändern": "Hier legst du fest, dass sich deine Sparrate später ändert. Beispiel: die ersten 20 Jahre 200 € im Monat, ab Jahr 20 dann 300 €. Du kannst mehrere Änderungen eintragen. Eine eingestellte Erhöhung pro Jahr läuft ab der neuen Rate weiter.",
@@ -3089,7 +3165,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $$('[data-page="uebersicht"] [data-depot]').forEach((el) => (el.hidden = !has));
     if (!has) $("#riskCard").hidden = true;
     { const n = new Date(), yy = n.getMonth() === 11 ? n.getFullYear() : n.getMonth() === 0 ? n.getFullYear() - 1 : null; $("#yrBanner").hidden = !has || !yy; if (yy) $("#yrBannerT").textContent = "Dein Jahr " + yy + " im Rückblick."; }
-    if (has) { renderHero(); renderPerf(d); renderMovers(); renderAlloc(); renderRisk(); const r = $("#recent"); r.innerHTML = recentHtml(C.txs.slice(-4).reverse(), d, !isDemo()); bindTx(r); }
+    if (has) { renderHero(); renderPerf(d); renderMovers(); renderAlloc(); renderRisk(); renderRulesHome(); const r = $("#recent"); r.innerHTML = recentHtml(C.txs.slice(-4).reverse(), d, !isDemo()); bindTx(r); }
     renderTiles();
   };
   const sgn0 = (v) => (v >= 0 ? "+" : "−") + eur0.format(Math.abs(v));
@@ -3350,10 +3426,11 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     return { [a.name || a.symbol]: 1 };
   }
   function renderAlloc() {
-    if (!["pos", "cls", "sector", "country", "cont"].includes(S.alloc)) S.alloc = "cls";
-    seg("#allocSeg", [["cls", "Klasse"], ["pos", "Titel"], ["sector", "Sektor"], ["country", "Land"], ["cont", "Kontinent"]], S.alloc, (v) => { S.alloc = v; savePrefs(); renderAlloc(); });
+    if (!["pos", "cls", "sector", "country", "cont", "co"].includes(S.alloc)) S.alloc = "cls";
+    seg("#allocSeg", [["cls", "Klasse"], ["pos", "Titel"], ["co", "Firmen"], ["sector", "Sektor"], ["country", "Land"], ["cont", "Kontinent"]], S.alloc, (v) => { S.alloc = v; savePrefs(); renderAlloc(); });
     const groups = {};
-    C.list.filter((p) => p.value > 0).forEach((p) => { const g = groupParts(p); for (const k in g) groups[k] = (groups[k] || 0) + p.value * g[k]; });
+    if (S.alloc === "co") xrGroups(C.list).forEach(([l, v]) => (groups[l] = (groups[l] || 0) + v));
+    else C.list.filter((p) => p.value > 0).forEach((p) => { const g = groupParts(p); for (const k in g) groups[k] = (groups[k] || 0) + p.value * g[k]; });
     let items = Object.entries(groups).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
     if (items.length > 7) { const rest = items.slice(6); items = items.slice(0, 6).concat([{ label: "Sonstige (" + rest.length + ")", value: rest.reduce((s, x) => s + x.value, 0), other: true }]); }
     const order = items.filter((i) => !i.other).map((i) => i.label).sort();
@@ -5009,6 +5086,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       <tr><td>Realisierte Gewinne (FIFO)</td><td class="r num">${signed(A.gains)}</td><td class="r num">${signed(A.gainsT)}</td></tr>
       <tr><td>Vorabpauschale für ${y - 1}, im Januar ${y}</td><td class="r num">${eur.format(A.vp)}</td><td class="r num">${eur.format(A.vpT)}</td></tr>
       <tr class="sel"><td><b>Summe</b></td><td class="r num"></td><td class="r num"><b>${signed(A.taxable)}</b></td></tr></tbody>`;
+    renderLossPots(y);
   };
   $("#taxMarried").addEventListener("change", (e) => { S.data.tax.married = e.target.checked; commit(); });
 
@@ -5108,10 +5186,10 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const f = S.fc;
     return { start: f.start != null ? f.start : B.value, rate: Math.min(RATE_MAX, f.rate != null ? f.rate : B.rate), ret: f.ret / 100, retMin: f.retMin / 100, retMax: f.retMax / 100, inf: f.inf / 100, dyn: f.dynMode === "pct" ? f.dyn / 100 : 0, dynY: f.dynMode === "eurY" ? f.dynEur : 0, dynM: f.dynMode === "eurM" ? f.dynEur : 0, terA: B.terStart / 100, terB: B.terRate / 100, years: 100, stopM: f.stop > 0 ? f.stop * 12 : 0, tax: f.tax !== false && !f.avd, fsa: hcFsa(), bz: hcBz() / 100, tr: taxRate(), avd: !!f.avd, avdKids: Math.max(0, Math.min(10, +f.avdKids || 0)), sbY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.sbAmt || 0 : sbAuto().y) : 0, ruY: f.sbOn ? Math.max(0, f.sbMode === "manual" ? +f.ruAmt || 0 : sbAuto("ru").y) : 0, phases: (f.phases || []).filter((x) => x.from > 0 && x.rate != null && isFinite(x.rate)).map((x) => ({ m: Math.round(x.from * 12), rate: Math.min(RATE_MAX, Math.max(0, +x.rate)) })).sort((a, b) => a.m - b.m) };
   }
-  function simulate(o, ret, ys, sc, months) {
+  function simulate(o, ret, ys, sc, months, fx) {
     // Monatlich. In einer Krise ersetzt der Krisenverlauf (abwärts, dann zurück aufs alte Hoch) die normale Rendite
     const n = months || o.years * 12, g = Math.pow(1 + ret, 1 / 12), kA = Math.pow(1 - o.terA, 1 / 12), kB = Math.pow(1 - o.terB, 1 / 12);
-    const f = new Array(n).fill(g);
+    const f = fx || new Array(n).fill(g);
     if (sc && ys.length) {
       const fD = Math.pow(1 - sc.dd, 1 / Math.max(1, sc.down)), fU = sc.up > 0 ? Math.pow(1 / (1 - sc.dd), 1 / sc.up) : g;
       ys.forEach((y) => { const c = Math.round(y * 12); for (let k = 0; k < sc.down + sc.up && c + k < n; k++) f[c + k] = k < sc.down ? fD : fU; });
@@ -5133,7 +5211,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
         const v = A + Bv, vp = Math.max(0, Math.min(v - vYS - inY, vYS * o.bz * 0.7)), t = Math.max(0, vp * 0.7 - o.fsa) * o.tr;
         if (t > 0 && v > 0) { A -= (t * A) / v; Bv -= (t * Bv) / v; } vpSum += vp; taxP += t; vYS = A + Bv; inY = 0;
       }
-      pts.push({ m: m + 1, y: (m + 1) / 12, v: A + Bv, g: A0 + B0, paid, zul, vpSum, taxP });
+      if (!fx || (m + 1) % 12 === 0) pts.push({ m: m + 1, y: (m + 1) / 12, v: A + Bv, g: A0 + B0, paid, zul, vpSum, taxP });
     }
     return pts;
   }
@@ -5523,6 +5601,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     $("#spTerHow").innerHTML = `<b>So wird gerechnet:</b> Jeden Monat wächst das Depot mit der Rendite, danach wird ein Zwölftel der TER abgezogen. Aus ${numStr(f.ret)} % Rendite werden so rund ${nf(2).format(net * 100)} %. Von 10.000 € gehen im Jahr also etwa ${eur0.format(10000 * terW)} an den Fonds. Weil die TER ein Prozentsatz ist, kostet sie in Euro umso mehr, je größer dein Depot wird, und das Geld fehlt dir zusätzlich beim Zinseszins. Darum ist der Unterschied nach ${Y} Jahren größer als die Summe der einzelnen Jahreskosten.`;
     const ms = [1e5, 25e4, 5e5, 1e6, 2e6, 5e6].filter((t) => t > o.start).map((t) => { const q = R.pts.slice(0, Y + 1).find((x) => x.v >= t); return q ? [t, q.y] : null; }).filter(Boolean).slice(0, 4);
     $("#spMiles").innerHTML = ms.length ? ms.map(([t, y]) => `<div class="mile"><span class="note">${shortEur(t)}</span><b>${y0 + y}</b></div>`).join("") : '<p class="note" style="margin:0">Kein weiterer Meilenstein in dieser Laufzeit.</p>';
+    renderMc(o, Y, p.v);
   }
 
   // ---------- Zielrechner ----------
@@ -5855,7 +5934,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const raw = o.pts, li = raw.length - 1;
     if (li < 1) return;
     // Prozent-Ansicht: jede Linie als Gewinn auf das bis dahin Eingezahlte
-    const keys0 = o.lines.map((l) => l[0]).concat(o.band || []), pof = o.pctOf || ((q, k) => (q.paid > 0 ? q[k] / q.paid - 1 : 0));
+    const keys0 = o.lines.map((l) => l[0]).concat(o.band || [], o.band2 || []), pof = o.pctOf || ((q, k) => (q.paid > 0 ? q[k] / q.paid - 1 : 0));
     const pts = o.pct ? raw.map((q) => { const r = Object.assign({}, q); keys0.forEach((k) => (r[k] = pof(q, k) * 100)); return r; }) : raw;
     const W = Math.max(280, host.clientWidth), H = W < 500 ? 220 : 270, m = { l: W < 500 ? 46 : 58, r: 10, t: 14, b: 26 };
     const keys = keys0, allV = pts.flatMap((p) => keys.map((k) => p[k]));
@@ -5875,6 +5954,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     if (o.band) {
       const [lo, hi] = o.band;
       svgEl("path", { d: path(hi) + pts.slice().reverse().map((p, k) => "L" + X(li - k).toFixed(1) + " " + Yp(p[lo]).toFixed(1)).join("") + "Z", fill: c1, "fill-opacity": 0.14, stroke: "none" }, svg);
+      if (o.band2) svgEl("path", { d: path(o.band2[1]) + pts.slice().reverse().map((p, k) => "L" + X(li - k).toFixed(1) + " " + Yp(p[o.band2[0]]).toFixed(1)).join("") + "Z", fill: c1, "fill-opacity": 0.18, stroke: "none" }, svg);
     }
     (o.marks || []).forEach((mk) => {
       const x = X(mk.i);
@@ -6165,7 +6245,351 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       return `<tr class="click" data-id="${esc(p.id)}"><td><div class="sec-name">${esc(p.asset.name)}</div><div class="sec-sub">${esc(p.asset.symbol)} <span class="chip">${esc(p.asset.cls || "–")}</span></div></td><td style="text-align:left">${fmtTop(topC)}</td><td style="text-align:left">${fmtTop(topS)}</td><td>${missing ? '<span class="chip warn">fehlt</span>' : `<span class="chip">${esc(ex.source || "Stammdaten")}</span>`}</td></tr>`; }).join("");
     $("#srcTable").innerHTML = `<thead><tr><th class="nosort">Wertpapier</th><th class="nosort" style="text-align:left">Länder</th><th class="nosort" style="text-align:left">Sektoren</th><th class="nosort">Quelle</th></tr></thead><tbody>${rows || '<tr><td colspan="4" class="empty">Keine Positionen in der Auswahl.</td></tr>'}</tbody>`;
     $$("#srcTable tr[data-id]").forEach((tr) => tr.addEventListener("click", () => openAsset(tr.dataset.id)));
+    renderXray(K); renderOverlap(K); renderCur(K); renderFactor(K); renderRulesPanel();
   }
+  // ---------- v72: ETF-Überschneidung ----------
+  // Schätzung: Länder- und Sektor-Gewichte der beiden Indizes übereinandergelegt (der kleinere Wert zählt), mindestens die gemeinsamen größten Titel
+  const mixOv = (a, b) => { let s = 0; for (const k in a) if (k !== "Ohne Angabe" && b[k]) s += Math.min(a[k], b[k]); return s; };
+  function etfOverlap(a, b) {
+    const ea = exposure(a), eb = exposure(b), pa = profileFor(a), pb = profileFor(b);
+    const hasC = !ea.c["Ohne Angabe"] && !eb.c["Ohne Angabe"], hasS = !ea.s["Ohne Angabe"] && !eb.s["Ohne Angabe"];
+    if (!hasC && !hasS) return null;
+    const oc = hasC ? mixOv(ea.c, eb.c) : 1, os = hasS ? mixOv(ea.s, eb.s) : 1;
+    const ha = (pa && HOLDINGS[pa.key]) || [], hb = (pb && HOLDINGS[pb.key]) || [], common = [];
+    ha.forEach(([n, w]) => { const m = hb.find((x) => coKey(x[0]) === coKey(n)); if (m) common.push([n, Math.min(w, m[1])]); });
+    common.sort((x, y) => y[1] - x[1]);
+    const top = common.reduce((x, c) => x + c[1], 0) / 100;
+    return { v: Math.min(1, Math.max(top, Math.min(oc, os))), common: common.map((c) => c[0]) };
+  }
+  function renderOverlap(K) {
+    const out = $("#ovOut"); if (!out) return;
+    const etfs = K.list.filter((p) => p.value > 0 && /^(ETF|Fonds)$/.test(p.asset.cls || "")), pairs = [], skip = new Set();
+    for (let i = 0; i < etfs.length; i++) for (let j = i + 1; j < etfs.length; j++) {
+      const o = etfOverlap(etfs[i].asset, etfs[j].asset);
+      if (!o) { [etfs[i], etfs[j]].forEach((p) => { if (exposure(p.asset).c["Ohne Angabe"] && exposure(p.asset).s["Ohne Angabe"]) skip.add(p.asset.name || p.asset.symbol); }); continue; }
+      pairs.push({ a: etfs[i], b: etfs[j], v: o.v, common: o.common });
+    }
+    pairs.sort((x, y) => y.v - x.v);
+    $("#ovCount").textContent = etfs.length >= 2 ? pairs.length + (pairs.length === 1 ? " Paar" : " Paare") : "";
+    if (etfs.length < 2) { out.innerHTML = '<p class="hint">Ab zwei ETFs zeigt Depotblick hier, wie stark sie sich überschneiden.</p>'; return; }
+    if (!pairs.length) { out.innerHTML = '<p class="hint">Für deine ETFs fehlen Länder und Sektoren. Tippe unter „Herkunft der Daten“ auf einen ETF und trage sie ein.</p>'; return; }
+    const nm = (p) => esc(p.asset.name || p.asset.symbol), t = pairs[0], lvl = (v) => (v >= 0.6 ? ["hoch", "--loss"] : v >= 0.3 ? ["mittel", "--div"] : ["gering", "--gain"]);
+    const lead = t.v >= 0.6 ? `<b>${nm(t.a)}</b> und <b>${nm(t.b)}</b> überschneiden sich zu rund ${nf(0).format(t.v * 100)} %. Du hältst viele Firmen doppelt, der zweite ETF streut kaum zusätzlich.`
+      : t.v >= 0.3 ? `Die größte Überschneidung haben <b>${nm(t.a)}</b> und <b>${nm(t.b)}</b> mit rund ${nf(0).format(t.v * 100)} %. Das ist ein mittlerer Wert.`
+      : `Deine ETFs ergänzen sich gut. Die größte Überschneidung liegt bei rund ${nf(0).format(t.v * 100)} %.`;
+    out.innerHTML = `<p class="ctext" style="margin:0">${lead}</p><div class="ov">${pairs.slice(0, 12).map((p) => { const [l, c] = lvl(p.v); return `<div class="r"><div class="h"><span>${nm(p.a)} <span class="muted">und</span> ${nm(p.b)}</span><b class="num">≈ ${nf(0).format(p.v * 100)} %</b></div><div class="fbar"><b style="width:${Math.max(1, p.v * 100)}%;background:var(${c})"></b></div><span class="note">${l}${p.common.length ? " · gemeinsam u. a. " + p.common.slice(0, 4).map(esc).join(", ") : ""}</span></div>`; }).join("")}</div>${pairs.length > 12 ? `<p class="note">und ${pairs.length - 12} weitere Paare mit weniger Überschneidung</p>` : ""}${skip.size ? `<p class="note">Nicht bewertet, weil Länder und Sektoren fehlen: ${[...skip].map(esc).join(", ")}.</p>` : ""}`;
+  }
+
+  // ---------- v72: Währungen ----------
+  const EURO_C = ["Deutschland", "Frankreich", "Niederlande", "Spanien", "Italien", "Finnland", "Belgien", "Irland", "Österreich", "Portugal", "Luxemburg", "Griechenland"];
+  const CUR_BY_C = { USA: "US-Dollar", Japan: "Yen", "Großbritannien": "Britisches Pfund", Schweiz: "Schweizer Franken", Kanada: "Kanadischer Dollar", Australien: "Australischer Dollar", China: "Yuan und Hongkong-Dollar", Hongkong: "Yuan und Hongkong-Dollar", Taiwan: "Taiwan-Dollar", Indien: "Indische Rupie", "Südkorea": "Koreanischer Won", Schweden: "Schwedische Krone", "Dänemark": "Dänische Krone", Norwegen: "Norwegische Krone", Singapur: "Singapur-Dollar", Brasilien: "Brasilianischer Real" };
+  EURO_C.forEach((c) => (CUR_BY_C[c] = "Euro"));
+  function renderCur(K) {
+    const out = $("#curOut"); if (!out) return;
+    const open = K.list.filter((p) => p.value > 0), tot = open.reduce((x, p) => x + p.value, 0), g = {};
+    if (!(tot > 0)) { out.innerHTML = '<p class="hint">Keine offenen Positionen in der Auswahl.</p>'; return; }
+    open.forEach((p) => {
+      const cl = p.asset.cls || "Aktie";
+      if (cl === "Krypto") { g["Krypto (keine Landeswährung)"] = (g["Krypto (keine Landeswährung)"] || 0) + p.value; return; }
+      if (cl === "Rohstoff") { g["Gold und Rohstoffe (in US-Dollar gehandelt)"] = (g["Gold und Rohstoffe (in US-Dollar gehandelt)"] || 0) + p.value; return; }
+      const c = exposure(p.asset).c;
+      for (const k in c) { const cur = k === "Ohne Angabe" ? "Ohne Angabe" : CUR_BY_C[k] || "Andere Währungen"; g[cur] = (g[cur] || 0) + p.value * c[k]; }
+    });
+    const last = (l) => (l === "Ohne Angabe" ? 2 : l === "Andere Währungen" ? 1 : 0);
+    const rows = Object.entries(g).sort((a, b) => last(a[0]) - last(b[0]) || b[1] - a[1]), usd = (g["US-Dollar"] || 0) / tot, eu = (g.Euro || 0) / tot;
+    out.innerHTML = `<p class="ctext" style="margin:0">${usd > 0.005 ? `Rund ${nf(0).format(usd * 100)} % deines Depots hängen am US-Dollar, ${nf(0).format(eu * 100)} % am Euro. Fällt der Dollar um 10 % gegen den Euro, verliert dein Depot dadurch etwa ${nf(1).format(usd * 10)} %. Steigt er, gewinnst du entsprechend.` : `Rund ${nf(0).format(eu * 100)} % deines Depots stecken im Euro-Raum.`}</p>
+      <div class="ov">${rows.map(([l, v], i) => `<div class="r"><div class="h"><span>${esc(l)}</span><b class="num">${nf(1).format((v / tot) * 100)} %</b></div><div class="fbar"><b style="width:${Math.max(0.5, (v / tot) * 100)}%;background:var(${last(l) ? OTHER : COLORS[i % COLORS.length]})"></b></div></div>`).join("")}</div>`;
+  }
+
+  // ---------- v72: Faktoren (grob) ----------
+  // Größe [groß, mittel, klein] und Stil [Wachstum, gemischt, Wert] je Index, grobe Richtwerte in Prozent
+  const FACT = { world: [[80, 19, 1], [35, 40, 25]], allworld: [[78, 20, 2], [34, 40, 26]], sp500: [[84, 15, 1], [40, 40, 20]], ndx: [[90, 10, 0], [60, 35, 5]], em: [[80, 18, 2], [32, 40, 28]], europe: [[78, 21, 1], [26, 42, 32]], estx50: [[98, 2, 0], [25, 45, 30]], dax: [[85, 15, 0], [25, 40, 35]], japan: [[75, 24, 1], [27, 40, 33]], tech: [[88, 11, 1], [65, 30, 5]], semi: [[80, 17, 3], [60, 32, 8]], ev: [[50, 35, 15], [50, 35, 15]], quantum: [[50, 35, 15], [55, 35, 10]], battery: [[50, 35, 15], [45, 35, 20]], clean: [[35, 40, 25], [45, 35, 20]] };
+  const F_GROW = /Technologie|Kommunikation|Zyklischer Konsum|Gesundheit/, F_VAL = /Finanzen|Energie|Versorger|Grundstoffe|Basiskonsum|Immobilien/;
+  function factorOf(a) {
+    const cl = a.cls || "Aktie";
+    if (/^(ETF|Fonds)$/.test(cl)) {
+      const n = (a.name || "").toLowerCase(), pr = profileFor(a), base = pr && FACT[pr.key];
+      if (fundType(a) !== "aktien" && fundType(a) !== "misch") return null;
+      let size = base ? base[0].slice() : null, style = base ? base[1].slice() : null;
+      if (/small ?cap|smallcap|nebenwerte/.test(n)) size = [0, 25, 75]; else if (/mid ?cap|mdax/.test(n)) size = [10, 75, 15]; else if (/\bimi\b/.test(n) && size) size = [size[0] - 9, size[1] - 2, size[2] + 11];
+      if (/value|dividend|aristocrat|high yield|quality income/.test(n)) style = [5, 30, 65]; else if (/growth|momentum/.test(n)) style = [65, 30, 5];
+      if (!size && !style) return { unknown: true };
+      return { size: size || [70, 25, 5], style: style || [33, 34, 33], src: "ETF" };
+    }
+    if (cl !== "Aktie") return null;
+    const sec = a.sector || guessSector(a.symbol), known = !!STOCKS[String(a.symbol || "").toUpperCase()];
+    const sz = a.fSize || (known ? "L" : ""), st = a.fStyle || (F_GROW.test(sec) ? "G" : F_VAL.test(sec) ? "V" : sec ? "B" : "");
+    if (!sz && !st) return { unknown: true, stock: true };
+    return { size: sz ? [sz === "L" ? 100 : 0, sz === "M" ? 100 : 0, sz === "S" ? 100 : 0] : null, style: st ? [st === "G" ? 100 : 0, st === "B" ? 100 : 0, st === "V" ? 100 : 0] : null, stock: true, own: !!(a.fSize || a.fStyle) };
+  }
+  function renderFactor(K) {
+    const out = $("#facOut"); if (!out) return;
+    const open = K.list.filter((p) => p.value > 0), tot = open.reduce((x, p) => x + p.value, 0), S3 = [0, 0, 0, 0], T3 = [0, 0, 0, 0]; let eq = 0;
+    const stocks = [];
+    open.forEach((p) => { const f = factorOf(p.asset); if (!f) return; eq += p.value; if (f.stock || (p.asset.cls || "Aktie") === "Aktie") stocks.push(p);
+      if (f.size) f.size.forEach((w, i) => (S3[i] += (p.value * w) / 100)); else S3[3] += p.value;
+      if (f.style) f.style.forEach((w, i) => (T3[i] += (p.value * w) / 100)); else T3[3] += p.value; });
+    if (!(eq > 0)) { out.innerHTML = '<p class="hint">Keine Aktien oder Aktien-ETFs in der Auswahl.</p>'; return; }
+    const bar = (v, labels, cols) => `<div class="stack" aria-hidden="true">${v.map((x, i) => (x > 0 ? `<span style="width:${(x / eq) * 100}%;background:var(${cols[i]})"></span>` : "")).join("")}</div><div class="legend-b">${v.map((x, i) => (x > 0 ? `<span><i style="background:var(${cols[i]})"></i>${labels[i]} <b>${nf(0).format((x / eq) * 100)} %</b></span>` : "")).join("")}</div>`;
+    const cols = ["--c1", "--c3", "--c4", OTHER], big = S3[0] / eq, gr = T3[0] / eq, va = T3[2] / eq;
+    const tilt = gr - va > 0.1 ? "neigt zu Wachstumsfirmen" : va - gr > 0.1 ? "neigt zu günstig bewerteten Firmen (Wert)" : "ist zwischen Wachstum und Wert ausgewogen";
+    out.innerHTML = `<p class="ctext" style="margin:0">Dein Aktienteil steckt zu rund ${nf(0).format(big * 100)} % in großen Firmen und ${tilt}.${big > 0.85 ? " Kleine Firmen fehlen fast ganz, das ist bei Welt-ETFs normal." : ""}</p>
+      <div class="label">Größe der Firmen</div>${bar(S3, ["groß", "mittel", "klein", "ohne Angabe"], cols)}
+      <div class="label">Stil</div>${bar(T3, ["Wachstum", "gemischt", "Wert", "ohne Angabe"], cols)}
+      ${stocks.length ? `<details class="more"><summary>Einzelaktien selbst einordnen <span class="muted">· ${stocks.length}</span></summary><div class="facst">${stocks.sort((a, b) => b.value - a.value).map((p) => { const a = p.asset, f = factorOf(a), cur = (arr, ks) => (arr ? ks[arr.indexOf(100)] || "" : "");
+        const sel = (k, v, opts) => `<select data-fk="${k}" data-fid="${esc(p.id)}" aria-label="${k === "fSize" ? "Größe" : "Stil"} von ${esc(a.name || a.symbol)}">${opts.map(([o, l]) => `<option value="${o}"${o === v ? " selected" : ""}>${l}</option>`).join("")}</select>`;
+        return `<div class="r"><span class="n" title="${esc(a.name || a.symbol)}">${esc(a.name || a.symbol)}</span>${sel("fSize", cur(f.size, ["L", "M", "S"]), [["", "Größe?"], ["L", "groß"], ["M", "mittel"], ["S", "klein"]])}${sel("fStyle", cur(f.style, ["G", "B", "V"]), [["", "Stil?"], ["G", "Wachstum"], ["B", "gemischt"], ["V", "Wert"]])}</div>`; }).join("")}</div></details>` : ""}
+      <p class="foot">Bezogen auf Aktien und Aktien-ETFs (${nf(0).format((eq / tot) * 100)} % der Auswahl). Die Werte sind eine grobe Näherung: ETFs nach ihrem Index, Einzelaktien nach Branche, bis du sie selbst einordnest.</p>`;
+    $$("[data-fk]", out).forEach((s) => s.addEventListener("change", () => { const a = S.data.assets[s.dataset.fid]; if (!a) return; if (s.value) a[s.dataset.fk] = s.value; else delete a[s.dataset.fk]; commit(); }));
+  }
+
+  // ---------- v72: Eigene Anlage-Regeln ----------
+  const RULE_CLS = ["Aktie", "ETF", "Fonds", "Anleihe", "Krypto", "Rohstoff", "Sonstiges"];
+  const ruleText = (r) => (r.kind === "stock" ? "Jede Einzelaktie" : r.kind === "cls" ? "Anlageklasse " + r.key : r.kind === "country" ? "Land " + r.key : "Sektor " + r.key) + (r.op === "min" ? " mindestens " : " höchstens ") + numStr(r.pct, 1) + " %";
+  function rulesEval(list) {
+    const rules = S.data.rules || [], open = list.filter((p) => p.value > 0), tot = open.reduce((x, p) => x + p.value, 0), K = { list: open };
+    if (!rules.length || !(tot > 0)) return [];
+    const agg = { cls: aggregate("k", K), country: aggregate("c", K), sector: aggregate("s", K) };
+    return rules.map((r) => {
+      let cur = 0, who = "";
+      if (r.kind === "stock") { const st = open.filter((p) => (p.asset.cls || "Aktie") === "Aktie").sort((a, b) => b.value - a.value)[0]; if (st) { cur = st.value / tot; who = st.asset.name || st.asset.symbol; } }
+      else { const e = (agg[r.kind] || []).find((x) => x.label === r.key); cur = e ? e.v / tot : 0; }
+      const lim = r.pct / 100, bad = r.op === "min" ? cur < lim - 1e-9 : cur > lim + 1e-9, near = !bad && (r.op === "min" ? cur < lim * 1.1 : cur > lim * 0.9);
+      return { r, cur, who, st: bad ? "bad" : near ? "near" : "ok" };
+    });
+  }
+  const ruleNow = (e) => (e.r.kind === "stock" ? (e.who ? "Größte: " + esc(e.who) + " mit " + nf(1).format(e.cur * 100) + " %" : "Keine Einzelaktien im Depot") : "Aktuell " + nf(1).format(e.cur * 100) + " %") + (e.st === "bad" ? " · verletzt" : e.st === "near" ? " · knapp an der Grenze" : " · eingehalten");
+  function renderRulesHome() {
+    const card = $("#rulesCard"); if (!card) return;
+    const E = rulesEval(C.list); card.hidden = !E.length; if (!E.length) return;
+    const bad = E.filter((e) => e.st === "bad"), near = E.filter((e) => e.st === "near"), st = bad.length ? "bad" : near.length ? "near" : "ok";
+    card.innerHTML = `<a class="rulesum" href="#statistiken" data-rules-go><i class="amp ${st}"></i><span style="min-width:0;flex:1"><b>Anlage-Regeln: ${E.length - bad.length} von ${E.length} eingehalten</b>${bad.length ? `<span class="note" style="display:block">Verletzt: ${bad.slice(0, 2).map((e) => esc(ruleText(e.r)) + " (" + nf(1).format(e.cur * 100) + " %)").join(" · ")}${bad.length > 2 ? " …" : ""}</span>` : near.length ? `<span class="note" style="display:block">Knapp: ${esc(ruleText(near[0].r))} (${nf(1).format(near[0].cur * 100)} %)</span>` : ""}</span><span class="link">ansehen →</span></a>`;
+    card.querySelector("[data-rules-go]").addEventListener("click", () => { stTab = "risiko"; try { localStorage.setItem("depotblick-sttab", stTab); } catch (e) {} });
+  }
+  function rlKeys() {
+    const kind = $("#rlKind").value, key = $("#rlKey"), K = { list: C.list.filter((p) => p.value > 0) };
+    key.hidden = kind === "stock"; $("#rlOp").hidden = kind === "stock"; if (kind === "stock") { $("#rlOp").value = "max"; return; }
+    const have = kind === "cls" ? [] : aggregate(kind === "country" ? "c" : "s", K).map((e) => e.label);
+    const base = kind === "cls" ? RULE_CLS : Object.keys(kind === "country" ? PROFILES.world.c : PROFILES.world.s);
+    const opts = [...new Set(have.concat(base))].filter((l) => l !== "Sonstige" && l !== "Ohne Angabe"), cur = key.value;
+    key.innerHTML = opts.map((o) => `<option${o === cur ? " selected" : ""}>${esc(o)}</option>`).join("");
+  }
+  function renderRulesPanel() {
+    const box = $("#rulesList"); if (!box) return;
+    const rules = S.data.rules || (S.data.rules = []), E = rulesEval(C.list), has = C.list.some((p) => p.value > 0);
+    $("#rulesSum").textContent = rules.length ? (E.length ? E.filter((e) => e.st !== "bad").length + " von " + rules.length + " eingehalten" : rules.length + (rules.length === 1 ? " Regel" : " Regeln")) : "";
+    const sug = [["stock", "", "max", 5, "Einzelaktie höchstens 5 %"], ["cls", "Krypto", "max", 5, "Krypto höchstens 5 %"], ["country", "USA", "max", 70, "USA höchstens 70 %"], ["sector", "Technologie", "max", 35, "Technologie höchstens 35 %"]];
+    box.innerHTML = rules.length ? rules.map((r, i) => { const e = E[i]; return `<div class="rule"><i class="amp ${e ? e.st : "off"}"></i><span><b>${esc(ruleText(r))}</b><small>${e ? ruleNow(e) : has ? "" : "Noch keine Positionen im Depot"}</small></span><button type="button" class="icon-btn" data-rdel="${i}" aria-label="Regel löschen">✕</button></div>`; }).join("")
+      : `<p class="hint">Noch keine Regel. Lege fest, was dir wichtig ist. Depotblick prüft das bei jedem Öffnen und warnt dich beim Kauf. Zum Beispiel:</p><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:8px">${sug.map((s, i) => `<button type="button" class="chip" data-rsug="${i}">${s[4]}</button>`).join("")}</div>`;
+    $$("[data-rdel]", box).forEach((b) => b.addEventListener("click", () => { rules.splice(+b.dataset.rdel, 1); commit(); }));
+    $$("[data-rsug]", box).forEach((b) => b.addEventListener("click", () => { const s = sug[+b.dataset.rsug]; rules.push({ id: uid(), kind: s[0], key: s[1], op: s[2], pct: s[3] }); commit(); }));
+    rlKeys();
+  }
+  $("#rlKind").addEventListener("change", rlKeys);
+  $("#rlAdd").addEventListener("click", () => {
+    const kind = $("#rlKind").value, pct = parseNum($("#rlPct").value), rules = S.data.rules || (S.data.rules = []);
+    if (!isFinite(pct) || pct < 0 || pct > 100) { toast("Bitte einen Wert zwischen 0 und 100 % eingeben"); return; }
+    const r = { id: uid(), kind, key: kind === "stock" ? "" : $("#rlKey").value, op: kind === "stock" ? "max" : $("#rlOp").value, pct };
+    if (rules.some((x) => x.kind === r.kind && x.key === r.key && x.op === r.op)) { toast("Diese Regel gibt es schon. Lösche sie zuerst, um den Wert zu ändern"); return; }
+    rules.push(r); commit(); toast("Regel gespeichert");
+  });
+  // Warnung im Kauf-Dialog: würde dieser Kauf eine Regel verletzen?
+  function txRuleHint() {
+    const el = $("#txRuleWarn"); if (!el) return;
+    const id = assetId($("#fAsset").value.trim()), n = parseNum($("#fShares").value), px = parseNum($("#fPrice").value), a = S.data.assets[id];
+    if (txType !== "buy" || !a || !(n > 0) || !(px > 0) || editTx || !(S.data.rules || []).length) { el.hidden = true; return; }
+    const before = rulesEval(C.list), list = C.list.map((p) => ({ asset: p.asset, value: p.value, id: p.id }));
+    const hit = list.find((p) => p.id === id); if (hit) hit.value += n * px; else list.push({ asset: a, value: n * px, id });
+    const bad = rulesEval(list).filter((e, i) => e.st === "bad" && (!before[i] || before[i].st !== "bad" || (e.r.op === "max" ? e.cur > before[i].cur + 1e-9 : e.cur < before[i].cur - 1e-9)));
+    el.hidden = !bad.length;
+    if (bad.length) el.innerHTML = "Achtung, deine Anlage-Regel: " + bad.map((e) => `<b>${esc(ruleText(e.r))}</b>. Nach diesem Kauf ${e.r.kind === "stock" ? "liegt " + esc(e.who) + " bei" : "sind es"} ${nf(1).format(e.cur * 100)} %.`).join(" ") + " Du kannst trotzdem speichern.";
+  }
+
+  // ---------- v72: Verlusttöpfe und Steuer-Tipps ----------
+  // Aktienverluste dürfen nur mit Aktiengewinnen verrechnet werden, alle anderen Verluste mit allen Erträgen. Reste gehen ins nächste Jahr
+  function lossPots(yTo) {
+    const all = sortTx(S.data.txs), rows = []; if (!all.length) return rows;
+    const gA = {};
+    [...new Set(all.map((t) => t.asset))].forEach((id) => { const a = S.data.assets[id] || {}; if ((a.cls || "Aktie") !== "Aktie") return; fifo(all.filter((t) => t.asset === id)).sales.forEach((x) => { const y = +x.d.slice(0, 4); gA[y] = (gA[y] || 0) + x.gain; }); });
+    let potA = 0, potO = 0;
+    for (let y = +all[0].date.slice(0, 4); y <= yTo; y++) {
+      const T = taxYear(y), a0 = potA, o0 = potO, ga = gA[y] || 0;
+      let a = ga - potA; if (a < 0) { potA = -a; a = 0; } else potA = 0;
+      let o = T.taxable - ga + a - potO; if (o < 0) { potO = -o; o = 0; } else potO = 0;
+      rows.push({ y, ga, other: T.taxable - ga, a0, o0, potA, potO, taxable: o });
+    }
+    return rows;
+  }
+  function renderLossPots(y) {
+    const box = $("#ltOut"); if (!box) return;
+    const cy = new Date().getFullYear(), rows = lossPots(y), R = rows.find((r) => r.y === y) || { y, ga: 0, other: 0, a0: 0, o0: 0, potA: 0, potO: 0, taxable: 0 }, rate = taxRate();
+    const end = y >= cy ? "Stand heute" : "Ende " + y;
+    $("#ltSum").textContent = R.potA + R.potO > 0.5 ? "zusammen " + eur0.format(R.potA + R.potO) : "leer";
+    box.innerHTML = `<div class="tablewrap"><table><thead><tr><th>Topf</th><th class="r">im Jahr</th><th class="r">${end}</th></tr></thead><tbody>
+      <tr><td>Aktien<div class="note">nur Einzelaktien · Anfang ${y}: ${eur0.format(R.a0)}</div></td><td class="r num">${signed(R.ga)}</td><td class="r num"><b>${eur.format(R.potA)}</b></td></tr>
+      <tr><td>Sonstige<div class="note">ETFs, Fonds, Dividenden · Anfang ${y}: ${eur0.format(R.o0)}</div></td><td class="r num">${signed(R.other)}</td><td class="r num"><b>${eur.format(R.potO)}</b></td></tr></tbody></table></div>
+      <p class="ctext" style="margin:10px 0 0">${R.potA + R.potO > 0.5 ? `In den Töpfen liegen ${eur0.format(R.potA + R.potO)} Verlust. Künftige Gewinne bis zu dieser Höhe bleiben steuerfrei${R.potA > 0.5 ? ", beim Aktien-Topf aber nur Gewinne aus Einzelaktien" : ""}.` : "Deine Verlusttöpfe sind leer."} Nach Verrechnung sind ${y} ${eur0.format(R.taxable)} steuerpflichtig.</p>`;
+    const tc = $("#tipCard"); tc.hidden = y !== cy; if (y !== cy) return;
+    const tips = [], fsa = hcFsa(), rest = Math.max(0, fsa - R.taxable), over = Math.max(0, R.taxable - fsa);
+    const K = compute({ txs: S.data.txs, assets: S.data.assets }), open = K.list.filter((p) => p.shares > 0 && p.price > 0), allTx = sortTx(S.data.txs);
+    const gainN = (lots, n, px) => { let k = n, c = 0; for (const l of lots) { if (k <= 1e-12) break; const q = Math.min(k, l.n); c += q * l.c; k -= q; } return n * px - c; };
+    const st = (n) => nf(n < 10 ? 2 : n < 100 ? 1 : 0).format(n) + " Stück";
+    if (R.potA + R.potO > 0.5) tips.push(`<b>Verlusttopf nutzen.</b> Du hast ${eur0.format(R.potA + R.potO)} Verlust vorgetragen. Gewinne bis zu dieser Höhe kannst du realisieren, ohne Steuern zu zahlen${R.potA > 0.5 && R.potO < 0.5 ? " (nur bei Einzelaktien)" : ""}.`);
+    if (rest > 20) {
+      const win = open.filter((p) => p.unreal > 5).sort((a, b) => b.unrealPct - a.unrealPct).slice(0, 3).map((p) => {
+        const lots = fifo(allTx.filter((t) => t.asset === p.id)).lots, tf = tfOf(p.asset), full = gainN(lots, p.shares, p.price) * (1 - tf);
+        if (!(full > 5)) return null;
+        let n = p.shares;
+        if (full > rest) { let lo = 0, hi = p.shares; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (gainN(lots, m, p.price) * (1 - tf) >= rest) hi = m; else lo = m; } n = hi; }
+        const g = Math.min(full, rest);
+        return `<li><b>${esc(p.asset.name || p.asset.symbol)}</b>: ${n >= p.shares - 1e-9 ? "die ganze Position (" + st(n) + ")" : "etwa " + st(n)} im Wert von rund ${eur0.format(n * p.price)} verkaufen und wieder kaufen. Das nutzt ${eur0.format(g)} Freibetrag${tf > 0 ? " (nach Teilfreistellung)" : ""}.</li>`;
+      }).filter(Boolean);
+      if (win.length) tips.push(`<b>Freibetrag ausschöpfen.</b> Dir bleiben dieses Jahr noch ${eur0.format(rest)} Freibetrag, er verfällt am 31.12. Wenn du Gewinne bis zu dieser Höhe realisierst und die Anteile gleich wieder kaufst, steigt dein Einstand. Das spart dir bei einem späteren Verkauf bis zu ${eur0.format(rest * rate)} Steuern. Eine der Möglichkeiten reicht:<ul>${win.join("")}</ul><span class="note">Rechne Gebühren und den Unterschied zwischen Kauf- und Verkaufskurs dagegen. Der Rückkauf direkt danach ist erlaubt.</span>`);
+      else tips.push(`<b>Freibetrag.</b> Dir bleiben dieses Jahr noch ${eur0.format(rest)} Freibetrag. Im Moment hast du keine Position mit Gewinn, mit der du ihn nutzen könntest. Er verfällt am 31.12. und lässt sich nicht mitnehmen.`);
+    }
+    if (over > 1) {
+      const stockRoom = Math.max(0, R.ga - R.a0);
+      const lose = open.filter((p) => p.unreal < -20).sort((a, b) => a.unreal - b.unreal).slice(0, 3).map((p) => {
+        const isSt = (p.asset.cls || "Aktie") === "Aktie", loss = -p.unreal * (1 - tfOf(p.asset)), use = Math.min(over, isSt ? Math.min(loss, stockRoom) : loss);
+        return `<li><b>${esc(p.asset.name || p.asset.symbol)}</b> liegt ${eur0.format(-p.unreal)} im Minus. ${use > 1 ? `Ein Verkauf senkt deine Steuer dieses Jahr um bis zu ${eur0.format(use * rate)}.` : isSt ? "Der Verlust zählt nur gegen Gewinne aus Einzelaktien. Er landet im Aktien-Topf und hilft dir erst später." : ""}</li>`;
+      });
+      if (lose.length) tips.push(`<b>Verluste gegenrechnen.</b> Du liegst ${eur0.format(over)} über dem Freibetrag, darauf werden rund ${eur0.format(over * rate)} Steuern fällig. Wenn du eine Position im Minus verkaufst, zählt der Verlust dagegen. Du kannst sie danach wieder kaufen, wenn du weiter an sie glaubst.<ul>${lose.join("")}</ul>`);
+    }
+    if (multiDepot() && R.potA + R.potO > 0.5) tips.push("<b>Mehrere Banken.</b> Jede Bank führt ihre eigenen Töpfe. Sollen Verluste bei einer Bank mit Gewinnen bei einer anderen verrechnet werden, beantrage dort bis zum 15. Dezember eine Verlustbescheinigung und gib beides in der Steuererklärung an.");
+    $("#tipList").innerHTML = tips.length ? tips.map((t) => `<div class="tip">${t}</div>`).join("") : '<p class="hint">Im Moment gibt es nichts zu tun: Dein Freibetrag ist genutzt und es gibt keine Verluste zum Gegenrechnen.</p>';
+  }
+
+  // ---------- v72: Hochrechnung mit Wahrscheinlichkeiten ----------
+  // 1.000 Verläufe mit zufälligen Monatsrenditen. Im Durchschnitt aller Verläufe gilt die eingestellte Rendite, die Mitte (Median) liegt wegen der Schwankung darunter
+  function mcRun(o, Y, vol, N) {
+    const n = Y * 12, sd = vol / Math.sqrt(12), mu = Math.log(1 + o.ret) / 12 - (sd * sd) / 2, f = new Array(n); let s = 20261111, paid = null;
+    const rnd = () => { s = (s + 0x6d2b79f5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const cols = Array.from({ length: Y + 1 }, () => new Float64Array(N));
+    for (let k = 0; k < N; k++) {
+      for (let m = 0; m < n; m += 2) { const u = Math.max(1e-12, rnd()), r = Math.sqrt(-2 * Math.log(u)), a = 2 * Math.PI * rnd(); f[m] = Math.exp(mu + sd * r * Math.cos(a)); if (m + 1 < n) f[m + 1] = Math.exp(mu + sd * r * Math.sin(a)); }
+      const pts = simulate(o, o.ret, [], null, n, f);
+      for (let i = 0; i <= Y; i++) cols[i][k] = pts[i].v;
+      if (!paid) paid = pts.map((p) => p.paid + (p.zul || 0));
+    }
+    cols.forEach((c) => c.sort());
+    const q = (c, p) => c[Math.min(N - 1, Math.max(0, Math.round(p * (N - 1))))];
+    return { N, last: cols[Y], pts: cols.map((c, i) => ({ y: i, paid: paid[i], p5: q(c, 0.05), p20: q(c, 0.2), p50: q(c, 0.5), p80: q(c, 0.8), p95: q(c, 0.95) })) };
+  }
+  function ownVol() {
+    const m = {}; twr(C.series || []).forEach((r) => { const k = r.d.slice(0, 7); m[k] = (m[k] == null ? 1 : m[k]) * (1 + r.r); });
+    const mr = Object.values(m).map((v) => v - 1); if (mr.length < 12) return NaN;
+    const mean = mr.reduce((x, v) => x + v, 0) / mr.length;
+    return Math.sqrt(mr.reduce((x, v) => x + (v - mean) ** 2, 0) / (mr.length - 1)) * Math.sqrt(12);
+  }
+  function renderMc(o, Y, det) {
+    const f = S.fc, on = !!f.mcOn; $("#mcOn").checked = on; $("#mcBody").hidden = !on; if (!on) return;
+    const ov = ownVol(), opts = [["10", "ruhig 10 %"], ["15", "Weltaktien 15 %"], ["20", "einzelne Aktien 20 %"], ["30", "sehr wild 30 %"]];
+    if (isFinite(ov) && ov > 0.02) opts.push(["own", "dein Depot bisher " + nf(0).format(ov * 100) + " %"]);
+    if (!opts.some((x) => x[0] === String(f.mcVol))) f.mcVol = "15";
+    sseg("#mcVol", opts, String(f.mcVol), (v) => { f.mcVol = v; savePrefs(); renderMc(o, Y, det); });
+    const vol = f.mcVol === "own" ? ov : +f.mcVol / 100, M = mcRun(o, Y, vol, 1000), p = M.pts[Y], y0 = new Date().getFullYear();
+    drawSp($("#mcChart"), { pts: M.pts, label: "Fächer möglicher Verläufe des Depotwerts", pct: false, band: ["p5", "p95"], band2: ["p20", "p80"],
+      lines: [["paid", "--muted", 1.4, "4 4"], ["p50", "--accent", 2.4]], xl: (i) => String(y0 + i), xTicks: Y,
+      tip: (q) => `<div>${y0 + q.y} · nach ${q.y} ${q.y === 1 ? "Jahr" : "Jahren"}</div><div>Mitte <span class="num">${eur0.format(q.p50)}</span></div><div>80 von 100 Fällen mindestens <span class="num">${shortEur(q.p20)}</span></div><div>95 von 100 Fällen mindestens <span class="num">${shortEur(q.p5)}</span></div><div>Nur 5 von 100 über <span class="num">${shortEur(q.p95)}</span></div><div>Eingezahlt <span class="num">${eur0.format(q.paid)}</span></div>` });
+    $("#mcLegend").innerHTML = '<span><i style="background:var(--accent)"></i>Mitte (die Hälfte liegt darüber)</span><span><i class="band" style="opacity:.34"></i>60 von 100 Fällen</span><span><i class="band"></i>90 von 100 Fällen</span><span><i class="dash"></i>eingezahlt</span>';
+    const inf = Math.pow(1 + o.inf, Y);
+    $("#mcRows").innerHTML = [["In 50 von 100 Fällen hast du mindestens", p.p50], ["In 80 von 100 Fällen mindestens", p.p20], ["In 95 von 100 Fällen mindestens", p.p5]].map(([l, v]) => `<div class="r"><span>${l}</span><b class="num">${eur0.format(v)}</b></div>`).join("") + `<div class="r"><span class="note">Das 80-von-100-Ergebnis in heutiger Kaufkraft</span><span class="num note">${eur0.format(p.p20 / inf)}</span></div>`;
+    const goal = f.mcGoal > 0 ? f.mcGoal : (f.goal && f.goal.sum) || 1e6, inp = $("#mcGoal");
+    if (document.activeElement !== inp) inp.value = nf(0).format(goal);
+    let hit = 0, lossN = 0; for (let i = 0; i < M.N; i++) { if (M.last[i] >= goal) hit++; if (M.last[i] < p.paid) lossN++; }
+    const ph = Math.round((hit / M.N) * 100), pl = Math.round((lossN / M.N) * 100);
+    $("#mcGoalTxt").innerHTML = `Dein Ziel von <b>${shortEur(goal)}</b> erreichst du nach ${Y} Jahren in <b>${ph} von 100</b> Fällen.${ph < 50 ? " Mehr Sparrate oder mehr Zeit erhöhen die Chance." : ph >= 90 ? " Das ist ein dicker Puffer." : ""} ${pl >= 1 ? `In ${pl} von 100 Fällen hast du am Ende weniger als eingezahlt.` : "In weniger als 1 von 100 Fällen hast du am Ende weniger als eingezahlt."}`;
+    $("#mcNote").textContent = `Gerechnet mit ${numStr(f.ret)} % mittlerer Rendite und ${nf(0).format(vol * 100)} % Schwankung im Jahr, mit deinen Sparraten, Kosten und Steuern von oben. ${det > p.p50 * 1.02 ? `Die Mitte liegt unter den ${shortEur(det)} von oben: Wenige sehr gute Verläufe ziehen den Durchschnitt hoch, das typische Ergebnis ist niedriger. ` : ""}${f.crash && f.crash.on ? "Die eingestellte Krise ist hier nicht extra drin, Einbrüche entstehen durch den Zufall von selbst. " : ""}Die Verläufe sind Zufall nach festen Regeln. Echte Börsen können stärker ausschlagen.`;
+  }
+  $("#mcOn").addEventListener("change", (e) => { S.fc.mcOn = e.target.checked; fcChanged(); });
+  $("#mcGoal").addEventListener("input", (e) => { const v = eurIn(e.target.value.trim()); if (isFinite(v) && v > 0 && v < 1e12) { S.fc.mcGoal = v; fcChanged(); } });
+
+  // ---------- v72: Depot als Bild teilen, ohne Beträge ----------
+  let shBy = "pos", shBlob = null;
+  function shareDraw() {
+    const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+    const g = cv.getContext("2d"), col = (v) => css(v) || "#888", ff = (css("--font-body") || "sans-serif").replace(/"/g, "'"), fd = (css("--font-display") || ff).replace(/"/g, "'");
+    const open = C.list.filter((p) => p.value > 0), tot = open.reduce((x, p) => x + p.value, 0) || 1, names = $("#shNames").checked, groups = {};
+    open.forEach((p, i) => { const a = p.asset, gp = shBy === "cls" ? { [a.cls || "Sonstiges"]: 1 } : shBy === "country" ? exposure(a).c : shBy === "sector" ? exposure(a).s : { [names ? a.name || a.symbol : "\u0000" + i]: 1 }; for (const k in gp) groups[k] = (groups[k] || 0) + p.value * gp[k]; });
+    let items = Object.entries(groups).map(([l, v]) => ({ l, v })).sort((a, b) => b.v - a.v);
+    if (shBy === "pos" && !names) items.forEach((it, i) => (it.l = "Position " + (i + 1)));
+    if (items.length > 9) { const r = items.slice(8); items = items.slice(0, 8).concat([{ l: "Sonstige (" + r.length + ")", v: r.reduce((x, y) => x + y.v, 0), o: true }]); }
+    const cols = ["--c1", "--c2", "--c3", "--c4", "--c5", "--c6", "--c7", "--div", "--faint"];
+    g.fillStyle = col("--bg"); g.fillRect(0, 0, W, H);
+    const rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+    g.fillStyle = col("--surface"); rr(48, 48, W - 96, H - 96, 36); g.fill();
+    g.fillStyle = col("--ink"); g.font = `700 64px ${fd}`; g.textBaseline = "alphabetic"; g.fillText("Mein Depot", 104, 168);
+    g.fillStyle = col("--muted"); g.font = `400 30px ${ff}`; g.fillText(fmtDate(today()) + " · " + open.length + (open.length === 1 ? " Position" : " Positionen") + " · nur Prozente", 104, 216);
+    // Rendite
+    const rets = twr(C.series || []), prod = rets.reduce((x, r) => x * (1 + r.r), 1), ser = C.series || [], yrs = ser.length > 1 ? (parseIso(ser[ser.length - 1].d) - parseIso(ser[0].d)) / (365.25 * 864e5) : 0;
+    const yAgo = isoDate(new Date(Date.now() - 365 * 864e5)), r12 = rets.filter((r) => r.d > yAgo).reduce((x, r) => x * (1 + r.r), 1) - 1;
+    const kp = [["Rendite gesamt", prod - 1], [yrs >= 1 ? "pro Jahr" : "seit Start", yrs >= 1 ? Math.pow(prod, 1 / yrs) - 1 : prod - 1], ["letzte 12 Monate", r12]], kw = (W - 208 - 48) / 3;
+    kp.forEach(([l, v], i) => { const x = 104 + i * (kw + 24); g.fillStyle = col("--sunk"); rr(x, 262, kw, 150, 20); g.fill(); g.fillStyle = col("--muted"); g.font = `400 26px ${ff}`; g.fillText(l, x + 22, 308);
+      g.fillStyle = col(v >= 0 ? "--gain" : "--loss"); g.font = `700 52px ${fd}`; g.fillText(isFinite(v) && rets.length ? (v >= 0 ? "+" : "−") + nf(1).format(Math.abs(v) * 100) + " %" : "–", x + 22, 378); });
+    // Ring
+    const cx = W / 2, cy = 640, R = 185, r0 = 112; let a0 = -Math.PI / 2;
+    items.forEach((it, i) => { const a1 = a0 + (it.v / tot) * Math.PI * 2; g.beginPath(); g.arc(cx, cy, R, a0, a1); g.arc(cx, cy, r0, a1, a0, true); g.closePath(); g.fillStyle = col(it.o ? OTHER : cols[i % cols.length]); g.fill(); a0 = a1; });
+    g.strokeStyle = col("--surface"); g.lineWidth = 4; a0 = -Math.PI / 2; items.forEach((it) => { g.beginPath(); g.moveTo(cx + Math.cos(a0) * r0, cy + Math.sin(a0) * r0); g.lineTo(cx + Math.cos(a0) * R, cy + Math.sin(a0) * R); g.stroke(); a0 += (it.v / tot) * Math.PI * 2; });
+    g.fillStyle = col("--muted"); g.font = `400 26px ${ff}`; g.textAlign = "center"; g.fillText({ pos: "nach Titeln", cls: "nach Klasse", country: "nach Ländern", sector: "nach Sektoren" }[shBy], cx, cy + 10); g.textAlign = "left";
+    // Liste
+    const ly = 872, lh = 42;
+    items.forEach((it, i) => { const y = ly + i * lh; g.fillStyle = col(it.o ? OTHER : cols[i % cols.length]); rr(104, y - 20, 24, 24, 6); g.fill();
+      g.fillStyle = col("--ink"); g.font = `400 30px ${ff}`; let t = it.l; while (g.measureText(t).width > 660 && t.length > 4) t = t.slice(0, -2); g.fillText(t === it.l ? t : t + "…", 146, y);
+      g.font = `600 30px ${ff}`; g.textAlign = "right"; g.fillText(nf(1).format((it.v / tot) * 100) + " %", W - 104, y); g.textAlign = "left"; });
+    g.fillStyle = col("--faint"); g.font = `400 24px ${ff}`; g.textAlign = "center"; g.fillText("Erstellt mit Depotblick · ohne Euro-Beträge", cx, H - 84); g.textAlign = "left";
+    return cv;
+  }
+  function shareRender() {
+    seg("#shSeg", [["pos", "Titel"], ["cls", "Klasse"], ["country", "Land"], ["sector", "Sektor"]], shBy, (v) => { shBy = v; shareRender(); });
+    $("#shNames").closest("label").hidden = shBy !== "pos";
+    const cv = shareDraw(); $("#shImg").src = cv.toDataURL("image/png");
+    shBlob = null; cv.toBlob((b) => { shBlob = b; const can = !!(b && navigator.canShare && navigator.canShare({ files: [new File([b], "depot.png", { type: "image/png" })] })); $("#shShare").hidden = !can; }, "image/png");
+  }
+  $("#shareBtn").addEventListener("click", () => { if (!C.list.some((p) => p.value > 0)) { toast("Noch keine Positionen zum Zeigen"); return; } $("#dlgShare").showModal(); shareRender(); });
+  $("#shNames").addEventListener("change", shareRender);
+  $$("[data-close]", $("#dlgShare")).forEach((b) => b.addEventListener("click", () => $("#dlgShare").close()));
+  $("#shShare").addEventListener("click", async () => { if (!shBlob) return; try { await navigator.share({ files: [new File([shBlob], "depot-" + today() + ".png", { type: "image/png" })], title: "Mein Depot" }); } catch (e) {} });
+  $("#shDl").addEventListener("click", async () => {
+    if (!shBlob) return; const name = "depot-" + today() + ".png";
+    try { if (window.claude && window.claude.use) { const dl = await Promise.race([window.claude.use("downloads"), new Promise((r) => setTimeout(() => r(null), 1500))]); if (dl) { await dl.save({ filename: name, data: shBlob }); return; } } } catch (e) { if (e && e.code === "declined") return; }
+    try { const url = URL.createObjectURL(shBlob), a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); } catch (e) { toast("Halte das Bild gedrückt, um es zu sichern"); }
+  });
+
+  // ---------- v72: ETFs aufgefächert (Durchschau) ----------
+  // Jede Firma mit ihrem Anteil am Depot: direkt gehalten plus über die größten Titel der ETFs. Der Rest der ETFs bleibt als Sammelposten
+  function xray(list) {
+    const open = list.filter((p) => p.value > 0), tot = open.reduce((x, p) => x + p.value, 0) || 1, co = lookThrough(open), other = [];
+    let rest = 0, unk = 0;
+    open.forEach((p) => { const pr = profileFor(p.asset), cl = p.asset.cls || "Aktie";
+      if (pr && HOLDINGS[pr.key]) rest += (p.value / tot) * (1 - HOLDINGS[pr.key].reduce((x, h) => x + h[1], 0) / 100);
+      else if (/^(ETF|Fonds)$/.test(cl)) unk += p.value / tot;
+      else if (cl !== "Aktie") other.push({ name: p.asset.name || p.asset.symbol, w: p.value / tot, cls: cl }); });
+    return { co, rest, unk, other, tot };
+  }
+  function xrGroups(list) {
+    const X = xray(list), out = X.co.map((e) => [e.name, e.w * X.tot]).concat(X.other.map((e) => [e.name, e.w * X.tot]));
+    if (X.rest + X.unk > 1e-6) out.push(["Übrige Firmen in ETFs", (X.rest + X.unk) * X.tot]);
+    return out;
+  }
+  let xrAll = false;
+  function renderXray(K) {
+    const out = $("#xrOut"); if (!out) return;
+    const on = !!S.ui.xr, btn = $("#xrBtn"), has = K.list.some((p) => p.value > 0);
+    btn.textContent = on ? "Wieder zuklappen" : "ETFs in einzelne Firmen aufteilen"; btn.hidden = !has;
+    if (!has) { out.innerHTML = '<p class="hint">Keine offenen Positionen in der Auswahl.</p>'; return; }
+    if (!on) { out.innerHTML = '<p class="hint">Ein Tipp, und du siehst, welche Firmen wirklich in deinem Depot stecken: deine Einzelaktien und die größten Titel deiner ETFs zusammengerechnet.</p>'; return; }
+    const X = xray(K.list), mx = Math.max(0.0001, ...X.co.map((e) => e.w)), n = xrAll ? X.co.length : 15, top10 = X.co.slice(0, 10).reduce((x, e) => x + e.w, 0);
+    const row = (name, w, sub, c) => `<div class="r"><div class="h"><span>${esc(name)}</span><b class="num">${nf(1).format(w * 100)} %</b></div><div class="fbar"><b style="width:${Math.max(0.5, Math.min(100, (w / mx) * 100))}%;background:var(${c})"></b></div>${sub ? `<span class="note">${sub}</span>` : ""}</div>`;
+    out.innerHTML = (X.co.length ? `<p class="ctext" style="margin:0">Aufgefächert ist <b>${esc(X.co[0].name)}</b> mit ${nf(1).format(X.co[0].w * 100)} % deine größte Firma. Die zehn größten machen zusammen ${nf(0).format(top10 * 100)} % aus.</p>` : "") +
+      `<div class="ov">${X.co.slice(0, n).map((e) => row(e.name, e.w, e.direct > 0.0005 && e.etf > 0.0005 ? `direkt ${nf(1).format(e.direct * 100)} % · über ETFs ${nf(1).format(e.etf * 100)} %` : e.etf > 0.0005 ? "über ETFs" : "direkt gehalten", e.direct > 0.0005 ? "--c1" : "--c3")).join("")}
+      ${xrAll || X.co.length <= n ? "" : `<div class="r"><button type="button" class="link" data-xr-all style="justify-self:start">alle ${X.co.length} Firmen zeigen</button></div>`}
+      ${X.rest > 0.0005 ? row("Übrige Firmen in deinen ETFs", X.rest, "viele kleinere Titel außerhalb der zehn größten ihres Index", OTHER) : ""}
+      ${X.unk > 0.0005 ? row("ETFs ohne hinterlegte Titel", X.unk, "für diesen Index kennt Depotblick die Firmen nicht", OTHER) : ""}
+      ${X.other.map((e) => row(e.name, e.w, esc(e.cls), "--c4")).join("")}</div>`;
+    const b = out.querySelector("[data-xr-all]"); if (b) b.addEventListener("click", () => { xrAll = true; renderXray(K); });
+  }
+  $("#xrBtn").addEventListener("click", () => { S.ui.xr = !S.ui.xr; savePrefs(); renderAnalysen(); });
+
 
   // Auswahl-Dialog
   let selClosed = false;
@@ -6266,6 +6690,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
   }
   // Steuerschätzung beim Verkauf direkt im Dialog
   function txTaxHint() {
+    txRuleHint();
     const el = $("#txTaxEst"); if (!el) return;
     const id = assetId($("#fAsset").value.trim()), n = parseNum($("#fShares").value), px = parseNum($("#fPrice").value);
     if (txType !== "sell" || !S.data.assets[id] || !(n > 0) || !(px > 0) || editTx) { el.hidden = true; return; }
@@ -6719,7 +7144,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     const o = pack(S.data, { app: "depotblick", exported: new Date().toISOString(), scope: bkScope });
     if (bkScope === "depot") delete o.budget;
     o.prefs = { ui: Object.assign({}, S.ui), theme: S.theme || "", fc: S.fc };
-    if (bkScope === "budget") ["txs", "assets", "plans", "depots", "wealth", "pots", "watch", "goals", "tax", "target", "retire"].forEach((k) => delete o[k]);
+    if (bkScope === "budget") ["txs", "assets", "plans", "depots", "wealth", "pots", "watch", "rules", "goals", "tax", "target", "retire"].forEach((k) => delete o[k]);
     if (bkScope !== "depot" && $("#bkPhotos").checked) { const all = await PhotoDB.all(), ph = {}; for (const k in all) { const d = await blobToData(all[k]); if (d) ph[k] = d; } o.photos = ph; }
     const pw = $("#bkPwOn").checked ? $("#bkPw").value : "";
     if ($("#bkPwOn").checked && pw.length < 6) { toast("Bitte ein Passwort mit mindestens 6 Zeichen eingeben"); $("#bkPw").focus(); return null; }
@@ -6784,7 +7209,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       const have = new Set(cur.txs.map((t) => t.id)), keys = keyCounts();
       inc.txs.forEach((t) => { if (have.has(t.id)) return; const k = txKey(t); if (keys[k] > 0) { keys[k]--; return; } cur.txs.push(t); n++; });
       for (const id in inc.assets) if (!cur.assets[id]) { cur.assets[id] = inc.assets[id]; n++; } else { const a = cur.assets[id], b = inc.assets[id]; const h = new Map((a.hist || []).map((x) => [x[0], x])); (b.hist || []).forEach((x) => { if (!h.has(x[0])) h.set(x[0], x); }); a.hist = [...h.values()].sort((x, y) => (x[0] < y[0] ? -1 : 1)); }
-      ["depots", "plans", "wealth", "pots", "watch"].forEach((k) => addById(cur[k], inc[k]));
+      ["depots", "plans", "wealth", "pots", "watch", "rules"].forEach((k) => addById(cur[k] || (cur[k] = []), inc[k] || []));
       if (!(cur.retire && cur.retire.v2) && inc.retire && inc.retire.v2) cur.retire = inc.retire;
       if (!cur.target && inc.target) cur.target = inc.target;
     }
@@ -6808,7 +7233,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     let msg;
     if (mode === "replace") {
       const cur = S.demo ? mkData() : S.data, out = mkData(pack(cur));
-      if (parts.depot) ["txs", "assets", "plans", "depots", "wealth", "pots", "watch", "goals", "tax", "target", "retire"].forEach((k) => (out[k] = inc[k]));
+      if (parts.depot) ["txs", "assets", "plans", "depots", "wealth", "pots", "watch", "rules", "goals", "tax", "target", "retire"].forEach((k) => (out[k] = inc[k]));
       if (parts.budget) out.budget = inc.budget;
       S.data = out; msg = "Daten ersetzt";
     } else {
