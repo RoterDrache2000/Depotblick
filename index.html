@@ -1784,7 +1784,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
             </div></div>
 
         </div>
-        <p class="appver" id="appVer">Depotblick Version 72 · Stand 11.11.2026 18:43</p>
+        <p class="appver" id="appVer">Depotblick Version 73 · Stand 12.11.2026 04:39</p>
       </section>
 
       <!-- Mehr (Handy) -->
@@ -2179,7 +2179,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
       s: { Versorger: 45, Industrie: 30, Technologie: 25 } },
   };
   const PROFILE_BY_ISIN = {
-    IE00B4L5Y983: "world", IE00BJ0KDQ92: "world", LU0274208692: "world", IE00BFY0GT14: "world", IE00BK1PV551: "world", LU1781541179: "world", IE00B0M62Q58: "world", FR0010315770: "world", LU0340285161: "world",
+    IE00B4L5Y983: "world", IE00BJ0KDQ92: "world", LU0274208692: "world", IE00BFY0GT14: "world", IE00BK1PV551: "world", LU1781541179: "world", IE000BI8OT95: "world", IE00B0M62Q58: "world", FR0010315770: "world", LU0340285161: "world",
     IE00B3RBWM25: "allworld", IE00BK5BQT80: "allworld", IE00B6R52259: "allworld", IE00BGHQ0G80: "allworld", LU1829220216: "allworld",
     IE00BKM4GZ66: "em", IE00B4L5YC18: "em", IE00BTJRMP35: "em", IE00B3VVMM84: "em", LU1681045370: "em", IE00B0M63177: "em",
     IE00B5BMR087: "sp500", IE00BFMXXD54: "sp500", IE00B3XXRP09: "sp500", LU0490618542: "sp500", IE00B6YX5C33: "sp500", IE00BYML9W36: "sp500",
@@ -5098,7 +5098,7 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
 
   // ---------- Hochrechnung ----------
   // Laufende Kosten (TER) bekannter ETFs in %, Richtwerte Herbst 2026
-  const TER_BY_ISIN = { IE00B4L5Y983: 0.2, IE00BFY0GT14: 0.12, LU1781541179: 0.12, IE00B0M62Q58: 0.5, IE00B3RBWM25: 0.19, IE00BK5BQT80: 0.19, IE00BKM4GZ66: 0.18, IE00B4L5YC18: 0.18, IE00B5BMR087: 0.07, IE00BFMXXD54: 0.07, IE00B3XXRP09: 0.07, IE00B53SZB19: 0.3, DE0005933931: 0.16, IE00B4K48X80: 0.12, LU0908500753: 0.07 };
+  const TER_BY_ISIN = { IE000BI8OT95: 0.12, IE00B1XNHC34: 0.65, DE000A0F5UH1: 0.46, LU0274208692: 0.45, IE00B9CQXS71: 0.45, IE00BYZK4552: 0.4, IE00B8GKDB10: 0.29, IE00B3VVMM84: 0.17, IE00B3WJKG14: 0.15, IE00BKX55T58: 0.12, IE00BJ0KDQ92: 0.12, IE00B4ND3602: 0.12, IE00B4L5Y983: 0.2, IE00BFY0GT14: 0.12, LU1781541179: 0.12, IE00B0M62Q58: 0.5, IE00B3RBWM25: 0.14, IE00BK5BQT80: 0.14, IE00BKM4GZ66: 0.18, IE00B4L5YC18: 0.18, IE00B5BMR087: 0.07, IE00BFMXXD54: 0.07, IE00B3XXRP09: 0.07, IE00B53SZB19: 0.3, DE0005933931: 0.16, IE00B4K48X80: 0.12, LU0908500753: 0.07 };
   function terOf(a) {
     if (a.ter != null && isFinite(a.ter)) return { v: a.ter, src: "eigene Angabe" };
     if (TER_BY_ISIN[a.symbol] != null) return { v: TER_BY_ISIN[a.symbol], src: "Richtwert" };
@@ -6708,8 +6708,8 @@ body, .main, .content, .page { touch-action: pan-y; max-width: 100%; }
     ["IE00BFY0GT14", "A2N6CW", "SPDR MSCI World", "ETF"], ["IE00BJ0KDQ92", "A1XB5U", "Xtrackers MSCI World 1C", "ETF"], ["LU0274208692", "DBX1MW", "Xtrackers MSCI World Swap", "ETF"],
     ["IE00B0M62Q58", "A0HGV0", "iShares MSCI World (Dist)", "ETF"], ["LU0908500753", "LYX0Q0", "Amundi Core Stoxx Europe 600", "ETF"], ["DE0005933931", "593393", "iShares Core DAX", "ETF"],
     ["IE00B53SZB19", "A0YEDL", "iShares Nasdaq 100", "ETF"], ["IE00B3WJKG14", "A142N1", "iShares S&P 500 Information Technology", "ETF"], ["IE00BYZK4552", "A2ANH0", "iShares Automation & Robotics", "ETF"],
-    ["IE00B1XNHC34", "A0MW0M", "iShares Global Clean Energy", "ETF"], ["IE00B8GKDB10", "A1T8FV", "Vanguard FTSE All-World High Dividend Yield", "ETF"],
-    ["DE000A0F5UH1", "A0F5UH", "iShares STOXX Global Select Dividend 100", "ETF"], ["IE00B9CQXS71", "A1T8FS", "SPDR S&P Global Dividend Aristocrats", "ETF"],
+    ["IE00B1XNHC34", "A0MW0M", "iShares Global Clean Energy Transition", "ETF"], ["IE000BI8OT95", "ETF146", "Amundi Core MSCI World", "ETF"], ["IE00BFMXXD54", "A2PFN2", "Vanguard S&P 500 (Acc)", "ETF"], ["IE00B4K48X80", "A0RPWG", "iShares Core MSCI Europe", "ETF"], ["IE00B945VV12", "A1T8FS", "Vanguard FTSE Developed Europe", "ETF"], ["IE00B8GKDB10", "A1T8FV", "Vanguard FTSE All-World High Dividend Yield", "ETF"],
+    ["DE000A0F5UH1", "A0F5UH", "iShares STOXX Global Select Dividend 100", "ETF"], ["IE00B9CQXS71", "A1T8GD", "SPDR S&P Global Dividend Aristocrats", "ETF"],
     ["IE00B4ND3602", "A1KWPQ", "iShares Physical Gold ETC", "Rohstoff"], ["DE000A0S9GB0", "A0S9GB", "Xetra-Gold", "Rohstoff"],
     ["US0378331005", "865985", "Apple", "Aktie"], ["US5949181045", "870747", "Microsoft", "Aktie"], ["US0231351067", "906866", "Amazon", "Aktie"], ["US02079K3059", "A14Y6F", "Alphabet A", "Aktie"],
     ["US88160R1014", "A1CX3T", "Tesla", "Aktie"], ["US67066G1040", "918422", "NVIDIA", "Aktie"], ["US30303M1027", "A1JWVX", "Meta Platforms", "Aktie"], ["US0079031078", "863186", "AMD", "Aktie"],
